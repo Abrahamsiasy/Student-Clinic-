@@ -201,7 +201,7 @@ Route::prefix('/')->middleware('auth')->group(function () {
 
     Route::resource('encounters', EncounterController::class);
 
-    Route::post('/search', [EncounterController::class, 'search'])->name('search');
+    Route::any('/search', [EncounterController::class, 'search'])->name('search');
 
 
     Route::post('/encounters/{encounter}', [EncounterController::class, 'callNext'])->name('encounters.callNext');

@@ -71,7 +71,7 @@
 
                  
                     
-                      <form  action="{{ route('search') }}" method="post">
+                      <form  action="{{ route('search') }}"  method="post">
                         @csrf
                       <div class="input-group">
                         <input type="search" autocomplete="off" name="student_id" class="form-control" placeholder="Enter Student ID here">
