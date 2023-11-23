@@ -114,7 +114,10 @@
                                             @lang('crud.product_requests.inputs.product_id')
                                         </th>
                                         <th class="text-left">
-                                            @lang('crud.product_requests.inputs.amount')
+                                            Requested Amount
+                                        </th>
+                                        <th class="text-left">
+                                            Approved Amount
                                         </th>
 
                                         <th class="text-left">
@@ -136,6 +139,7 @@
                                                 {{ optional($ApprovedRequest->product)->name ?? '-' }}
                                             </td>
                                             <td>{{ $ApprovedRequest->amount ?? '-' }}</td>
+                                            <td>{{ $ApprovedRequest->approval_amount ?? '-' }}</td>
                                             <td>
                                                 {{ optional($ApprovedRequest->store)->name ?? '-' }}
                                             </td>
@@ -203,16 +207,19 @@
                                     <tr>
                                         <th>#</th>
                                         <th class="text-left">
-                                            @lang('crud.product_requests.inputs.amount')
+                                            @lang('crud.product_requests.inputs.product_id')
                                         </th>
                                         <th class="text-left">
-                                            @lang('crud.product_requests.inputs.product_id')
+                                           Requested Amount
                                         </th>
 
                                         <th class="text-left">
                                             Store
                                         </th>
-                                        <th>Rejected Date</th>
+                                        <th class="text-left">
+                                            Rejection reason
+                                        </th>
+                                        <th>Rejection Date</th>
 
 
 
@@ -223,15 +230,18 @@
                                         <tr>
                                             <th>{{ $i++ }}</th>
 
-                                            <td>{{ $RejectedRequest->amount ?? '-' }}</td>
-
                                             <td>
                                                 {{ optional($RejectedRequest->product)->name ?? '-' }}
                                             </td>
+                                            <td>{{ $RejectedRequest->amount ?? '-' }}</td>
+
 
 
                                             <td>
                                                 {{ optional($RejectedRequest->store)->name ?? '-' }}
+                                            </td>
+                                            <td>
+                                                {{ $RejectedRequest->reason_of_rejection ?? '-' }}
                                             </td>
                                             <td>{{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $RejectedRequest->updated_at)->format('d-m-Y') }}
                                             </td>
@@ -394,7 +404,7 @@
                                                             method="POST"
                                                             onsubmit="return confirm('{{ __('crud.common.are_you_sure') }}')">
                                                             @csrf @method('DELETE')
-                                                            <button type="submit" class="btn btn-light text-danger">
+                                                            <button type="submit" class="btn btn-sm btn-outline-danger mx-1">
                                                                 Cancel
                                                             </button>
                                                         </form>

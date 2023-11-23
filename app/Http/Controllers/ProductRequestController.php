@@ -97,7 +97,7 @@ class ProductRequestController extends Controller
      */
     public function create(Request $request)
     {
-        if (Auth::user()->can('pharmacy.products.*')) {
+        if (Auth::user()->can('pharmacy.products.request')) {
             $pharmacyUser = PharmacyUser::where('user_id', Auth::user()->id)->first();
             if($pharmacyUser==null){
                 return back()->withError('Pharmacist hasn\'t been assigned to any pharmacy yet ');
@@ -122,16 +122,7 @@ class ProductRequestController extends Controller
             );
         }
         abort(Response::HTTP_UNAUTHORIZED, 'Unauthorized access.');
-        // $this->authorize('create', ProductRequest::class);
 
-        // $clinics = Clinic::pluck('name', 'id');
-        // $products = Product::pluck('name', 'id');
-        // $stores = Store::pluck('name', 'id');
-
-        // return view(
-        //     'app.product_requests.create',
-        //     compact('clinics', 'products', 'stores')
-        // );
     }
 
     /**
@@ -141,7 +132,7 @@ class ProductRequestController extends Controller
     public function store(ProductRequestStoreRequest $request)
     {
 
-        if (Auth::user()->can('pharmacy.products.*')) {
+        if (Auth::user()->can('pharmacy.products.request')) {
             $pharmacyUser = PharmacyUser::where('user_id', Auth::user()->id)->first();
             if($pharmacyUser==null){
                 return back()->withError('Pharmacist hasn\'t been assigned to any pharmacy yet ');
@@ -287,8 +278,10 @@ class ProductRequestController extends Controller
         abort(Response::HTTP_UNAUTHORIZED, 'Unauthorized access l.');
     }
 
-    public function approve(ProductRequest $productRequest)
+    public function approve(Request $request, ProductRequest $productRequest)
     {
+
+// dd($request);
         if (Auth::user()->can('store.request.*')) {
             $storeUser = StoreUser::where('user_id', Auth::user()->id)->first();
             if($storeUser==null){
@@ -305,17 +298,17 @@ class ProductRequestController extends Controller
 
             $items = Item::where('product_id', $productRequest->product_id)->orderBy('expire_date')->get();
             // dd($items);
-
+            $approvedAmount=$request->approvalAmount;
             foreach ($items as $item) {
-                if ($item->number_of_units >= $productRequest->amount) {
+                if ($item->number_of_units >= $approvedAmount) {
                     $t = ItemsInPharmacy::firstOrCreate(['item_id' => $item->id, 'pharmacy_id' => $productRequest->pharmacy_id]);
-                    $t->count = $t->count + $productRequest->amount;
+                    $t->count = $t->count + $approvedAmount;
                     $t->save();
-                    $item->number_of_units = $item->number_of_units - $productRequest->amount;
+                    $item->number_of_units = $item->number_of_units - $approvedAmount;
                     $item->save();
                     break;
                 } else {
-                    $productRequest->amount = $productRequest->amount - $item->number_of_units;
+                    $approvedAmount = $approvedAmount - $item->number_of_units;
                     $t = ItemsInPharmacy::firstOrCreate(['item_id' => $item->id, 'pharmacy_id' => $productRequest->pharmacy_id]);
                     $t->count = $t->count + $item->number_of_units;
                     $t->save();
@@ -329,6 +322,7 @@ class ProductRequestController extends Controller
 
 
             $productRequest->status = 'Approved';
+            $productRequest->approval_amount=$request->approvalAmount;
             $productRequest->save();
 
             return redirect()
@@ -360,8 +354,10 @@ class ProductRequestController extends Controller
 
 
 
-    public function reject(ProductRequest $productRequest)
+    public function reject(Request $request, ProductRequest $productRequest)
     {
+
+        // dd($request);
         if (Auth::user()->can('store.request.*')) {
             $storeUser = StoreUser::where('user_id', Auth::user()->id)->first();
             if($storeUser==null){
@@ -370,6 +366,7 @@ class ProductRequestController extends Controller
             $store = Store::where('id', $storeUser->store_id)->first();
             $products = Product::where('store_id', $store->id);
 
+            $productRequest->reason_of_rejection=$request->reason;
             $productRequest->status = 'Rejected';
             $productRequest->save();
 

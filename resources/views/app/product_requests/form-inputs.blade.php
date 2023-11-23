@@ -1,6 +1,25 @@
 @php $editing = isset($productRequest) @endphp
 
 <div class="row">
+
+        <x-inputs.group class="col-sm-12">
+            <x-inputs.select name="store_id" label="Store">
+                @php $selected = old('store_id', ($editing ? $productRequest->store_id : '')) @endphp
+                <option disabled {{ empty($selected) ? 'selected' : '' }}>Please select the Store</option>
+                @foreach($stores as $s)
+                <option value="{{ $s->id }}" {{ $selected == $s->id  ? 'selected' : '' }} >{{ $s->name  }}</option>
+                @endforeach
+            </x-inputs.select>
+        </x-inputs.group>
+        <x-inputs.group class="col-sm-12">
+            <x-inputs.select name="product_id" label="Product">
+                @php $selected = old('product_id', ($editing ? $productRequest->product_id : '')) @endphp
+                <option disabled {{ empty($selected) ? 'selected' : '' }}>Please select the Product</option>
+                @foreach($products as $value => $label)
+                <option value="{{ $value }}" {{ $selected == $value ? 'selected' : '' }} >{{ $label }}</option>
+                @endforeach
+            </x-inputs.select>
+        </x-inputs.group>
     <x-inputs.group class="col-sm-12">
         <x-inputs.number
             name="amount"
@@ -21,24 +40,5 @@
             @endforeach
         </x-inputs.select>
     </x-inputs.group> --}}
-
-    <x-inputs.group class="col-sm-12">
-        <x-inputs.select name="store_id" label="Store">
-            @php $selected = old('store_id', ($editing ? $productRequest->store_id : '')) @endphp
-            <option disabled {{ empty($selected) ? 'selected' : '' }}>Please select the Store</option>
-            @foreach($stores as $s)
-            <option value="{{ $s->id }}" {{ $selected == $s->id  ? 'selected' : '' }} >{{ $s->name  }}</option>
-            @endforeach
-        </x-inputs.select>
-    </x-inputs.group>
-    <x-inputs.group class="col-sm-12">
-        <x-inputs.select name="product_id" label="Product">
-            @php $selected = old('product_id', ($editing ? $productRequest->product_id : '')) @endphp
-            <option disabled {{ empty($selected) ? 'selected' : '' }}>Please select the Product</option>
-            @foreach($products as $value => $label)
-            <option value="{{ $value }}" {{ $selected == $value ? 'selected' : '' }} >{{ $label }}</option>
-            @endforeach
-        </x-inputs.select>
-    </x-inputs.group>
 
 </div>

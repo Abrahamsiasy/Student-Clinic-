@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('encounters', function (Blueprint $table) {
+        Schema::table('medical_sick_leaves', function (Blueprint $table) {
             //
             $table->timestamp('arrived_at')->nullable();
         });
@@ -26,7 +26,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('encounters', function (Blueprint $table) {
+        Schema::table('medical_sick_leaves', function (Blueprint $table) {
             //
             $table->dropColumn('arrived_at');
         });

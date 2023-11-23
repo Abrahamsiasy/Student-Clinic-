@@ -125,12 +125,13 @@
                                     </a> --}}
 
                                             @can('store.*')
-                                                <a
+                                                {{-- <a
                                                     href="{{ route('product-requests.approve', ['productRequest' => $productRequest]) }}">
                                                     <button type="button" class="btn btn-primary">
                                                         Approve
                                                     </button>
                                                 </a>
+
 
                                                 <a
                                                     href="{{ route('product-requests.reject', ['productRequest' => $productRequest]) }}">
@@ -138,7 +139,74 @@
                                                         onclick="return confirm('{{ __('crud.common.are_you_sure') }}')">
                                                         Reject
                                                     </button>
+                                                </a> --}}
+                                                <a href="#" data-toggle="modal" data-target="#approveModal">
+                                                    <button type="button" class="btn btn-sm btn-outline-primary mx-1">Approve</button>
                                                 </a>
+
+                                                <a href="#" data-toggle="modal" data-target="#rejectModal"
+                                                    onclick="return confirm('{{ __('crud.common.are_you_sure') }}')">
+                                                    <button type="button" class="btn btn-sm btn-outline-danger mx-1">Reject</button>
+                                                </a>
+
+                                                <!-- Approval Modal -->
+                                                <div class="modal fade" id="approveModal" tabindex="-1" role="dialog"
+                                                    aria-labelledby="approveModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="approveModalLabel">Approve Request
+                                                                </h5>
+                                                                <button type="button" class="close" data-dismiss="modal"
+                                                                    aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <form method="GET"
+                                                                    action="{{ route('product-requests.approve', ['productRequest' => $productRequest]) }}"
+                                                                    id="approveForm">
+                                                                    @csrf
+                                                                    <label for="approvalAmount">Amount:</label>
+                                                                    <input type="number" id="approvalAmount"
+                                                                        name="approvalAmount" class="form-control" required
+                                                                        max="{{ $productRequest->amount }}">
+                                                                    <input type="hidden" name="productRequest_id"
+                                                                        value="{{ $productRequest->id }}">
+                                                                    <button type="submit"
+                                                                        class="btn btn-primary mt-3">Approve</button>
+                                                                </form>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Rejection Modal -->
+                                                <div class="modal fade" id="rejectModal" tabindex="-1" role="dialog" aria-labelledby="rejectModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="rejectModalLabel">Reject Request</h5>
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <form method="GET" action="{{ route('product-requests.reject', ['productRequest' => $productRequest]) }}" id="rejectForm">
+                                                                    @csrf
+                                                                    <label for="reason">Reason:</label>
+                                                                    <input type="hidden" name="productRequest_id" value="{{ $productRequest->id }}">
+                                                                    <textarea id="reason" name="reason" class="form-control" required></textarea>
+
+                                                                    <button type="submit" class="btn btn-danger mt-3">Reject</button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
                                                 {{-- <a href="#" wire:click.prevent="rejectProductRequest('{{ $productRequest->id }}')" class="btn btn-danger" onclick="return confirm('{{ __('crud.common.are_you_sure') }}')">
                                         Reject
                                     </a> --}}

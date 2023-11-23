@@ -233,9 +233,9 @@ class PermissionsSeeder extends Seeder
         Permission::updateOrCreate(['name' => 'create users']);
         Permission::updateOrCreate(['name' => 'update users']);
         Permission::updateOrCreate(['name' => 'delete users']);
-      
 
-  
+
+
 
         $pharmacy_user = Role::updateOrCreate(['name' => Constants::PHARMACY_USER]);
         $store_user = Role::updateOrCreate(['name' => Constants::STORE_USER_ROLE]);
@@ -244,13 +244,13 @@ class PermissionsSeeder extends Seeder
 
       //  $store_user = Role::updateOrCreate(Constants::STORE_USER_ROLE);
 
-        $store_user->syncPermissions('store.product.*', 'store.product.index', 'store.product.create', 'store.product.update', 'store.product.view', 'store.product.item', 'store.request.*', 'store.request.index', 'store.request.approve', 'store.request.reject', 'store.records.*', 'store.records.index', 'store.records.view', 'store.records.edit', 'store.records.delete');
+        $store_user->syncPermissions('store.*','store.product.*', 'store.product.index', 'store.product.create', 'store.product.update', 'store.product.view', 'store.product.item', 'store.request.*', 'store.request.index', 'store.request.approve', 'store.request.reject', 'store.records.*', 'store.records.index', 'store.records.view', 'store.records.edit', 'store.records.delete');
 
 
 
-        $pharmacy_user->syncPermissions('pharmacy.prescriptions.*', 'pharmacy.prescriptions.index', 'pharmacy.prescriptions.approve', 'pharmacy.prescriptions.view', 'pharmacy.products.*', 'pharmacy.products.index', 'pharmacy.products.request', 'pharmacy.products.view', 'pharmacy.history.*');
+        $pharmacy_user->syncPermissions('pharmacy.*','pharmacy.prescriptions.*', 'pharmacy.prescriptions.index', 'pharmacy.prescriptions.approve', 'pharmacy.prescriptions.view', 'pharmacy.products.*', 'pharmacy.products.index', 'pharmacy.products.request', 'pharmacy.products.view', 'pharmacy.history.*');
 
-    
+
         }
     catch (\Exception $e) {
         Log::error('Error in PermissionsSeeder: ' . $e->getMessage());

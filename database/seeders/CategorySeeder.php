@@ -15,10 +15,7 @@ class CategorySeeder extends Seeder
      */
     public function run()
     {
-            // Category::factory()
-            //     ->count(5)
-            //     ->create();
-
+          
 
 
             $categories = [
@@ -42,17 +39,13 @@ class CategorySeeder extends Seeder
                 'Gastrointestinal Agents',
                 'Antihaemorrhoidal Agents',
             ];
-            $i=1;
+
             foreach ($categories as $category) {
-                DB::table('categories')->insert([
-                    'id'=>$i++,
+                Category::firstOrCreate([
                     'name' => $category,
-                    // You can set default values for other columns if needed
-                    'description' => null,
-                    'status' => null,
-                    'created_at' => now(),
-                    'updated_at' => now(),
                 ]);
+
+
             }
     }
 }

@@ -196,39 +196,29 @@
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
-                                                                     
-                                                                        @foreach ($encounters->sortByDesc('created_at') as $index => $encounter)
 
+                                                                        @foreach ($encounters->sortByDesc('created_at') as $index => $encounter)
                                                                             <tr>
                                                                                 <td>{{ $encounter->id }}</td>
                                                                                 <td>
-
                                                                                     {{ $encounter->created_at?->format('d M Y') ?? '-' }}
-
                                                                                 </td>
                                                                                 <td>{{ $encounter->student->fullName }}</td>
-
                                                                                 <td>{{ $encounter?->doctor->name ?? '-' }}</td>
-
-
-                          
-
                                                                                 <td>
                                                                                     @if ($loop->last)
-                                                                                    Closed
-                                                                                         @else
-                                                                                 
-                                                                                       <span class="badge badge-primary">       Last record </span>
-                                                                                          @endif
-                                                                                    
-                                                                                    
+                                                                                        Closed
+                                                                                    @else
+                                                                                        <span class="badge badge-primary"> Last
+                                                                                            record </span>
+                                                                                    @endif
                                                                                 <td>
                                                                                     <a href="{{ route('printSickLeave', ['encounterId' => $encounter->id]) }}"
                                                                                         class="btn btn-sm d-inline-block btn-outline-primary mr-3"
                                                                                         target="_blank">
-                                                                                         <i class="fas fa-print"></i> Print
-                                                                                     </a>
-                                                                                     
+                                                                                        <i class="fas fa-print"></i> Print
+                                                                                    </a>
+
 
                                                                                 </td>
                                                                             </tr>
@@ -259,35 +249,35 @@
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
-                                                                   
+
 
                                                                         @foreach ($student->encounter->sortByDesc('created_at') as $index => $enc)
-                                                                        <tr>
-                                                                            <td colspan="9"><b>{{ ucwords(strtolower($student->fullName)) }}</b>,
-                                                                                
-                                                                                &nbsp;Visit date:
-                                                                                {{ optional($enc->created_at)->format('d M Y') ?? '-' }}
-                                                                            </td>
-                                                                        </tr>
-
-                                                                        @if($enc->mainDiagnoses)
-                                                                        @foreach ($enc->mainDiagnoses  as  $maindiagnosis)
-                                                                        
                                                                             <tr>
+                                                                                <td colspan="9">
+                                                                                    <b>{{ ucwords(strtolower($student->fullName)) }}</b>,
 
-                                                                                <td> {{ $loop->index + 1 }} </td>
-                                                                                <td>
-
-                                                                                    {{ $maindiagnosis->encounter->created_at?->format('d M Y') ?? '-' }}
-
-                                                                                </td>
-                                                                                <td>{{ $maindiagnosis->diagnosis->name ?? '-' }}
-                                                                                </td>
-                                                                                <td>{{ $maindiagnosis->encounter?->doctor->name ?? '-' }}
+                                                                                    &nbsp;Visit date:
+                                                                                    {{ optional($enc->created_at)->format('d M Y') ?? '-' }}
                                                                                 </td>
                                                                             </tr>
-                                                                        @endforeach
-                                                                        @endif
+
+                                                                            @if ($enc->mainDiagnoses)
+                                                                                @foreach ($enc->mainDiagnoses as $maindiagnosis)
+                                                                                    <tr>
+
+                                                                                        <td> {{ $loop->index + 1 }} </td>
+                                                                                        <td>
+
+                                                                                            {{ $maindiagnosis->encounter->created_at?->format('d M Y') ?? '-' }}
+
+                                                                                        </td>
+                                                                                        <td>{{ $maindiagnosis->diagnosis->name ?? '-' }}
+                                                                                        </td>
+                                                                                        <td>{{ $maindiagnosis->encounter?->doctor->name ?? '-' }}
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                @endforeach
+                                                                            @endif
                                                                         @endforeach
                                                                     </tbody>
                                                                 </table>
@@ -317,42 +307,43 @@
                                                                     <tbody>
 
 
-                                                                    
+
                                                                         @foreach ($student->encounter->sortByDesc('created_at') as $index => $enc)
                                                                             <tr>
-                                                                                <td colspan="9"><b>{{ ucwords(strtolower($student->fullName)) }}</b>,
-                                                                                    
+                                                                                <td colspan="9">
+                                                                                    <b>{{ ucwords(strtolower($student->fullName)) }}</b>,
+
                                                                                     &nbsp;Visit date:
                                                                                     {{ optional($enc->created_at)->format('d M Y') ?? '-' }}
                                                                                 </td>
                                                                             </tr>
 
-                                                                            @if($enc->vitalSigns)
-                                                                            @foreach ($enc->vitalSigns  as $vitalSign)
+                                                                            @if ($enc->vitalSigns)
+                                                                                @foreach ($enc->vitalSigns as $vitalSign)
+                                                                                    <tr>
+
+                                                                                        <td> {{ $loop->index + 1 }} </td>
+                                                                                        <td> {{ $vitalSign->encounter->created_at?->format('d M Y') ?? '-' }}
+                                                                                        </td>
+
+                                                                                        <td>{{ $vitalSign->temp ?? '-' }}</td>
+                                                                                        <td>{{ $vitalSign->blood_pressure ?? '-' }}
+                                                                                        </td>
+                                                                                        <td>{{ $vitalSign->pulse_rate ?? '-' }}
+                                                                                        </td>
+                                                                                        <td>{{ $vitalSign->rr ?? '-' }}</td>
+                                                                                        <td>{{ $vitalSign->weight ?? '-' }}
+                                                                                        </td>
+                                                                                        <td>{{ $vitalSign->height ?? '-' }}
+                                                                                        </td>
+                                                                                        <td>{{ $vitalSign->muac ?? '-' }}</td>
 
 
-    
-                                                                            <tr>
-
-                                                                                <td> {{ $loop->index + 1 }} </td>
-                                                                                <td> {{ $vitalSign->encounter->created_at?->format('d M Y') ?? '-' }}
-                                                                                </td>
-
-                                                                                <td>{{ $vitalSign->temp ?? '-' }}</td>
-                                                                                <td>{{ $vitalSign->blood_pressure ?? '-' }}
-                                                                                </td>
-                                                                                <td>{{ $vitalSign->pulse_rate ?? '-' }}</td>
-                                                                                <td>{{ $vitalSign->rr ?? '-' }}</td>
-                                                                                <td>{{ $vitalSign->weight ?? '-' }}</td>
-                                                                                <td>{{ $vitalSign->height ?? '-' }}</td>
-                                                                                <td>{{ $vitalSign->muac ?? '-' }}</td>
-
-
-                                                                            </tr>
+                                                                                    </tr>
+                                                                                @endforeach
+                                                                            @endif
                                                                         @endforeach
-                                                                        @endif
-                                                                        @endforeach
-                                                                       
+
                                                                     </tbody>
                                                                 </table>
 
@@ -395,14 +386,15 @@
                                                                         @if ($student->encounter)
                                                                             @foreach ($student->encounter->sortByDesc('created_at') as $index => $enc)
                                                                                 <tr>
-                                                                                    <td colspan="9"><b>{{ ucwords(strtolower($student->fullName)) }}</b>,
-                                                                                        
+                                                                                    <td colspan="9">
+                                                                                        <b>{{ ucwords(strtolower($student->fullName)) }}</b>,
+
                                                                                         &nbsp;Encounter Date:
                                                                                         {{ optional($enc->created_at)->format('d M Y') ?? '-' }}
                                                                                     </td>
                                                                                 </tr>
 
-                                                                             
+
                                                                                 @foreach ($enc->labRequests as $labTestRequest)
                                                                                     <tr>
 
@@ -441,18 +433,18 @@
                                                     <div class="tab-pane" id="medicalRecords">
                                                         <div class="card mt-4">
                                                             <div class="card-body">
-                                                             
+
 
 
                                                                 <table class="table table-sm table-striped">
                                                                     <thead>
                                                                         <tr>
                                                                             <th>#</th>
-                                                                  
+
                                                                             <th>subjective</th>
                                                                             <th>Objective </th>
                                                                             <th>Assessment</th>
-                                                                            <th>Plan  </th>
+                                                                            <th>Plan </th>
 
                                                                         </tr>
                                                                     </thead>
@@ -460,29 +452,30 @@
                                                                         @if ($student->encounter)
                                                                             @foreach ($student->encounter->sortByDesc('created_at') as $index => $enc)
                                                                                 <tr>
-                                                                                    <td colspan="9"><b>{{ ucwords(strtolower($student->fullName)) }}</b>,
-                                                                                        
+                                                                                    <td colspan="9">
+                                                                                        <b>{{ ucwords(strtolower($student->fullName)) }}</b>,
+
                                                                                         &nbsp;Encounter Date:
                                                                                         {{ optional($enc->created_at)->format('d M Y') ?? '-' }}
                                                                                     </td>
                                                                                 </tr>
 
-                                                                             
+
                                                                                 @foreach ($enc->medicalRecords as $medicalRecord)
                                                                                     <tr>
 
                                                                                         <td> {{ $loop->index + 1 }} </td>
-                                                                                    
-                                                                                        <td>{{ $medicalRecord->subjective  ?? '-' }}
+
+                                                                                        <td>{{ $medicalRecord->subjective ?? '-' }}
                                                                                         </td>
                                                                                         <td>{{ $medicalRecord->objective ?? '-' }}
                                                                                         </td>
 
-                                                                                        <td>{{ $medicalRecord->assessment  ?? '-' }}
+                                                                                        <td>{{ $medicalRecord->assessment ?? '-' }}
                                                                                         </td>
-                                                                                        <td>{{ $medicalRecord->plan  ?? '-' }}
+                                                                                        <td>{{ $medicalRecord->plan ?? '-' }}
                                                                                         </td>
-                                                                                      
+
 
                                                                                     </tr>
                                                                                 @endforeach
@@ -1004,8 +997,7 @@
 
 
                     @if ($encounter->arrived_at != null)
-
-                 <div class="card-body">
+                        <div class="card-body">
 
                             <div class="row">
 
