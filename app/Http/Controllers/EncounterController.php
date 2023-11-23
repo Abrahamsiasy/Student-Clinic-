@@ -96,7 +96,8 @@ class EncounterController extends Controller
         $encounters = Encounter::where('status', 2)
             ->whereNotNull('doctor_id')
             ->where('doctor_id', $currentUserId)
-            ->whereDate('created_at',today())
+            //->whereDate('created_at',today())
+            ->whereDate('created_at', '>=', now()->subDays(2))
             ->oldest('id') // Order by 'id' in ascending order
             ->paginate(10)
             ->withQueryString();
@@ -381,6 +382,32 @@ class EncounterController extends Controller
 
         return redirect()->back()->with('error', 'Error happen while changing status.');
     }
+
+
+    public function approve(Request $request)
+    {
+
+        $labTestRequest_id = trim($request->input('labTestRequest_id'));
+        $labTestRequest = LabTestRequest::where('id',   $labTestRequest_id)->first();
+
+       $encounter = $labTestRequest->encounter;
+        if ($labTestRequest ) {
+
+            if($labTestRequest ->closed_at == null){
+                $labTestRequest->update(['closed_at' =>now()]);
+
+              } 
+           
+            return redirect()->back()->with('success', 'Lab result approved');
+
+           // return redirect()->route('app.encounters.show', ['encounter' =>$encounter])->with('success', 'Lab result approved');
+
+
+        }
+
+        return redirect()->back()->with('error', 'Error happen while approving lab');
+    }
+
 
 
     public function rechecin(Request $request)

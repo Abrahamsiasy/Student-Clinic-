@@ -58,6 +58,7 @@
                     ->flatMap->labRequests
                     ->whereNotNull('status')
                     ->whereNotNull('result')
+                    ->whereNull('closed_at') 
                     ->count();
                 @endphp
 

@@ -121,6 +121,8 @@ Route::prefix('/')->middleware('auth')->group(function () {
 
     Route::post('/toggle-arrival', [EncounterController::class, 'toggleArrival'])->name('toggleArrival');
 
+    Route::post('/approve', [EncounterController::class, 'approve'])->name('approval');
+
     Route::get('/encouter-list', [HomeController::class, 'getEncouter'])->name('encounter-list');
     Route::post('/autosearch-encounters', [HomeController::class, 'autoSearch'])->name('autosearch-encounters');
     Route::resource('clinic-users', ClinicUserController::class);
