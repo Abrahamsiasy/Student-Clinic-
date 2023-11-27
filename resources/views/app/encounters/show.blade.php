@@ -961,9 +961,31 @@
                     <div class="col-md-4 mb-2">
                         <i class="fa fa-caret-right"></i>
                         <span>Age:</span>
+                  
+
+                               
+                        @if($encounter->student->date_of_birth === null)
+                              
+                       
+                            {{-- {{ route('map-rfid') }} --}}
+                        <form method="post" action="#">  
+                            @csrf
+                            <input type="hidden" name="student_id" value="{{ $encounter->student->id }}">
+                            <input type="text"   required class="form-control-sm" autocomplete="off"  name="rfid" placeholder="Enter Age">
+                            <button type="submit" class="btn btn-sm btn-outline-primary mr-1" > <i class="icon fa fa-plus"></i> Save</button>
+                        </form>
+                   
+
+                    @else
                         <span style="color:red;">
                             {{ \Carbon\Carbon::parse($encounter->student->date_of_birth)->diff(\Carbon\Carbon::now())->format('%y years old') }}
                         </span>
+
+
+                    @endif
+
+
+
 
                     </div>
 
