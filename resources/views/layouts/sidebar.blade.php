@@ -418,7 +418,7 @@
                                     @can('view-any', App\Models\Encounter::class)
                                         <li class="nav-item">
                                             <a href="{{ route('encounter-list') }}"
-                                                class="nav-link {{ Request::is('reception*') ? 'active' : '' }}">
+                                                class="nav-link">
                                                 <i class="fa fa-caret-right nav-icon"></i>
                                                 <p>All encounters </p>
                                             </a>
@@ -428,7 +428,7 @@
                                     @can('view-any', App\Models\Encounter::class)
                                     <li class="nav-item">
                                         <a href="{{ route('encounters.opened') }}"
-                                            class="nav-link {{ Request::is('reception*') ? 'active' : '' }}">
+                                            class="nav-link">
                                             <i class="fa fa-caret-right nav-icon"></i>
                                             <p>Opened encounters </p>
                                         </a>
@@ -440,7 +440,7 @@
                                     @can('waiting-queue')
                                         <li class="nav-item">
                                             <a href="{{ route('encounters.index') }}"
-                                                class="nav-link {{ Request::is('encounters*') ? 'active' : '' }}">
+                                                class="nav-link">
                                                 <i class="fa fa-caret-right nav-icon"></i>
                                                 <p>Waiting Queues</p>
                                             </a>
@@ -454,19 +454,7 @@
                                             </a>
                                         </li>
                                     @endcan
-{{-- 
-                                    @can('view-lab-dispay')
-                                        <li class="nav-item ">
-                                            <a href="{{ route('lab-queue') }}" class="nav-link">
-                                                <i class="fa fa-caret-right nav-icon"></i>
-                                                <p>
-                                                    Lab Queue
 
-                                                </p>
-                                            </a>
-
-                                        </li>
-                                    @endcan --}}
                                     @can('view-OPD-dispay')
                                         <li class="nav-item ">
                                             <a href="{{ route('opd-queue') }}" class="nav-link">

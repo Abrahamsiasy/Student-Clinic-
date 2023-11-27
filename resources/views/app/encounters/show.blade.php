@@ -206,11 +206,15 @@
                                                                                 <td>{{ $encounter->student->fullName }}</td>
                                                                                 <td>{{ $encounter?->doctor->name ?? '-' }}</td>
                                                                                 <td>
-                                                                                    @if ($loop->last)
+                                                                                    @if ($encounter->status ==3)  
                                                                                         Closed
+                                                                                    @elseif ($encounter->status ==4)  
+                                                                                    Missed
+                                                                                    @elseif ($encounter->status ==2)
+                                                                                    In-progress
                                                                                     @else
-                                                                                        <span class="badge badge-primary"> Last
-                                                                                            record </span>
+
+                                                                                        <span class="badge badge-primary">Checked-in</span>
                                                                                     @endif
                                                                                 <td>
                                                                                     <a href="{{ route('printSickLeave', ['encounterId' => $encounter->id]) }}"
@@ -218,6 +222,16 @@
                                                                                         target="_blank">
                                                                                         <i class="fas fa-print"></i> Print
                                                                                     </a>
+
+
+                                                                                    @can('view', $encounter)
+                                                                                    <a href="{{ route('encounters.show', $encounter) }}">
+                                                                                        <button type="button" class="btn btn-sm btn-outline-primary mx-1">
+                                                                                            <i class="icon fa fa-list"></i> Details
+                                                                                        </button>
+                                                                                    </a>
+                                                                                @endcan
+
 
 
                                                                                 </td>

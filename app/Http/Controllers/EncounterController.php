@@ -16,6 +16,7 @@ use App\Models\ClinicUser;
 use App\Models\LabCatagory;
 use Illuminate\Http\Request;
 use App\Models\LabTestRequest;
+use Illuminate\Support\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
@@ -159,41 +160,39 @@ class EncounterController extends Controller
         return view('app.encounters.index', compact('encounters', 'search', 'rooms'));
     }
 
-
-
- 
+    public function updateEncounterStatus()
+    {
+      
+         Encounter::where('created_at', '<=', now()->subHour())
+        ->where('status', STATUS_IN_PROGRESS)
+        ->whereNull('arrived_at')
+        ->update(['status' => STATUS_MISSED]);
+    
+        return response()->json(['message' => 'Encounter statuses updated successfully']);
+    }
 
     public function openedEencounter(Request $request): View
     {
-        //dd(STATUS_IN_PROGRESS);
+       
         $this->authorize('view-any', Encounter::class);
         $clinic_id = Auth::user()->clinicUsers?->clinic_id;
-        // dd($clinic_id);
-
         $search = $request->get('search', '');
-        $status = STATUS_IN_PROGRESS; // list of students accepted by receptionist
-
-
-        // Retrieve encounters with the desired status
+    
         $desiredStatusEncountersQuery = Encounter::search($search)
-            ->where('status', $status);
+        ->where('status', STATUS_IN_PROGRESS)
+        ->whereNull('arrived_at')
+        ->whereNotNull('doctor_id');
 
         if ($clinic_id) {
             $desiredStatusEncountersQuery->where('clinic_id', $clinic_id);
         }
 
         $encounters = $desiredStatusEncountersQuery
-            ->orderBy('created_at', 'asc')
-            ->paginate(100)
+            ->orderBy('created_at', 'desc')
+            ->paginate(15)
             ->withQueryString();
-
-        // $reception_id = $encounters[0]?->registered_by;
         $rooms = Clinic::find($clinic_id)?->rooms;
-        // dd($rooms);
-
-
-        // dd($encounters);
-
+    
         return view('app.encounters.opened', compact('encounters', 'search', 'rooms'));
     }
 
