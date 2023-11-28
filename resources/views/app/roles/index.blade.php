@@ -57,7 +57,7 @@
                                             @can('update', $role)
                                                 <a href="{{ route('roles.edit', $role) }}">
                                                     <button type="button" class="btn btn-sm btn-outline-primary mx-1">
-                                                        <i class="fa fa-edit"></i> Edit
+                                                        <i class="fa fa-tasks"></i> Permissions
                                                     </button>
                                                 </a>
                                                 @endcan @can('view', $role)

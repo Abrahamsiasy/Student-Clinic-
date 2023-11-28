@@ -7,6 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class StockCategoryStoreRequest extends FormRequest
 {
     /**
+     *
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
@@ -19,6 +20,9 @@ class StockCategoryStoreRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [];
+        return [
+            'name' => ['required', 'max:255', 'string'],
+            'description' => ['nullable', 'max:255', 'string'],
+        ];
     }
 }

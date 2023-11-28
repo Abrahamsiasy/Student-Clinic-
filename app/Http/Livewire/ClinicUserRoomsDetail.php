@@ -65,9 +65,19 @@ class ClinicUserRoomsDetail extends Component
 
         $this->authorize('create', Room::class);
 
-        $this->clinicUser->rooms()->attach($this->room_id, []);
+        //dd($this->room_id);
+        //$clincUserRoom = $this->room_id;
+        $clincUser = $this->clinicUser;
+
+        $clincUser->room_id = $this->room_id;
+        // dd($clincUser->room_id);
+        // $this->clinicUser->clinics()->attach($this->clinic_id, []);
+
+        $clincUser->save();
+
 
         $this->hideModal();
+        $this->emit('refreshPage');
     }
 
     public function detach($room): void
@@ -81,11 +91,16 @@ class ClinicUserRoomsDetail extends Component
 
     public function render(): View
     {
+        // dd($this);
+        // $room = $this->clinicUser->room;
+        // dd($room);
+        // $room_name = $room->name;
+        // $room_id = $room->id;
+        $room_name = $this->clinicUser->room->name ?? '-';
+        $room_id = $this->clinicUser->room->id ?? '-';
         return view('livewire.clinic-user-rooms-detail', [
-            'clinicUserRooms' => $this->clinicUser
-                ->rooms()
-                ->withPivot([])
-                ->paginate(20),
+            'room_name' => $room_name,
+            'room_id' => $room_id,
         ]);
     }
 }

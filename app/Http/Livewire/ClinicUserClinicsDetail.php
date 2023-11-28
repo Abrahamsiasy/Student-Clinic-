@@ -15,7 +15,8 @@ class ClinicUserClinicsDetail extends Component
     public ClinicUser $clinicUser;
     public Clinic $clinic;
     public $clinicsForSelect = [];
-    public $clinic_id = null;
+    public $clinic_id;
+
 
     public $showingModal = false;
     public $modalTitle = 'New Clinic';
@@ -61,12 +62,19 @@ class ClinicUserClinicsDetail extends Component
 
     public function save(): void
     {
-        $this->validate();
+
+        dd($this);
+        // dd($this->clinicUser->clinic_id);
+        // $this->validate();
 
         $this->authorize('create', Clinic::class);
 
-        $this->clinicUser->clinics()->attach($this->clinic_id, []);
+        $clincUser = $this->clinicUser;
+        $clincUser->clinic_id = $this->clinic_id;
+        dd($clincUser);
+        // $this->clinicUser->clinics()->attach($this->clinic_id, []);
 
+        $clincUser->save();
         $this->hideModal();
     }
 
@@ -81,11 +89,13 @@ class ClinicUserClinicsDetail extends Component
 
     public function render(): View
     {
+        $clinic = $this->clinicUser->clinic ?? '-';
+        $clinic_name = $clinic->name ?? '-';
+        $clinic_id = $clinic->id ?? '-';
+
         return view('livewire.clinic-user-clinics-detail', [
-            'clinicUserClinics' => $this->clinicUser
-                ->clinics()
-                ->withPivot([])
-                ->paginate(20),
+            'clinic_name' => $clinic_name,
+            'clinic_id' => $clinic_id,
         ]);
     }
 }

@@ -2,13 +2,24 @@
 
 @section('content')
     <div class="">
+        @if (!$rooms)
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>Attention!</strong> You need to assign clinic and rooms to this user.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @endif
         <div class="searchbar mt-0 mb-4">
+
             <div class="row">
+
                 <div class="col-md-6">
                     <form>
                         <div class="input-group">
-                            <input id="indexSearch" type="text" name="search" placeholder="{{ __('crud.common.search') }}"
-                                value="{{ $search ?? '' }}" class="form-control" autocomplete="off" />
+                            <input id="indexSearch" type="text" name="search"
+                                placeholder="{{ __('crud.common.search') }}" value="{{ $search ?? '' }}"
+                                class="form-control" autocomplete="off" />
                             <div class="input-group-append">
                                 <button type="submit" class="btn btn-primary">
                                     <i class="icon io-md-search"></i>
@@ -18,11 +29,52 @@
                     </form>
                 </div>
                 <div class="col-md-6 text-right">
-                    @can('create', App\Models\Encounter::class)
-                        <a href="{{ route('encounters.create') }}" class="btn btn-primary">
-                            <i class="icon ion-md-add"></i> @lang('crud.common.create')
-                        </a>
-                    @endcan
+
+
+
+                    <button type="button" class="btn btn-sm d-inline-block btn-outline-primary" data-toggle="modal"
+                        data-target="#roomChangeModal">
+                        <i class="fas fa-door-open"></i></i>&nbsp; {{ Auth::user()->clinicUsers?->room?->name }}: Change
+                        Room </button>
+                    <!-- Change Room Modal Start-->
+                    <div class="modal fade" id="roomChangeModal" tabindex="-1" role="dialog"
+                        aria-labelledby="roomChangeModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="roomChangeModallLabel">Select a Room</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <form action="{{ route('encounters.all') }}" method="POST">
+                                    @csrf
+                                    <div class="modal-body">
+
+                                        <ul class="list-group">
+                                            <select id="doctorSelect" class="form-control" style="width: 100%;"
+                                                name="room_id">
+                                                @if ($rooms)
+                                                    @foreach ($rooms as $room)
+                                                        <option value="{{ $room->id }}">{{ $room->name }}</option>
+                                                    @endforeach
+                                                @endif
+                                            </select>
+                                        </ul>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-dismiss="modal">Cancel</button>
+                                        <button type="submit" class="btn btn-primary">Choose Room</button>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Change Room Modal end-->
+
                 </div>
             </div>
         </div>
@@ -48,9 +100,7 @@
                                 <th class="text-left">
                                     {{-- @lang('crud.encounters.inputs.status') --}}
 
-                                    @unless (auth()->user()->hasRole('doctor'))
-                                        Patient Name
-                                    @endunless
+                                    Patient Name
                                 </th>
 
                                 <th class="text-left">
@@ -73,6 +123,11 @@
                                 <th class="text-left">
                                     Status
                                 </th>
+
+                                <th class="text-left">
+                                    Doctor
+                                </th>
+
                                 <th class="text-center">
                                     @lang('crud.common.actions')
                                 </th>
@@ -88,9 +143,9 @@
                                         {{-- <td>{{ $encounter->student->id_number ?? '-' }}</td> --}}
                                     <td>{{ $encounter->student->id_number ?? '-' }}</td>
                                     <td>
-                                        @unless (auth()->user()->hasRole('doctor'))
-                                            {{ $encounter->student->fullName ?? '-' }}
-                                        @endunless
+                                        {{-- @unless (auth()->user()->hasRole('doctor')) --}}
+                                        {{ $encounter->student?->fullName ?? '-' }}
+                                        {{-- @endunless --}}
                                     </td>
                                     <td>
                                         @php
@@ -109,6 +164,9 @@
 
                                     <td>{{ optional($encounter->student)->sex ?? '-' }}</td>
 
+
+
+
                                     <td>{{ $encounter->check_in_time ? \Carbon\Carbon::parse($encounter->check_in_time)->format('M d, Y') : '-' }}
                                     </td>
                                     <td>
@@ -120,7 +178,7 @@
                                                     'color' => 'btn-outline-primary',
                                                 ],
                                                 STATUS_CHECKED_IN => [
-                                                    'name' => 'Accepted by Reception',
+                                                    'name' => 'Checked-in',
                                                     'description' => 'The patient has arrived at the clinic and registered their presence.',
                                                     'color' => 'btn-outline-success',
                                                 ],
@@ -187,6 +245,7 @@
                                         <!-- Status Description (Hidden) -->
                                         {{-- {{ $statusDetails[$encounter->status]['description'] ?? '-' }} --}}
                                     </td>
+                                    <td> {{ $encounter->doctor->name ?? '-' }}</td>
 
                                     <td class="text-center">
                                         <div role="group" aria-label="Row Actions" class="btn-group">
@@ -200,47 +259,51 @@
                                             {{-- @endcan  --}}
 
                                             <!-- Check if user is a doctor -->
-                                            @if (auth()->user()->hasRole(DOCTOR_ROLE))
+                                            {{-- @if (auth()->user()->hasRole(DOCTOR_ROLE)) --}}
+                                            @can('accept_patient')
                                                 @if ($key === 0 && $encounter->status === STATUS_CHECKED_IN)
                                                     <a href="{{ route('encounters.accept', $encounter) }}">
                                                         <button type="button" class="btn btn-sm btn-outline-primary mx-1">
-                                                            <i class="icon fa fa-user"></i> Accept
+                                                             <i class="icon far fa-clock"></i>  Accept
                                                         </button>
                                                     </a>
-                                                @else
-                                                    <button type="button" class="btn btn-sm btn-outline-primary mx-1"
-                                                        disabled>
-                                                        <i class="icon fa fa-user"></i> Accept
-                                                    </button>
-                                                @endif
-                                            @else
-                                                @can('view', $encounter)
-                                                    <a href="{{ route('encounters.show', $encounter) }}">
-                                                        <button type="button" class="btn btn-sm btn-outline-primary mx-1">
-                                                            <i class="icon fa fa-user"></i> Profile
-                                                        </button>
-                                                    </a>
-                                                @endcan
-                                            @endif
-                                            @if (auth()->user()->hasRole(['admin', 'super-admin']))
-                                                @can('update', $encounter)
-                                                    <a href="{{ route('encounters.edit', $encounter) }}">
-                                                        <button type="button" class="btn btn-sm btn-outline-primary mx-1">
-                                                            <i class="fa fa-edit"></i> Edit
-                                                        </button>
-                                                    </a>
-                                                @endcan
 
-                                                @can('delete', $encounter)
-                                                    <form data-route="{{ route('encounters.destroy', $encounter) }}"
-                                                        method="POST" id="deletebtnid">
-                                                        @csrf @method('DELETE')
-                                                        <button type="submit" class="btn btn-sm btn-outline-danger">
-                                                            <i class="fa fa-trash"></i> Delete
-                                                        </button>
-                                                    </form>
-                                                @endcan
-                                            @endif
+                                                @elseif ($key != 0 && $encounter->status === STATUS_CHECKED_IN)
+                                                <a href="{{ route('encounters.accept', $encounter) }}">
+                                                    <button type="button" class="btn btn-sm btn-outline-primary mx-1">
+                                                            <i class="icon far fa-clock"></i>  Waiting
+                                                    </button>
+                                                </a>
+                                          
+                                                @else
+                                                    @if ($encounter->status === STATUS_IN_PROGRESS)
+                                                        <a href="#">
+                                                            <button type="button" class="btn btn-sm btn-outline-success mx-1">
+                                                                 <i class="icon fa fa-user"></i>  In-progress
+                                                            </button>
+                                                        </a>
+                                                    @else
+                                                        <a href="#">
+                                                            <button type="button" class="btn btn-sm btn-outline-info mx-1">
+                                                                <i class="icon fa fa-check"></i> Case closed 
+                                                        </a>
+                                                    @endif
+                                                @endif
+                                            @endcan
+
+                                            @can('view', $encounter)
+                                                <a href="{{ route('encounters.show', $encounter) }}">
+                                                    <button type="button" class="btn btn-sm btn-outline-primary mx-1">
+                                                        <i class="icon fa fa-user"></i> Profile
+                                                    </button>
+                                                </a>
+                                            @endcan
+
+
+
+
+
+
                                     </td>
                                 </tr>
                             @endforeach

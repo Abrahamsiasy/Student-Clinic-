@@ -40,16 +40,25 @@
                         <thead>
                             <tr>
                                 <th>#</th>
+                                <th class="text-left">
+                                    Name
+                                </th>
                                 <th class="text-center">
                                     @lang('crud.common.actions')
                                 </th>
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse($stockCategories as $key => $stockCategory)
+                            @php
+                                $key=1
+                            @endphp
+                            @forelse($stockCategories as  $stockCategory)
                                 <tr>
 
-                                    <td> {{ $key + 1 }}
+                                    <td> {{ $key ++  }}
+                                    </td>
+                            <td>{{ $stockCategory->name ?? '-' }}</td>
+
                                     <td class="text-center">
                                         <div role="group" aria-label="Row Actions" class="btn-group">
                                             @can('update', $stockCategory)

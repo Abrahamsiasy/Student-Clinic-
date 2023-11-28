@@ -19,6 +19,12 @@ class Prescription extends Model
         'other_info',
         'main_diagnosis_id',
         'encounter_id',
+        'items_in_pharmacies_id',
+        'product_id',
+        'location_of_medication',
+        'clinic_id'
+
+
     ];
 
     protected $searchableFields = ['*'];
@@ -30,5 +36,10 @@ class Prescription extends Model
     public function encounter()
     {
         return $this->belongsTo(Encounter::class, 'encounter_id');
+    }
+
+    public function itemInPharmacy()
+    {
+        return $this->belongsTo(ItemsInPharmacy::class, 'items_in_pharmacies_id');
     }
 }

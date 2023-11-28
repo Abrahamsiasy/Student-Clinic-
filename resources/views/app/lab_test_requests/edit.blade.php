@@ -28,7 +28,7 @@
                     <button type="submit" class="btn btn-primary float-right">
                         <i class="icon ion-md-save"></i>
                         {{-- @lang('crud.common.update') --}}
-                        Send
+                        Save
                     </button>
                 </div>
             </x-form>

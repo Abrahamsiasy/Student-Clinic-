@@ -14,13 +14,16 @@
             <div class="mt-4"></div>
 
             <div class="mt-4">
-                <a
-                    href="{{ route('stock-categories.index') }}"
-                    class="btn btn-light"
-                >
-                    <i class="icon ion-md-return-left"></i>
-                    @lang('crud.common.back')
-                </a>
+
+
+                <div class="mb-4">
+                    <h5>Name</h5>
+                    <span>{{$stockCategory->name ?? '-' }}</span>
+                </div>
+                <div class="mb-4">
+                    <h5>Description</h5>
+                    <span>{{ $stockCategory->description ?? '-' }}</span>
+                </div>
 
                 @can('create', App\Models\StockCategory::class)
                 <a
@@ -34,7 +37,7 @@
         </div>
     </div>
 
-    @can('view-any', App\Models\Stock::class)
+    {{-- @can('view-any', App\Models\Stock::class)
     <div class="card mt-4">
         <div class="card-body">
             <h4 class="card-title w-100 mb-2">Stocks</h4>
@@ -44,6 +47,6 @@
             />
         </div>
     </div>
-    @endcan
+    @endcan --}}
 </div>
 @endsection

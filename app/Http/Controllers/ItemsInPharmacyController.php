@@ -25,8 +25,12 @@ class ItemsInPharmacyController extends Controller
         // $this->authorize('view-any', ItemsInPharmacy::class);
 
 
-        if (Auth::user()->hasRole(Constants::PHARMACY_USER)) {
+        if (Auth::user()->can('pharmacy.products.*')) {
             $pharmacyUser = PharmacyUser::where('user_id', Auth::user()->id)->first();
+            if($pharmacyUser==null){
+                return back()->withError('Pharmacist hasn\'t been assigned to any pharmacy yet ');
+            }
+            // dd($pharmacyUser);
             $pharmacy = Pharmacy::where('id', $pharmacyUser->pharmacy_id)->first();
 
             $search = $request->get('search', '');

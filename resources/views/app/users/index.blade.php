@@ -65,13 +65,13 @@
                                             @can('update', $user)
                                                 <a href="{{ route('users.edit', $user) }}">
                                                     <button type="button" class="btn btn-sm btn-outline-primary mx-1">
-                                                        <i class="fa fa-edit"></i> Edit
+                                                        <i class="fa fa-users"></i> Usergroup
                                                     </button>
                                                 </a>
                                                 @endcan @can('view', $user)
                                                 <a href="{{ route('users.show', $user) }}">
                                                     <button type="button" class="btn btn-sm btn-outline-primary mx-1">
-                                                        <i class="icon ion-md-eye"></i> Show
+                                                        <i class="fa fa-eye"></i> Show
                                                     </button>
                                                 </a>
                                                 @endcan @can('delete', $user)
@@ -79,7 +79,7 @@
                                                     onsubmit="return confirm('{{ __('crud.common.are_you_sure') }}')">
                                                     @csrf @method('DELETE')
                                                     <button type="submit" class="btn btn-sm btn-outline-danger mx-1">
-                                                        <i class="icon ion-md-trash"></i> Delete
+                                                        <i class="fa fa-trash"></i> Delete
                                                     </button>
                                                 </form>
                                             @endcan

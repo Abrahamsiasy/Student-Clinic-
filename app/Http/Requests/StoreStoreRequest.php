@@ -24,8 +24,8 @@ class StoreStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['nullable', 'max:255', 'string'],
-            'campus_id' => ['nullable', 'exists:campus,id'],
+            'name' => ['required', 'max:255', 'string'],
+            'campus_id' => ['required', 'exists:campus,id'],
             'description' => ['nullable', 'max:255', 'string'],
             'status' => ['required', 'max:255'],
         ];

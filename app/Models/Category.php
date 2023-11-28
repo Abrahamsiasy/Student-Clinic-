@@ -12,6 +12,7 @@ class Category extends Model
     use Searchable;
 
     protected $fillable = ['name', 'description', 'status'];
+    protected $table='categories';
 
     protected $searchableFields = ['*'];
 

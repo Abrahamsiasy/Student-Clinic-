@@ -19,6 +19,7 @@ class Item extends Model
         'supplier_name',
         'campany_name',
         'number_of_units',
+        'unit_type',
         'number_of_unit_per_pack',
         'unit_price',
         'price_per_unit',

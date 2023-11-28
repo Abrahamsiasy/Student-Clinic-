@@ -56,16 +56,13 @@ class OpdQueueCard extends AbstractWidget
         // 19 = Referral Approved
 
 
-        $opdQueue = Encounter::whereIn('status', [
-            STATUS_IN_PROGRESS
-        ])->get();
-        //dd($opdQueue->Doctor);
-        // dd($opdQueue->first()->Doctor ? $opdQueue->first()->Doctor->user->name : '-');
-        // dd($opdQueue->first()->Doctor->user->name);
+       // $opdQueue = Encounter::whereIn('status', [ STATUS_IN_PROGRESS])->get();
 
-        // dd($opdQueue->first()->Doctor->rooms->first());
-
-
+        $opdQueue = Encounter::whereIn('status', [STATUS_IN_PROGRESS])
+                    ->whereNull('arrived_at')
+                    ->get();
+      
+                    
 
         // Assuming $opdQueue is your collection
         $currentPage = request()->input('page', 1); // Get the current page from the request or default to 1

@@ -8,19 +8,32 @@
                 <a href="{{ route('lab-catagories.index') }}" class="mr-4"
                     ><i class="icon ion-md-arrow-back"></i
                 ></a>
-                @lang('crud.lab_catagories.show_title')
+           Lab Category Details
             </h4>
 
-            <div class="mt-4">
-                <div class="mb-4">
-                    <h5>@lang('crud.lab_catagories.inputs.lab_name')</h5>
-                    <span>{{ $labCatagory->lab_name ?? '-' }}</span>
-                </div>
-                <div class="mb-4">
-                    <h5>@lang('crud.lab_catagories.inputs.lab_desc')</h5>
-                    <span>{{ $labCatagory->lab_desc ?? '-' }}</span>
-                </div>
-            </div>
+
+            <table class="table" style="font-size: 20px;">
+                <thead>
+                  <tr>
+         
+                    <th scope="col">Lab Name</th>
+                    <th scope="col">  Description:</th>
+            
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+         
+                    <td>{{ $labCatagory->lab_name ?? '-' }} </td>
+                    <td>{{ $labCatagory->lab_desc ?? '-' }}</td>
+          
+                  </tr>
+     
+            
+                </tbody>
+              </table>
+
+
 
             <div class="mt-4">
                 <a

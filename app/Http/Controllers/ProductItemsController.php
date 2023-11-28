@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Resources\ItemResource;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ItemCollection;
-
+use Illuminate\Support\Facades\Auth;
 class ProductItemsController extends Controller
 {
     /**
@@ -17,7 +17,7 @@ class ProductItemsController extends Controller
      */
     public function index(Request $request, Product $product)
     {
-        dd("Here");
+        // dd("Here");
         // $this->authorize('view', $product);
 
         $search = $request->get('search', '');
@@ -38,9 +38,9 @@ class ProductItemsController extends Controller
      */
     public function store(Request $request, Product $product)
     {
-        dd("I am here");
+        // dd("I am here");
         // $this->authorize('create', Item::class);
-        if(Auth::user()->hasRole('Constants::STORE_USER_ROLE')){
+        if (Auth::user()->can('store.product.index')) {
 
             $validated = $request->validate([
                 'batch_number' => ['nullable', 'max:255', 'string'],
@@ -50,6 +50,7 @@ class ProductItemsController extends Controller
                 'campany_name' => ['nullable', 'max:255', 'string'],
                 'number_of_units' => ['nullable', 'numeric'],
                 'number_of_unit_per_pack' => ['nullable', 'numeric'],
+                'unit_type' => ['required', 'string'],
                 'unit_price' => ['nullable', 'numeric'],
                 'price_per_unit' => ['nullable', 'numeric'],
                 'profit_margit' => ['nullable', 'numeric'],

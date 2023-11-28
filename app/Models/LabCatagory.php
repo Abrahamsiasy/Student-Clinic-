@@ -26,4 +26,6 @@ class LabCatagory extends Model
     {
         return $this->hasMany(LabTestRequest::class);
     }
+
+   
 }

@@ -14,10 +14,11 @@ class Pharmacy extends Model
     protected $fillable = [
         'name',
         'admin_id',
-        'campus_id',
+        // 'campus_id',
         'status',
         'description',
         'clinic_id',
+        'store_id',
     ];
 
     protected $searchableFields = ['*'];
@@ -26,10 +27,10 @@ class Pharmacy extends Model
         'status' => 'boolean',
     ];
 
-    public function campus()
-    {
-        return $this->belongsTo(Campus::class);
-    }
+    // public function campus()
+    // {
+    //     return $this->belongsTo(Campus::class);
+    // }
 
     public function itemsInPharmacies()
     {
@@ -46,7 +47,7 @@ class Pharmacy extends Model
         return $this->hasMany(ItemRequest::class);
     }
 
-    public function user()
+    public function admin()
     {
         return $this->belongsTo(User::class);
     }
@@ -54,6 +55,10 @@ class Pharmacy extends Model
     public function clinic()
     {
         return $this->belongsTo(Clinic::class);
+    }
+
+    public function store(){
+        return $this->belongsTo(Store::class);
     }
 
     public function storesToPharmacies()

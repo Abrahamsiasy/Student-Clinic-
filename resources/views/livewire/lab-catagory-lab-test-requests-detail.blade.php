@@ -156,57 +156,42 @@
                             title="{{ trans('crud.common.select_all') }}" />
                     </th>
                     <th class="text-left">
-                        @lang('crud.lab_catagory_lab_test_requests.inputs.sample_collected_at')
+                    Sample taken at
+                    </th>
+                  
+                    <th class="text-left">
+                     Status
+                    </th>
+                 
+                    <th class="text-left">
+                    Note
                     </th>
                     <th class="text-left">
-                        @lang('crud.lab_catagory_lab_test_requests.inputs.sample_analyzed_at')
+                     Result
                     </th>
                     <th class="text-left">
-                        @lang('crud.lab_catagory_lab_test_requests.inputs.status')
+                     Comment
                     </th>
-                    <th class="text-left">
-                        @lang('crud.lab_catagory_lab_test_requests.inputs.notification')
-                    </th>
-                    <th class="text-left">
-                        @lang('crud.lab_catagory_lab_test_requests.inputs.note')
-                    </th>
-                    <th class="text-left">
-                        @lang('crud.lab_catagory_lab_test_requests.inputs.result')
-                    </th>
-                    <th class="text-left">
-                        @lang('crud.lab_catagory_lab_test_requests.inputs.comment')
-                    </th>
-                    <th class="text-left">
-                        @lang('crud.lab_catagory_lab_test_requests.inputs.analyser_result')
-                    </th>
-                    <th class="text-left">
-                        @lang('crud.lab_catagory_lab_test_requests.inputs.approved_at')
-                    </th>
+              
+             
                     <th class="text-right">
-                        @lang('crud.lab_catagory_lab_test_requests.inputs.price')
+                        Price
+                    </th>
+                    <th class="text-left"> 
+                    Sample ID
                     </th>
                     <th class="text-left">
-                        @lang('crud.lab_catagory_lab_test_requests.inputs.sample_id')
+                      Order on
                     </th>
                     <th class="text-left">
-                        @lang('crud.lab_catagory_lab_test_requests.inputs.ordered_on')
+                    Ordered by 
                     </th>
                     <th class="text-left">
-                        @lang('crud.lab_catagory_lab_test_requests.inputs.lab_test_request_group_id')
+                    Sample taken by
                     </th>
-                    <th class="text-left">
-                        @lang('crud.lab_catagory_lab_test_requests.inputs.sample_collected_by_id
-                                                                                                ')
-                    </th>
-                    <th class="text-left">
-                        @lang('crud.lab_catagory_lab_test_requests.inputs.sample_analyzed_by_id
-                                                                                                ')
-                    </th>
-                    <th class="text-left">
-                        @lang('crud.lab_catagory_lab_test_requests.inputs.approved_by_id
-                                                                                                ')
-                    </th>
-                    <th></th>
+             
+                 
+                 
                 </tr>
             </thead>
             <tbody class="text-gray-600">
@@ -218,15 +203,11 @@
                         <td class="text-left">
                             {{ $labTestRequest->sample_collected_at ?? '-' }}
                         </td>
-                        <td class="text-left">
-                            {{ $labTestRequest->sample_analyzed_at ?? '-' }}
-                        </td>
+                     
                         <td class="text-left">
                             {{ $labTestRequest->status ?? '-' }}
                         </td>
-                        <td class="text-left">
-                            {{ $labTestRequest->notification ?? '-' }}
-                        </td>
+                       
                         <td class="text-left">
                             {{ $labTestRequest->note ?? '-' }}
                         </td>
@@ -236,12 +217,8 @@
                         <td class="text-left">
                             {{ $labTestRequest->comment ?? '-' }}
                         </td>
-                        <td class="text-left">
-                            {{ $labTestRequest->analyser_result ?? '-' }}
-                        </td>
-                        <td class="text-left">
-                            {{ $labTestRequest->approved_at ?? '-' }}
-                        </td>
+                     
+                 
                         <td class="text-right">
                             {{ $labTestRequest->price ?? '-' }}
                         </td>
@@ -257,12 +234,8 @@
                         <td class="text-left">
                             {{ optional($labTestRequest->sampleCcollectedBy)->id ?? '-' }}
                         </td>
-                        <td class="text-left">
-                            {{ optional($labTestRequest->sampleAnalyzedBy)->id ?? '-' }}
-                        </td>
-                        <td class="text-left">
-                            {{ optional($labTestRequest->approvedBy)->id ?? '-' }}
-                        </td>
+                 
+                     
                         <td class="text-right">
                             <div role="group" aria-label="Row Actions" class="relative inline-flex align-middle">
                                 @can('update', $labTestRequest)

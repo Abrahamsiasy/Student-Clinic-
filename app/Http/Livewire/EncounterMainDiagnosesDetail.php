@@ -24,6 +24,8 @@ class EncounterMainDiagnosesDetail extends Component
     public $studentsForSelect = [];
     public $diagnosesForSelect = [];
 
+
+    public $mainDiagnosis_diagnosis_id;
     public $selected = [];
     public $editing = false;
     public $allSelected = false;
@@ -32,10 +34,10 @@ class EncounterMainDiagnosesDetail extends Component
     public $modalTitle = 'New MainDiagnosis';
 
     protected $rules = [
-        // 'mainDiagnosis.clinic_user_id' => [
-        //     'nullable',
-        //     'exists:clinic_users,id',
-        // ],
+        'mainDiagnosis.clinic_user_id' => [
+            'nullable',
+            'exists:clinic_users,id',
+        ],
         // 'mainDiagnosis.student_id' => ['nullable', 'exists:students,id'],
         'mainDiagnosis.diagnosis_id' => ['required', 'exists:diagnoses,id'],
     ];
@@ -94,6 +96,8 @@ class EncounterMainDiagnosesDetail extends Component
     public function save(): void
     {
         $this->validate();
+        // dd($this);
+        // get auth user?
 
 
         if (!$this->mainDiagnosis->encounter_id) {

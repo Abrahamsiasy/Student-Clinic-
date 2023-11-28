@@ -20,8 +20,8 @@ return [
         'created' => 'Successfully created',
         'saved' => 'Saved successfully',
         'removed' => 'Successfully removed',
-        'approved'=>'Successfully Approved',
-        'rejected'=>'Successfully Rejected'
+        'approved' => 'Successfully Approved',
+        'rejected' => 'Successfully Rejected'
     ],
 
     'appointments' => [
@@ -38,6 +38,22 @@ return [
             'encounter_id' => 'Encounter',
             'clinic_user_id' => 'Doctor',
             'student_id' => 'Student',
+        ],
+    ],
+
+    'videos' => [
+        'name' => 'Videos',
+        'index_title' => 'Videos List',
+        'new_title' => 'New Video',
+        'create_title' => 'Create Video',
+        'edit_title' => 'Edit Video',
+        'show_title' => 'Show Video',
+        'inputs' => [
+            'title' => 'Title',
+            'desc' => 'Desc',
+            'status' => 'Status',
+            'path' => 'Path',
+            'path' => 'Path',
         ],
     ],
 

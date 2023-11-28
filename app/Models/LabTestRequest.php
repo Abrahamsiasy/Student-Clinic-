@@ -31,7 +31,8 @@ class LabTestRequest extends Model
         'approved_by_id',
         'encounter_id',
         'lab_test_id',
-        'upload'
+        'upload',
+        'closed_at'
     
     ];
 
@@ -44,6 +45,7 @@ class LabTestRequest extends Model
         'sample_analyzed_at' => 'datetime',
         'approved_at' => 'datetime',
         'ordered_on' => 'datetime',
+        'closed_at'=> 'datetime',
        
     ];
 

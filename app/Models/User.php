@@ -28,6 +28,11 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function isSuperAdmin(): bool
+    {
+        return $this->hasRole('super-admin');
+    }
+
     public function getFullNameAttribute()
     {
         return ucfirst($this->name);
@@ -38,7 +43,7 @@ class User extends Authenticatable
     }
     public function storeUser()
     {
-        return $this->belongsTo(StoreUser::class);
+        return $this->hasOne(StoreUser::class);
     }
 
     public function pharmacyUsers()
@@ -47,10 +52,20 @@ class User extends Authenticatable
     }
 
 
-
-    public function isSuperAdmin(): bool
+    public function clinics()
     {
-        return $this->hasRole('super-admin');
+        return $this->belongsToMany(Clinic::class, 'clinic_clinic_user');
     }
+
+
+    public function encounters()
+    {
+        return $this->hasMany(Encounter::class,'doctor_id');
+    }
+
+
+
+
+
 
 }

@@ -36,14 +36,20 @@
                 </div>
 
                 <div class="table-responsive">
-                    <table class="table table-hover table-condensed">
+                    <table class="table table-hover  table-sm table-condensed">
                         <thead>
                             <tr>
                                 <th>#</th>
                                 <th class="text-left">
-                                    @lang('crud.prescriptions.inputs.drug_name')
+                                    Student ID
                                 </th>
                                 <th class="text-left">
+                                    Student Name
+                                </th>
+                                <th class="text-left">
+                                    @lang('crud.prescriptions.inputs.drug_name')
+                                </th>
+                                {{-- <th class="text-left">
                                     @lang('crud.prescriptions.inputs.dose')
                                 </th>
                                 <th class="text-left">
@@ -57,7 +63,7 @@
                                 </th>
                                 <th class="text-left">
                                     @lang('crud.prescriptions.inputs.main_diagnosis_id')
-                                </th>
+                                </th> --}}
                                 <th class="text-center">
                                     @lang('crud.common.actions')
                                 </th>
@@ -68,29 +74,42 @@
                                 <tr>
 
                                     <td> {{ $key + 1 }}
+                                    <td>{{ $prescription->encounter->student->full_name ?? '-' }}</td>
+                                    <td>{{ $prescription->encounter->student->id_number ?? '-' }}</td>
                                     <td>{{ $prescription->drug_name ?? '-' }}</td>
-                                    <td>{{ $prescription->dose ?? '-' }}</td>
+                                    {{-- <td>{{ $prescription->dose ?? '-' }}</td>
                                     <td>{{ $prescription->frequency ?? '-' }}</td>
                                     <td>{{ $prescription->duration ?? '-' }}</td>
                                     <td>{{ $prescription->other_info ?? '-' }}</td>
                                     <td>
                                         {{ optional($prescription->mainDiagnosis)->id ?? '-' }}
-                                    </td>
+                                    </td> --}}
                                     <td class="text-center">
                                         <div role="group" aria-label="Row Actions" class="btn-group">
-                                            @can('update', $prescription)
-                                                <a href="{{ route('prescriptions.edit', $prescription) }}">
-                                                    <button type="button" class="btn btn-sm btn-outline-primary mx-1">
-                                                        <i class="fa fa-edit"></i> Edit
-                                                    </button>
-                                                </a>
-                                                @endcan @can('view', $prescription)
+                                            @can('pharmacy.prescriptions.view')
                                                 <a href="{{ route('prescriptions.show', $prescription) }}">
                                                     <button type="button" class="btn btn-sm btn-outline-primary mx-1">
                                                         <i class="icon ion-md-eye"></i> Show
                                                     </button>
                                                 </a>
-                                                @endcan @can('delete', $prescription)
+                                            @endcan
+                                            @can('pharmacy.prescriptions.view')
+                                                <a href="{{ route('prescriptions.approve', $prescription) }}">
+                                                    <button type="button" class="btn btn-sm btn-outline-primary mx-1">
+
+                                                        Approve
+                                                    </button>
+                                                </a>
+                                            @endcan
+                                            @can('pharmacy.prescriptions.view')
+                                                <a href="{{ route('prescriptions.reject', $prescription) }}">
+                                                    <button type="button" class="btn btn-sm btn-outline-primary mx-1">
+                                                        Reject
+                                                    </button>
+                                                </a>
+                                            @endcan
+
+                                            {{-- @can('delete', $prescription)
                                                 <form action="{{ route('prescriptions.destroy', $prescription) }}"
                                                     method="POST"
                                                     onsubmit="return confirm('{{ __('crud.common.are_you_sure') }}')">
@@ -99,7 +118,7 @@
                                                         <i class="icon ion-md-trash"></i> Delete
                                                     </button>
                                                 </form>
-                                            @endcan
+                                            @endcan --}}
                                         </div>
                                     </td>
                                 </tr>

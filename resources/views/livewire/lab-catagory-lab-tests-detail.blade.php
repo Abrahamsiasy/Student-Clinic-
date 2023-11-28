@@ -70,7 +70,7 @@
     </x-modal>
 
     <div class="table-responsive">
-        <table class="table table-hover  table-sm table-condensed">
+        <table class="table table-hover  table-bordered table-sm " >
             <thead>
                 <tr>
                     <th>
@@ -78,20 +78,19 @@
                             title="{{ trans('crud.common.select_all') }}" />
                     </th>
                     <th class="text-left">
-                        @lang('crud.lab_catagory_lab_tests.inputs.test_name')
+                     Lab test Name
                     </th>
                     <th class="text-left">
-                        @lang('crud.lab_catagory_lab_tests.inputs.test_desc')
+                    Description
                     </th>
                     <th class="text-left">
-                        @lang('crud.lab_catagory_lab_tests.inputs.status')
+                        Total orders
                     </th>
                     <th class="text-left">
-                        @lang('crud.lab_catagory_lab_tests.inputs.is_available
-                                                                                                ')
+                    Status                                                                       
                     </th>
                     <th class="text-right">
-                        @lang('crud.lab_catagory_lab_tests.inputs.price')
+                     Price
                     </th>
                     <th></th>
                 </tr>
@@ -104,9 +103,20 @@
                         </td>
                         <td class="text-left">{{ $labTest->test_name ?? '-' }}</td>
                         <td class="text-left">{{ $labTest->test_desc ?? '-' }}</td>
-                        <td class="text-left">{{ $labTest->status ?? '-' }}</td>
+                        <td class="text-left">{{ $labTest->labTestRequests->count() ?? '0' }}</td>
                         <td class="text-left">
-                            {{ $labTest->is_available ?? '-' }}
+                              @if($labTest->is_available == 1)
+                       
+
+                              
+                            
+
+                              <span class="badge badge-info"> Avaliable </span>
+             
+                              @else
+                           
+                              <span class="badge badge-danger">   Not avaliable </span>
+                              @endif
                         </td>
                         <td class="text-right">{{ $labTest->price ?? '-' }}</td>
                         <td class="text-right">

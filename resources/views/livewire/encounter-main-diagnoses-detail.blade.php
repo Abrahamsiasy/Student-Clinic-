@@ -15,7 +15,7 @@
     </div>
 
     <x-modal id="encounter-main-diagnoses-modal" wire:model="showingModal">
-        <div class="modal-content">
+        <div class="modal-content" style="width: 900px;">
             <div class="modal-header">
                 <h5 class="modal-title">{{ $modalTitle }}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -45,14 +45,16 @@
                         </x-inputs.select>
                     </x-inputs.group> --}}
 
+
                     <x-inputs.group class="col-sm-12">
-                        <x-inputs.select name="mainDiagnosis.diagnosis_id" label="Diagnosis"
+                        <x-inputs.selecmodal name="mainDiagnosis.diagnosis_id" label="Diagnosis"
                             wire:model="mainDiagnosis.diagnosis_id">
-                            <option value="null" disabled>Please select the Diagnosis</option>
+                            <option value="null" disabled>-</option>
+
                             @foreach ($diagnosesForSelect as $value => $label)
                                 <option value="{{ $value }}">{{ $label }}</option>
                             @endforeach
-                        </x-inputs.select>
+                        </x-inputs.selecmodal>
                     </x-inputs.group>
                 </div>
             </div>

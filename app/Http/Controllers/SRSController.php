@@ -17,27 +17,13 @@ class SRSController extends Controller
     public function srsData()
     {
     
-            $this->setting();
+        $this->insert();
+        $this->setting();
     
     }
-        public function srsPhoto(Request $request)
-        {
-        
-        if ($request->input('syncphoto')) {
-            shell_exec(config('photo_sync_script'));
-            session()->flash('success', 'SRS Data Successfully Synchronized');
-        }
-        $campuses = DB::table('campuses')->count();
-        $programs  = DB::table('programs')->count();
-        $programLevels = DB::table('program_levels')->count();
-        $programTypes = DB::table('program_types')->count();
-        $enrollmentTypes = DB::table('enrollment_types')->count();
-        $colleges = DB::table('colleges')->count();
-        $departments = DB::table('departments')->count();
-
-        return view('srs_data.dashboard', compact('data'));
-    }
+       
     public function insert() {
+
 
     try {
         $dbcon = DB::connection('mysql_srs');
@@ -64,8 +50,8 @@ class SRSController extends Controller
             // Convert the result object to an associative array
             $value = (array) $value;
             try {
-                $moh = DB::connection('mysql');
-                $result = $moh->table($targetTable)->updateOrInsert(
+                $conn = DB::connection('mysql');
+                $result = $conn->table($targetTable)->updateOrInsert(
                     ['id_number' => $value['student_id']],
                     [
                         //'username' => $value['username'],   	
@@ -152,5 +138,15 @@ class SRSController extends Controller
         }
    
     }
+
+    public function srsPhoto(Request $request)
+    {
+    
+    if ($request->input('syncphoto')) {
+        shell_exec(config('photo_sync_script'));
+        session()->flash('success', 'SRS Data Successfully Synchronized');
+    }
+    return view('srs_data.dashboard', compact('data'));
+}
     
 }

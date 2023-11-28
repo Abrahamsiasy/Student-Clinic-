@@ -212,17 +212,13 @@
                     <th class="text-left"> Sent at   </th>
                     <th class="text-left"> Status </th>
                     <th class="text-left"> Result </th>
-                    <th class="text-left"> Comment </th>
-           
-        
+                    {{-- <th class="text-left"> Comment </th> --}}
                     <th class="text-left"> Replied at</th>
-              
                     <th class="text-left"> User  </th>
-                  
+                    <th class="text-left"> Approved </th>
                     @endcan 
 
                     {{-- @endif --}}
-
 
                 </tr>
             </thead>
@@ -231,18 +227,62 @@
 
                 {{-- @if (Auth::user()->hasRole('Lab_technician ')) --}}
                     <tr class="hover:bg-gray-100">
-                    <td class="text-left"> <input type="checkbox" value="{{ $labTestRequest->id }}" wire:model="selected"/></td>
+               
+                        <td class="text-left">
+                            <input type="checkbox" value="{{ $labTestRequest->id }}" wire:model="selected" {{ $labTestRequest->status ? 'disabled' : '' }}>
+                        </td>
+
                     <td class="text-left"> {{ optional($labTestRequest->labTest->labCatagory)->lab_name ?? '-' }} - {{ $labTestRequest->labTest->test_name ?? '-' }} </td>
                     <td class="text-left"> {{ $labTestRequest->created_at->diffForHumans()}} </td>
 
                     <td class="text-left"> @if($labTestRequest->status == 0) <span style= "color:red;"> Pending </span> @else <i class="fa fa-check"> </i>  @endif </td>
                     <td class="text-left" title=" {{ $labTestRequest->comment ?? '-' }} " > {{ $labTestRequest->result ?? '-' }} </td>
-                    <td class="text-left"> {{ $labTestRequest->comment ?? '-' }} </td>
+                    
+                    {{-- <td class="text-left"> {{ $labTestRequest->comment ?? '-' }} </td> --}}
                    
                     <td class="text-left"> {{ $labTestRequest->sample_collected_at ?->format('j F,Y') ?? '-' }} </td>
                 
                     <td class="text-left"> {{ optional($labTestRequest->approvedBy)->user->name ?? '-' }} </td>
                         
+
+                    <td class="text-left"> 
+                        
+                        <span>
+                            @if ($labTestRequest->closed_at  === null and $labTestRequest->result  != null)
+                                <form method="post" action="{{ route('approval') }}" class="form-inline">
+                                    @csrf
+                                 
+                                    <input type="hidden" name="labTestRequest_id" value="{{ $labTestRequest->id }}">
+
+                                    <button type="submit"
+                                        class="btn btn-sm d-inline-block btn-outline-primary mr-1 notification-badge">
+                                        <b> Approve</b>
+                                    </button>
+
+
+                                </form>
+
+                             @elseif($labTestRequest->closed_at  != null and $labTestRequest->result  != null)
+                            
+                                
+                                    <button type="submit" class="btn btn-sm btn-primary mr-1">
+                                        <i class="fa fa-check"> </i>  Closed
+                                    </button>
+                        
+
+                            @else
+                                
+                                
+                                    <button type="submit" class="btn btn-sm btn-primary mr-1">
+                                    Pending
+                                    </button>
+                               
+                            @endif
+                        </span>
+                       
+                    
+                    </td>
+
                 </tr>
                 {{-- @endif --}}
 

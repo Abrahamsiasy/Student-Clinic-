@@ -136,4 +136,26 @@ class ClinicUserController extends Controller
             ->route('clinic-users.index')
             ->withSuccess(__('crud.common.removed'));
     }
+
+    public function changeClinicClinic(Request $request, ClinicUser $clinicUser)
+    {
+        $clinicUser = ClinicUser::find($request->clinic_user_id);
+        if (!$clinicUser) {
+            return redirect()->back()->with('error', 'Clinic user not found.');
+        }
+        $clinicUser->clinic_id = $request->clinic_id;
+        $clinicUser->save();
+        return redirect()->back()->with('success', 'Clinic changed successfully.');
+    }
+
+    public function changeClinicRoom(Request $request, ClinicUser $clinicUser)
+    {
+        $clinicUser = ClinicUser::find($request->clinic_user_id);
+        if (!$clinicUser) {
+            return redirect()->back()->with('error', 'Room user not found.');
+        }
+        $clinicUser->room_id = $request->room_id;
+        $clinicUser->save();
+        return redirect()->back()->with('success', 'Room changed successfully.');
+    }
 }

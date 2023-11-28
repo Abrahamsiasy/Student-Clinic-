@@ -14,10 +14,12 @@ return new class extends Migration
     public function up()
     {
         Schema::create('videos', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('id');
+            $table->string('title');
             $table->string('desc');
-            $table->string('status');
-            $table->string('file_path'); // Add a column for storing the file path
+            $table->tinyInteger('status');
+            $table->string('path');
+
             $table->timestamps();
         });
     }

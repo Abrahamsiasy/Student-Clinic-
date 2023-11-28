@@ -19,81 +19,131 @@
                 </li>
             </ul>
 
+            <style>
+                .notification-badge {
+                    animation: blinkAnimation 0.5s infinite; /* Blinking animation */
+
+                }
+        
+
+                .notification-badge:hover {
+                    animation: none; /* Stop the animation on hover */
+                }
+                @keyframes blinkAnimation {
+                    0% { opacity: 1; }
+                    50% { opacity: 0; }
+                    100% { opacity: 1; }
+                }
+                .large-badge {
+                 font-size: 1.0em; /* Adjust the size as needed */
+                 }
+            </style>
+
             <!-- Right Side Of Navbar -->
             <ul class="navbar-nav ml-auto">
 
-                @if (Auth::user()->hasRole('Lab_technician'))
-                    <li class="nav-item">
-                        <a class="nav-link" data-toggle="dropdown" href="#">
-                            <i class="far fa-comments"></i>
-                            <span class="badge badge-danger navbar-badge">2</span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                            @auth
-                                <ul class="navbar-nav ml-auto">
+              
 
-                                    @if (Auth::user()->hasRole('lab_technician'))
-                                        <li class="nav-item">
-                                            <a class="nav-link" data-toggle="dropdown" href="#">
-                                                <i class="far fa-comments"></i>
-                                                <span class="badge badge-danger navbar-badge">2</span>
-                                            </a>
-                                            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
 
-                                                <span class="dropdown-item dropdown-header"><i
-                                                        class="far fa-bell mr-1"></i>Lab request Result </span>
+                @php
+                $pendingLabsCount = Auth::user()->encounters
+                    ->flatMap->labRequests
+                    ->where('status', null)
+                    ->where('result', null)
+                    ->count();
+                @endphp
 
-                                                <div class="dropdown-divider"></div>
+                @php
+                $labResultsCount = Auth::user()->encounters
+                    ->flatMap->labRequests
+                    ->whereNotNull('status')
+                    ->whereNotNull('result')
+                    ->whereNull('closed_at') 
+                    ->count();
+                @endphp
 
-                                                <a href="#" class="dropdown-item">
-                                                    <!-- Message Start -->
-                                                    <div class="media">
-                                                        <img src="{{ asset('user_photo/user.png') }}" width="30px;"
-                                                            class="img-circle elevation-2" alt="">
+    
+            
+                   @can('result_notification')
 
-                                                        <div class="media-body">
-                                                            <h3 class="dropdown-item-title">
-                                                                {{ Auth::user()->name }}
-                                                                <span class="float-right text-sm text-danger"><i
-                                                                        class="fas fa-star"></i></span>
-                                                            </h3>
-                                                            <p class="text-sm">-</p>
-                                                            <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i>
-                                                                5 lab results </p>
-                                                        </div>
-                                                    </div>
-                                                    <!-- Message End -->
-                                                </a>
-                                        </li>
-                                    @endif
-                                    <span class="dropdown-item dropdown-header"><i class="far fa-bell mr-1"></i>Lab request
-                                        Result
-                                    </span>
+                   <li class="nav-item dropdown">
+                    <a class="nav-link" data-toggle="dropdown" href="#">
+                      <i  style="color:white" class="fa fa-bell large-badge"></i>
+                       @if( $labResultsCount > 0)
+                        <span class="badge badge-warning navbar-badge large-badge notification-badge" style="color:black;">
+                        @else
+                        {{-- <span class="badge badge-warning navbar-badge large-badge" style="color:black;"> --}}
+                        @endif
+                        <b>{{ $labResultsCount ?? '-' }} </b></span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right ">
+                      <span class="dropdown-item dropdown-header  badge-warning"  style="font-size:16px;" ><b>    <i  style="color:black" class="fa fa-bell"></i> &nbsp;{{ $labResultsCount ?? '0' }} Laboratory Notifications </b></span>
+                      <div class="dropdown-divider"></div>
+                      <a href="#" class="dropdown-item">
+                        <i class="fas fa-download mr-2"></i> {{ $labResultsCount ?? '0' }}  New lab results
+                        <span class="float-right text-muted text-sm">3 mins ago</span>
+                      </a>
+                      <div class="dropdown-divider"></div>
+                      <a href="#" class="dropdown-item">
+                        <i class="fa fa-flask mr-2"></i> {{  $pendingLabsCount ?? '-' }}  Pending lab
+                        <span class="float-right text-muted text-sm">1 hours ago</span>
+                      </a>
+                      <div class="dropdown-divider"></div>
+                      
+                  
+                      <a href="#" class="dropdown-item">
+                        <i class="fa fa-flask mr-2"></i> {{  $pendingLabsCount +  $labResultsCount ?? '-' }}  Total labs
+                        <span class="float-right text-muted text-sm"> <i  class="fa fa-flask"></i> </span>
+                      </a>
+                      <div class="dropdown-divider"></div>
+                      
+                  
 
-                                    <div class="dropdown-divider"></div>
+                      <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
+                    </div>
+                
 
-                                    <a href="#" class="dropdown-item">
-                                        <!-- Message Start -->
-                                        <div class="media">
-                                            <img src="{{ asset('user_photo/user.png') }}" width="30px;"
-                                                class="img-circle elevation-2" alt="">
+                  </li>
+                  @endcan
+                @php
+               
+                  $labRequests = \App\Models\LabTestRequest::whereNull('status')
+                      ->whereNull('result')
+                      ->get();
+              @endphp   
+      @can('lab_notification')
+     <div class="dropdown-divider"></div>
+                <!-- Notifications Dropdown Menu -->
+     <li class="nav-item dropdown">
+        <a class="nav-link" data-toggle="dropdown" href="#">
+          <i  style="color:white" title="Laboratory Requests" class="fa fa-envelope large-badge"></i>
 
-                                            <div class="media-body">
-                                                <h3 class="dropdown-item-title">
 
-                                                    <span class="float-right text-sm text-danger"><i
-                                                            class="fas fa-star"></i></span>
-                                                </h3>
-                                                <p class="text-sm">-</p>
-                                                <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 5 lab
-                                                    results </p>
-                                            </div>
-                                        </div>
-                                        <!-- Message End -->
-                                    </a>
-                        </li>
-                    @endif
-                @endauth
+          @if( $labRequests->count() > 0)
+          <span class="badge badge-warning navbar-badge  large-badge notification-badge" style="color:black;">
+          @else
+          {{-- <span class="badge badge-warning navbar-badge large-badge " style="color:black;"> --}}
+          @endif
+            
+            <b> {{ $labRequests->count() ?? '0' }}</b></span>
+        </a>
+        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+          <span class="dropdown-item dropdown-header" style="font-size:18px; color:red;"> {{ $labRequests->count() ?? '0' }} New Lab requests</span>
+          
+
+        @foreach($labRequests as $labRequest)
+          <div class="dropdown-divider"></div>
+          <a href="#" class="dropdown-item">
+            <i class="fa fa-check  mr-2" aria-hidden="true"></i>    {{ $labRequest->labTest->test_name }}
+            <span class="float-right text-muted text-sm"> {{ $labRequest->created_at->diffForHumans() }} </span>
+          </a>
+          <div class="dropdown-divider"></div>
+          @endforeach
+          <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
+        </div>
+      </li>
+
+      @endcan
                 <li class="nav-item">
 
                     <a class="nav-link" data-toggle="dropdown" style="color:white; href="#">

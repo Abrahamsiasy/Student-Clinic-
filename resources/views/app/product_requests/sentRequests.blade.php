@@ -12,7 +12,8 @@
         $(function() {
             switch (getCookie('tab')) {
                 case "0":
-                $('#ongoing-tabs').toggleClass('show');
+                    $('#ongoing-tabs').toggleClass('show');
+                    $('#ongoing-tabs').toggleClass('show');
                     $('#ongoing-tabs').toggleClass('active');
                     $('#ongoing-tab').toggleClass('active');
                     break;
@@ -39,27 +40,19 @@
             document.cookie = "tab=" + tab + "; path={{ url()->current() }}";
         }
     </script>
-    <script>
-
-
-
-
-
-
-
-
-    </script>
+    <script></script>
+    <script></script>
 @endpush
 @section('content')
-    <div class="container">
+    <div class="">
         <div class="card">
 
             <div class="card-header p-0 pt-1 border-bottom-0">
                 <div class="d-flex justify-content-between">
                     <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link" id="schedule-tab" data-toggle="pill" href="#ongoing-tabs" role="tab"
-                                aria-controls="custom-tabs-one-tabs" aria-selected="false"
+                            <a class="nav-link active" id="schedule-tab" data-toggle="pill" href="#ongoing-tabs"
+                                role="tab" aria-controls="custom-tabs-one-tabs" aria-selected="false"
                                 onclick="setTabCookie(0)">OnGoing</a>
                         </li>
                         <li class="nav-item">
@@ -112,20 +105,23 @@
 
                             </div>
                         </div>
-
                         <div class="table-responsive">
-                            <table class="table table-borderless table-hover">
+                            <table class="table table-hover  table-sm table-condensed">
                                 <thead>
                                     <tr>
-                                        <th class="text-left">
-                                            @lang('crud.product_requests.inputs.amount')
-                                        </th>
-
+                                        <th>#</th>
                                         <th class="text-left">
                                             @lang('crud.product_requests.inputs.product_id')
                                         </th>
                                         <th class="text-left">
-                                            Pharmacy
+                                            Requested Amount
+                                        </th>
+                                        <th class="text-left">
+                                            Approved Amount
+                                        </th>
+
+                                        <th class="text-left">
+                                            Store
                                         </th>
 
                                         <th>Approved Date</th>
@@ -133,12 +129,17 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @php
+                                        $i = 1;
+                                    @endphp
                                     @forelse($ApprovedProductRequests as $ApprovedRequest)
                                         <tr>
-                                            <td>{{ $ApprovedRequest->amount ?? '-' }}</td>
+                                            <td>{{ $i++ }}</td>
                                             <td>
                                                 {{ optional($ApprovedRequest->product)->name ?? '-' }}
                                             </td>
+                                            <td>{{ $ApprovedRequest->amount ?? '-' }}</td>
+                                            <td>{{ $ApprovedRequest->approval_amount ?? '-' }}</td>
                                             <td>
                                                 {{ optional($ApprovedRequest->store)->name ?? '-' }}
                                             </td>
@@ -198,20 +199,27 @@
                         </div>
 
                         <div class="table-responsive">
-                            <table class="table table-borderless table-hover">
+                            <table class="table table-hover  table-sm table-condensed">
+                                @php
+                                    $i = 1;
+                                @endphp
                                 <thead>
                                     <tr>
-                                        <th class="text-left">
-                                            @lang('crud.product_requests.inputs.amount')
-                                        </th>
+                                        <th>#</th>
                                         <th class="text-left">
                                             @lang('crud.product_requests.inputs.product_id')
                                         </th>
+                                        <th class="text-left">
+                                           Requested Amount
+                                        </th>
 
                                         <th class="text-left">
-                                            Pharmacy
+                                            Store
                                         </th>
-                                        <th>Rejected Date</th>
+                                        <th class="text-left">
+                                            Rejection reason
+                                        </th>
+                                        <th>Rejection Date</th>
 
 
 
@@ -220,15 +228,20 @@
                                 <tbody>
                                     @forelse($RejectedProductRequests as $RejectedRequest)
                                         <tr>
-                                            <td>{{ $RejectedRequest->amount ?? '-' }}</td>
+                                            <th>{{ $i++ }}</th>
 
                                             <td>
                                                 {{ optional($RejectedRequest->product)->name ?? '-' }}
                                             </td>
+                                            <td>{{ $RejectedRequest->amount ?? '-' }}</td>
+
 
 
                                             <td>
                                                 {{ optional($RejectedRequest->store)->name ?? '-' }}
+                                            </td>
+                                            <td>
+                                                {{ $RejectedRequest->reason_of_rejection ?? '-' }}
                                             </td>
                                             <td>{{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $RejectedRequest->updated_at)->format('d-m-Y') }}
                                             </td>
@@ -263,7 +276,8 @@
 
                         <div style="display: flex; justify-content: space-between;">
                             <h4 class="card-title">
-                               On Going Production Request Lists
+                                On Going Production Request Lists
+
                             </h4>
                         </div>
 
@@ -296,9 +310,13 @@
                         </div>
 
                         <div class="table-responsive">
-                            <table class="table table-borderless table-hover">
+                            <table class="table table-hover  table-sm table-condensed">
+                                @php
+                                    $i = 1;
+                                @endphp
                                 <thead>
                                     <tr>
+                                        <th>#</th>
                                         <th class="text-left">
                                             @lang('crud.product_requests.inputs.amount')
                                         </th>
@@ -306,15 +324,17 @@
                                         <th class="text-left">
                                             @lang('crud.product_requests.inputs.product_id')
                                         </th>
-                                        @if (Auth::user()->hasRole(App\Constants::STORE_USER_ROLE))
+
+                                        @can('store.*')
                                             <th class="text-left">
                                                 Pharmacy
                                             </th>
-                                        @elseif (Auth::user()->hasRole(App\Constants::PHARMACY_USER))
+                                        @endcan
+                                        @can('pharmacy.*')
                                             <th class="text-left">
                                                 @lang('crud.product_requests.inputs.store_id')
                                             </th>
-                                        @endif
+                                        @endcan
                                         <th class="text-center">
                                             @lang('crud.common.actions')
                                         </th>
@@ -323,6 +343,7 @@
                                 <tbody>
                                     @forelse($RequestedProductRequests as $requestedProductRequest)
                                         <tr>
+                                            <th>{{ $i++ }}</th>
                                             <td>{{ $requestedProductRequest->amount ?? '-' }}</td>
                                             {{-- <td>
                                             {{ optional($productRequest->clinic)->name ??
@@ -331,15 +352,25 @@
                                             <td>
                                                 {{ optional($requestedProductRequest->product)->name ?? '-' }}
                                             </td>
-                                            @if (Auth::user()->hasRole(App\Constants::PHARMACY_USER))
+                                            {{-- @if (Auth::user()->hasRole(App\Constants::PHARMACY_USER)) --}}
+                                            @can('pharmacy.*')
                                                 <td>
                                                     {{ optional($requestedProductRequest->store)->name ?? '-' }}
                                                 </td>
-                                            @elseif (Auth::user()->hasRole(App\Constants::STORE_USER_ROLE))
+                                            @endcan
+                                            @can('store.*')
+                                                {{-- @elseif (Auth::user()->hasRole(App\Constants::STORE_USER_ROLE)) --}}
                                                 <td>
                                                     {{ optional($requestedProductRequest->pharmacy)->name ?? '-' }}
+
                                                 </td>
-                                            @endif
+                                            @endcan
+                                            {{-- @elseif (Auth::user()->hasRole(App\Constants::STORE_USER_ROLE))
+                                            <td>
+                                                </td>
+                                            @endif --}}
+                                            {{-- </td>  --}}
+                                            {{-- @endif --}}
                                             <td class="text-center" style="width: 134px;">
                                                 <div role="group" aria-label="Row Actions" class="btn-group">
                                                     {{-- @can('update', $productRequest) --}}
@@ -366,17 +397,19 @@
                                                 </a> --}}
 
                                                     {{-- @endcan @can('delete', $productRequest) --}}
-                                                    @if (Auth::user()->hasRole(App\Constants::PHARMACY_USER))
+                                                    {{-- @if (Auth::user()->hasRole(App\Constants::PHARMACY_USER)) --}}
+                                                    @can('pharmacy.*')
                                                         <form
                                                             action="{{ route('product-requests.destroy', $requestedProductRequest) }}"
                                                             method="POST"
                                                             onsubmit="return confirm('{{ __('crud.common.are_you_sure') }}')">
                                                             @csrf @method('DELETE')
-                                                            <button type="submit" class="btn btn-light text-danger">
+                                                            <button type="submit" class="btn btn-sm btn-outline-danger mx-1">
                                                                 Cancel
                                                             </button>
                                                         </form>
-                                                    @endif
+                                                    @endcan
+                                                    {{-- @endif --}}
                                                     {{-- @endcan --}}
                                                 </div>
                                             </td>

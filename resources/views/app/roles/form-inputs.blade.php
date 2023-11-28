@@ -13,7 +13,7 @@
         <h4>Assign @lang('crud.permissions.name')</h4>
 
         @foreach ($permissions as $permission)
-        <div>
+        <div class="">
             <x-inputs.checkbox
                 id="permission{{ $permission->id }}"
                 name="permissions[]"

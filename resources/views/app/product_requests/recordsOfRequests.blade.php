@@ -1,14 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
+    <div class="">
         <div class="card">
             <div class="card-header p-0 pt-1 border-bottom-0">
                 <div class="d-flex justify-content-between">
                     <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link" id="schedule-tab" data-toggle="pill" href="#approved-tabs" role="tab"
-                                aria-controls="custom-tabs-one-tabs" aria-selected="false"
+                            <a class="nav-link active" id="schedule-tab" data-toggle="pill" href="#approved-tabs"
+                                role="tab" aria-controls="custom-tabs-one-tabs" aria-selected="false"
                                 onclick="setTabCookie(0)">Approved Requestes</a>
                         </li>
                         <li class="nav-item">
@@ -57,7 +57,7 @@
                         </div>
 
                         <div class="table-responsive">
-                            <table class="table table-borderless table-hover">
+                              <table class="table table-hover  table-sm table-condensed">
                                 <thead>
                                     <tr>
                                         <th class="text-left">
@@ -141,7 +141,7 @@
                         </div>
 
                         <div class="table-responsive">
-                            <table class="table table-borderless table-hover">
+                              <table class="table table-hover  table-sm table-condensed">
                                 <thead>
                                     <tr>
                                         <th class="text-left">

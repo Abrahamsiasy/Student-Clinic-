@@ -26,13 +26,15 @@ class LabTestRequestController extends Controller
     {
         $this->authorize('view-any', LabTestRequest::class);
 
+        $labCategories = LabCatagory::all();
+
         $search = $request->get('search', '');
 
         $labTestRequests = LabTestRequest::search($search)->orderBy('created_at', 'ASC')->paginate(10)->withQueryString();
 
         return view(
             'app.lab_test_requests.index',
-            compact('labTestRequests', 'search')
+            compact('labTestRequests', 'labCategories','search')
         );
     }
 
@@ -47,8 +49,12 @@ class LabTestRequestController extends Controller
                 'encounter_id' => $encounter
             ]);
         }
-        // return redirect()->route('encounters.index')->with('message', 'Lab sent successfully');
-        return redirect()->route('encounters.index')->withSuccess(__('crud.common.created'));
+    
+
+        return redirect()->route('encounters.show', ['encounter' => $encounter])->with('success', 'Lab sent successfully');
+       // return redirect()->route('encounters.show', ['encounter' => $encounter])->withSuccess(__('crud.common.created'));
+        
+
     }
     public function storesurvey(Request $request)
     {

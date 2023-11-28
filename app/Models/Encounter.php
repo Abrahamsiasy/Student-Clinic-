@@ -20,6 +20,8 @@ class Encounter extends Model
         'student_id',
         'doctor_id',
         'registered_by',
+        'accepted_at',
+        'arrived_at'
     ];
 
     protected $searchableFields = ['*'];
@@ -73,6 +75,11 @@ class Encounter extends Model
         return $this->hasMany(MedicalRecord::class);
     }
 
+
+    public function labRequests()
+    {
+        return $this->hasMany(LabTestRequest::class);
+    }
     public function labTestRequestGroups()
     {
         return $this->hasMany(LabTestRequestGroup::class);

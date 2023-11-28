@@ -4,10 +4,12 @@ namespace Database\Seeders;
 
 use App\Constants;
 use Illuminate\Database\Seeder;
-use PHPUnit\TextUI\XmlConfiguration\Constant;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\User;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\PermissionRegistrar;
+use PHPUnit\TextUI\XmlConfiguration\Constant;
+use Illuminate\Support\Facades\Log;
 
 require_once app_path('Helper/constants.php');
 
@@ -16,272 +18,173 @@ class PermissionsSeeder extends Seeder
 {
     public function run(): void
     {
-        // Reset cached roles and permissions
+
+        try {
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
-        // findOrCreate default permissions
-        Permission::create(['name' => 'list appointments']);
-        Permission::create(['name' => 'view appointments']);
-        Permission::create(['name' => 'create appointments']);
-        Permission::create(['name' => 'update appointments']);
-        Permission::create(['name' => 'delete appointments']);
+        // updateOrCreate default permissions
+        Permission::updateOrCreate(['name' => 'list appointments']);
+        Permission::updateOrCreate(['name' => 'view appointments']);
+        Permission::updateOrCreate(['name' => 'create appointments']);
+        Permission::updateOrCreate(['name' => 'update appointments']);
+        Permission::updateOrCreate(['name' => 'delete appointments']);
 
-        Permission::create(['name' => 'list campuses']);
-        Permission::create(['name' => 'view campuses']);
-        Permission::create(['name' => 'create campuses']);
-        Permission::create(['name' => 'update campuses']);
-        Permission::create(['name' => 'delete campuses']);
+        Permission::updateOrCreate(['name' => 'list campuses']);
+        Permission::updateOrCreate(['name' => 'view campuses']);
+        Permission::updateOrCreate(['name' => 'create campuses']);
+        Permission::updateOrCreate(['name' => 'update campuses']);
+        Permission::updateOrCreate(['name' => 'delete campuses']);
 
-        Permission::create(['name' => 'list clinics']);
-        Permission::create(['name' => 'view clinics']);
-        Permission::create(['name' => 'create clinics']);
-        Permission::create(['name' => 'update clinics']);
-        Permission::create(['name' => 'delete clinics']);
+        Permission::updateOrCreate(['name' => 'list clinics']);
+        Permission::updateOrCreate(['name' => 'view clinics']);
+        Permission::updateOrCreate(['name' => 'create clinics']);
+        Permission::updateOrCreate(['name' => 'update clinics']);
+        Permission::updateOrCreate(['name' => 'delete clinics']);
 
-        Permission::create(['name' => 'list allclinicservices']);
-        Permission::create(['name' => 'view allclinicservices']);
-        Permission::create(['name' => 'create allclinicservices']);
-        Permission::create(['name' => 'update allclinicservices']);
-        Permission::create(['name' => 'delete allclinicservices']);
+        Permission::updateOrCreate(['name' => 'list allclinicservices']);
+        Permission::updateOrCreate(['name' => 'view allclinicservices']);
+        Permission::updateOrCreate(['name' => 'create allclinicservices']);
+        Permission::updateOrCreate(['name' => 'update allclinicservices']);
+        Permission::updateOrCreate(['name' => 'delete allclinicservices']);
 
-        Permission::create(['name' => 'list clinicusers']);
-        Permission::create(['name' => 'view clinicusers']);
-        Permission::create(['name' => 'create clinicusers']);
-        Permission::create(['name' => 'update clinicusers']);
-        Permission::create(['name' => 'delete clinicusers']);
+        Permission::updateOrCreate(['name' => 'list clinicusers']);
+        Permission::updateOrCreate(['name' => 'view clinicusers']);
+        Permission::updateOrCreate(['name' => 'create clinicusers']);
+        Permission::updateOrCreate(['name' => 'update clinicusers']);
+        Permission::updateOrCreate(['name' => 'delete clinicusers']);
 
-        Permission::create(['name' => 'list collages']);
-        Permission::create(['name' => 'view collages']);
-        Permission::create(['name' => 'create collages']);
-        Permission::create(['name' => 'update collages']);
-        Permission::create(['name' => 'delete collages']);
+        Permission::updateOrCreate(['name' => 'list collages']);
+        Permission::updateOrCreate(['name' => 'view collages']);
+        Permission::updateOrCreate(['name' => 'create collages']);
+        Permission::updateOrCreate(['name' => 'update collages']);
+        Permission::updateOrCreate(['name' => 'delete collages']);
 
-        Permission::create(['name' => 'list diagnoses']);
-        Permission::create(['name' => 'view diagnoses']);
-        Permission::create(['name' => 'create diagnoses']);
-        Permission::create(['name' => 'update diagnoses']);
-        Permission::create(['name' => 'delete diagnoses']);
+        Permission::updateOrCreate(['name' => 'list diagnoses']);
+        Permission::updateOrCreate(['name' => 'view diagnoses']);
+        Permission::updateOrCreate(['name' => 'create diagnoses']);
+        Permission::updateOrCreate(['name' => 'update diagnoses']);
+        Permission::updateOrCreate(['name' => 'delete diagnoses']);
 
-        Permission::create(['name' => 'list encounters']);
-        Permission::create(['name' => 'view encounters']);
-        Permission::create(['name' => 'create encounters']);
-        Permission::create(['name' => 'update encounters']);
-        Permission::create(['name' => 'delete encounters']);
+        Permission::updateOrCreate(['name' => 'list encounters']);
+        Permission::updateOrCreate(['name' => 'view encounters']);
+        Permission::updateOrCreate(['name' => 'create encounters']);
+        Permission::updateOrCreate(['name' => 'update encounters']);
+        Permission::updateOrCreate(['name' => 'delete encounters']);
 
-        Permission::create(['name' => 'list labcatagories']);
-        Permission::create(['name' => 'view labcatagories']);
-        Permission::create(['name' => 'create labcatagories']);
-        Permission::create(['name' => 'update labcatagories']);
-        Permission::create(['name' => 'delete labcatagories']);
+        Permission::updateOrCreate(['name' => 'list labcatagories']);
+        Permission::updateOrCreate(['name' => 'view labcatagories']);
+        Permission::updateOrCreate(['name' => 'create labcatagories']);
+        Permission::updateOrCreate(['name' => 'update labcatagories']);
+        Permission::updateOrCreate(['name' => 'delete labcatagories']);
 
-        Permission::create(['name' => 'list labtests']);
-        Permission::create(['name' => 'view labtests']);
-        Permission::create(['name' => 'create labtests']);
-        Permission::create(['name' => 'update labtests']);
-        Permission::create(['name' => 'delete labtests']);
+        Permission::updateOrCreate(['name' => 'list labtests']);
+        Permission::updateOrCreate(['name' => 'view labtests']);
+        Permission::updateOrCreate(['name' => 'create labtests']);
+        Permission::updateOrCreate(['name' => 'update labtests']);
+        Permission::updateOrCreate(['name' => 'delete labtests']);
 
-        Permission::create(['name' => 'list labtestrequests']);
-        Permission::create(['name' => 'view labtestrequests']);
-        Permission::create(['name' => 'create labtestrequests']);
-        Permission::create(['name' => 'update labtestrequests']);
-        Permission::create(['name' => 'delete labtestrequests']);
+        Permission::updateOrCreate(['name' => 'list labtestrequests']);
+        Permission::updateOrCreate(['name' => 'view labtestrequests']);
+        Permission::updateOrCreate(['name' => 'create labtestrequests']);
+        Permission::updateOrCreate(['name' => 'update labtestrequests']);
+        Permission::updateOrCreate(['name' => 'delete labtestrequests']);
 
-        Permission::create(['name' => 'list labtestrequestgroups']);
-        Permission::create(['name' => 'view labtestrequestgroups']);
-        Permission::create(['name' => 'create labtestrequestgroups']);
-        Permission::create(['name' => 'update labtestrequestgroups']);
-        Permission::create(['name' => 'delete labtestrequestgroups']);
+        Permission::updateOrCreate(['name' => 'list labtestrequestgroups']);
+        Permission::updateOrCreate(['name' => 'view labtestrequestgroups']);
+        Permission::updateOrCreate(['name' => 'create labtestrequestgroups']);
+        Permission::updateOrCreate(['name' => 'update labtestrequestgroups']);
+        Permission::updateOrCreate(['name' => 'delete labtestrequestgroups']);
 
-        Permission::create(['name' => 'list maindiagnoses']);
-        Permission::create(['name' => 'view maindiagnoses']);
-        Permission::create(['name' => 'create maindiagnoses']);
-        Permission::create(['name' => 'update maindiagnoses']);
-        Permission::create(['name' => 'delete maindiagnoses']);
+        Permission::updateOrCreate(['name' => 'list maindiagnoses']);
+        Permission::updateOrCreate(['name' => 'view maindiagnoses']);
+        Permission::updateOrCreate(['name' => 'create maindiagnoses']);
+        Permission::updateOrCreate(['name' => 'update maindiagnoses']);
+        Permission::updateOrCreate(['name' => 'delete maindiagnoses']);
 
-        Permission::create(['name' => 'list medicalrecords']);
-        Permission::create(['name' => 'view medicalrecords']);
-        Permission::create(['name' => 'create medicalrecords']);
-        Permission::create(['name' => 'update medicalrecords']);
-        Permission::create(['name' => 'delete medicalrecords']);
+        Permission::updateOrCreate(['name' => 'list medicalrecords']);
+        Permission::updateOrCreate(['name' => 'view medicalrecords']);
+        Permission::updateOrCreate(['name' => 'create medicalrecords']);
+        Permission::updateOrCreate(['name' => 'update medicalrecords']);
+        Permission::updateOrCreate(['name' => 'delete medicalrecords']);
 
-        Permission::create(['name' => 'list prescriptions']);
-        Permission::create(['name' => 'view prescriptions']);
-        Permission::create(['name' => 'create prescriptions']);
-        Permission::create(['name' => 'update prescriptions']);
-        Permission::create(['name' => 'delete prescriptions']);
+        Permission::updateOrCreate(['name' => 'list prescriptions']);
+        Permission::updateOrCreate(['name' => 'view prescriptions']);
+        Permission::updateOrCreate(['name' => 'create prescriptions']);
+        Permission::updateOrCreate(['name' => 'update prescriptions']);
+        Permission::updateOrCreate(['name' => 'delete prescriptions']);
 
-        Permission::create(['name' => 'list programs']);
-        Permission::create(['name' => 'view programs']);
-        Permission::create(['name' => 'create programs']);
-        Permission::create(['name' => 'update programs']);
-        Permission::create(['name' => 'delete programs']);
+        Permission::updateOrCreate(['name' => 'list programs']);
+        Permission::updateOrCreate(['name' => 'view programs']);
+        Permission::updateOrCreate(['name' => 'create programs']);
+        Permission::updateOrCreate(['name' => 'update programs']);
+        Permission::updateOrCreate(['name' => 'delete programs']);
 
-        Permission::create(['name' => 'list religions']);
-        Permission::create(['name' => 'view religions']);
-        Permission::create(['name' => 'create religions']);
-        Permission::create(['name' => 'update religions']);
-        Permission::create(['name' => 'delete religions']);
+        Permission::updateOrCreate(['name' => 'list religions']);
+        Permission::updateOrCreate(['name' => 'view religions']);
+        Permission::updateOrCreate(['name' => 'create religions']);
+        Permission::updateOrCreate(['name' => 'update religions']);
+        Permission::updateOrCreate(['name' => 'delete religions']);
 
-        Permission::create(['name' => 'list rooms']);
-        Permission::create(['name' => 'view rooms']);
-        Permission::create(['name' => 'create rooms']);
-        Permission::create(['name' => 'update rooms']);
-        Permission::create(['name' => 'delete rooms']);
+        Permission::updateOrCreate(['name' => 'list rooms']);
+        Permission::updateOrCreate(['name' => 'view rooms']);
+        Permission::updateOrCreate(['name' => 'create rooms']);
+        Permission::updateOrCreate(['name' => 'update rooms']);
+        Permission::updateOrCreate(['name' => 'delete rooms']);
 
-        Permission::create(['name' => 'list stocks']);
-        Permission::create(['name' => 'view stocks']);
-        Permission::create(['name' => 'create stocks']);
-        Permission::create(['name' => 'update stocks']);
-        Permission::create(['name' => 'delete stocks']);
+        Permission::updateOrCreate(['name' => 'list stocks']);
+        Permission::updateOrCreate(['name' => 'view stocks']);
+        Permission::updateOrCreate(['name' => 'create stocks']);
+        Permission::updateOrCreate(['name' => 'update stocks']);
+        Permission::updateOrCreate(['name' => 'delete stocks']);
 
-        Permission::create(['name' => 'list stockcategories']);
-        Permission::create(['name' => 'view stockcategories']);
-        Permission::create(['name' => 'create stockcategories']);
-        Permission::create(['name' => 'update stockcategories']);
-        Permission::create(['name' => 'delete stockcategories']);
+        Permission::updateOrCreate(['name' => 'list stockcategories']);
+        Permission::updateOrCreate(['name' => 'view stockcategories']);
+        Permission::updateOrCreate(['name' => 'create stockcategories']);
+        Permission::updateOrCreate(['name' => 'update stockcategories']);
+        Permission::updateOrCreate(['name' => 'delete stockcategories']);
 
-        Permission::create(['name' => 'list stockunits']);
-        Permission::create(['name' => 'view stockunits']);
-        Permission::create(['name' => 'create stockunits']);
-        Permission::create(['name' => 'update stockunits']);
-        Permission::create(['name' => 'delete stockunits']);
+        Permission::updateOrCreate(['name' => 'list stockunits']);
+        Permission::updateOrCreate(['name' => 'view stockunits']);
+        Permission::updateOrCreate(['name' => 'create stockunits']);
+        Permission::updateOrCreate(['name' => 'update stockunits']);
+        Permission::updateOrCreate(['name' => 'delete stockunits']);
 
-        Permission::create(['name' => 'list students']);
-        Permission::create(['name' => 'view students']);
-        Permission::create(['name' => 'create students']);
-        Permission::create(['name' => 'update students']);
-        Permission::create(['name' => 'delete students']);
+        Permission::updateOrCreate(['name' => 'list students']);
+        Permission::updateOrCreate(['name' => 'view students']);
+        Permission::updateOrCreate(['name' => 'create students']);
+        Permission::updateOrCreate(['name' => 'update students']);
+        Permission::updateOrCreate(['name' => 'delete students']);
 
-        Permission::create(['name' => 'list suppliers']);
-        Permission::create(['name' => 'view suppliers']);
-        Permission::create(['name' => 'create suppliers']);
-        Permission::create(['name' => 'update suppliers']);
-        Permission::create(['name' => 'delete suppliers']);
+        Permission::updateOrCreate(['name' => 'list suppliers']);
+        Permission::updateOrCreate(['name' => 'view suppliers']);
+        Permission::updateOrCreate(['name' => 'create suppliers']);
+        Permission::updateOrCreate(['name' => 'update suppliers']);
+        Permission::updateOrCreate(['name' => 'delete suppliers']);
 
-        Permission::create(['name' => 'list vitalsigns']);
-        Permission::create(['name' => 'view vitalsigns']);
-        Permission::create(['name' => 'create vitalsigns']);
-        Permission::create(['name' => 'update vitalsigns']);
-        Permission::create(['name' => 'delete vitalsigns']);
-        Permission::findOrCreate('view-dashboard');
-
-        // findOrCreate user role and assign existing permissions
-        $currentPermissions = Permission::all();
-        ///////////////////////////////////////////////////////
-
-        $userRole = Role::create(['name' => 'user']);
-        $doctorRole = Role::create(['name' => DOCTOR_ROLE]);
-        $labTechnicianRole = Role::create(['name' => 'lab_technician']);
-        $receptionRole = Role::create(['name' => 'reception']);
-        $pharmacyRole = Role::create(['name' => 'pharmacist']);
-        $physicianRole = Role::create(['name' => 'physician']);
-        $nurseRole = Role::create(['name' => 'nurse']);
-
-        // $userRole->givePermissionTo($currentPermissions);
-        // $labTechnicianRole->givePermissionTo($currentPermissions);
-        // $receptionRole->givePermissionTo($currentPermissions);
-        // $pharmacyRole->givePermissionTo($currentPermissions);
-        // $physicianRole->givePermissionTo($currentPermissions);
-        // $nurseRole->givePermissionTo($currentPermissions);
-        ///////////////////////////////////////////////////////////////////////////
-        // findOrCreate admin exclusive permissions
-        Permission::create(['name' => 'list roles']);
-        Permission::create(['name' => 'view roles']);
-        Permission::create(['name' => 'create roles']);
-        Permission::create(['name' => 'update roles']);
-        Permission::create(['name' => 'delete roles']);
-
-        Permission::create(['name' => 'list permissions']);
-        Permission::create(['name' => 'view permissions']);
-        Permission::create(['name' => 'create permissions']);
-        Permission::create(['name' => 'update permissions']);
-        Permission::create(['name' => 'delete permissions']);
-
-        Permission::create(['name' => 'list users']);
-        Permission::create(['name' => 'view users']);
-        Permission::create(['name' => 'create users']);
-        Permission::create(['name' => 'update users']);
-        Permission::create(['name' => 'delete users']);
-
-        // findOrCreate admin role and assign all permissions
-        $allPermissions = Permission::all();
-        $adminRole = Role::create(['name' => 'super-admin']);
-        $adminRole->givePermissionTo($allPermissions);
-
-        $adminUser = \App\Models\User::whereEmail('admin@admin.com')->first();
-
-        if ($adminUser) {
-            $adminUser->assignRole($adminRole);
-        }
+        Permission::updateOrCreate(['name' => 'list vitalsigns']);
+        Permission::updateOrCreate(['name' => 'view vitalsigns']);
+        Permission::updateOrCreate(['name' => 'create vitalsigns']);
+        Permission::updateOrCreate(['name' => 'update vitalsigns']);
 
 
-        $doctorUser = \App\Models\User::whereEmail('doctor@doctor.com')->first();
-        $permissionsForDoctor = [
-            'list appointments',
-            'create appointments',
-            'update appointments',
-            'delete appointments',
-            'list encounters',
-            'view encounters',
-            'create encounters',
-            'update encounters',
-            'delete encounters',
-            'list diagnoses',
-            'view diagnoses',
-            'create diagnoses',
-            'update diagnoses',
-            'delete diagnoses',
-            'list labtests',
-            'view labtests',
-            'create labtests',
-            'update labtests',
-            'delete labtests',
-            'list prescriptions',
-            'view prescriptions',
-            'create prescriptions',
-            'update prescriptions',
-            'delete prescriptions',
-            'list medicalrecords',
-            'view medicalrecords',
-            'create medicalrecords',
-            'update medicalrecords',
-            'delete medicalrecords',
-            'list vitalsigns',
-            'view vitalsigns',
-            'create vitalsigns',
-            'update vitalsigns',
-            'delete vitalsigns',
-            // Add other doctor-specific permissions here
-        ];
-        $doctorRole->givePermissionTo($permissionsForDoctor);
+        Permission::updateOrCreate(['name'=>'delete vitalsigns']);
+        Permission::updateOrCreate(['name'=>'view-dashboard']);
+        Permission::updateOrCreate(['name'=>'view-dashboard']);
+        Permission::updateOrCreate(['name'=>'sync-student']);
+        Permission::updateOrCreate(['name'=>'sync-photo']);
+        Permission::updateOrCreate(['name'=>'patient-checkin']);
+        Permission::updateOrCreate(['name'=>'view_lab_waiting']);
+        Permission::updateOrCreate(['name'=>'waiting-queue']);
+        Permission::updateOrCreate(['name'=>'view-lab-dispay']);
+        Permission::updateOrCreate(['name'=>'view-OPD-dispay']);
+        Permission::updateOrCreate(['name'=>'view-setting']);
+        Permission::updateOrCreate(['name'=>'accept_patient']);
+        Permission::updateOrCreate(['name' => 'reporting']);
+        Permission::updateOrCreate(['name' => 'lab_notification']);
+        Permission::updateOrCreate(['name' => 'result_notification']);
+    //////////////////////////////////////////////////////////
 
-        if ($doctorUser) {
-
-            $doctorUser->assignRole($doctorRole);
-        }
-
-        $permissionsForReception = [
-            'list appointments',
-            'view appointments',
-            'create appointments',
-            'update appointments',
-            'delete appointments',
-            'list encounters',
-            'view encounters',
-            'create encounters',
-            'update encounters',
-            'delete encounters',
-            // Add other reception-specific permissions here
-        ];
-        $receptionRole->givePermissionTo($permissionsForReception);
-
-        $receptionUser = \App\Models\User::whereEmail('reception@reception.com')->first();
-
-        if ($receptionUser) {
-            $receptionUser->assignRole($receptionRole);
-        }
-
-
+        Permission::findOrCreate('store.*');
         Permission::findOrCreate('store.product.*');
         Permission::findOrCreate('store.product.index');
         Permission::findOrCreate('store.product.create');
@@ -297,6 +200,7 @@ class PermissionsSeeder extends Seeder
         Permission::findOrCreate('store.records.edit');
         Permission::findOrCreate('store.records.view');
         Permission::findOrCreate('store.records.delete');
+        Permission::findOrCreate('pharmacy.*');
         Permission::findOrCreate('pharmacy.prescriptions.*');
         Permission::findOrCreate('pharmacy.prescriptions.index');
         Permission::findOrCreate('pharmacy.prescriptions.approve');
@@ -308,71 +212,49 @@ class PermissionsSeeder extends Seeder
         Permission::findOrCreate('pharmacy.products.request');
         Permission::findOrCreate('pharmacy.products.view');
         Permission::findOrCreate('pharmacy.history.*');
-      
 
-        
+    //////////////////////////////////////////////////////////////////
+
+        // updateOrCreate admin exclusive permissions
+        Permission::updateOrCreate(['name' => 'list roles']);
+        Permission::updateOrCreate(['name' => 'view roles']);
+        Permission::updateOrCreate(['name' => 'create roles']);
+        Permission::updateOrCreate(['name' => 'update roles']);
+        Permission::updateOrCreate(['name' => 'delete roles']);
+
+        Permission::updateOrCreate(['name' => 'list permissions']);
+        Permission::updateOrCreate(['name' => 'view permissions']);
+        Permission::updateOrCreate(['name' => 'create permissions']);
+        Permission::updateOrCreate(['name' => 'update permissions']);
+        Permission::updateOrCreate(['name' => 'delete permissions']);
+
+        Permission::updateOrCreate(['name' => 'list users']);
+        Permission::updateOrCreate(['name' => 'view users']);
+        Permission::updateOrCreate(['name' => 'create users']);
+        Permission::updateOrCreate(['name' => 'update users']);
+        Permission::updateOrCreate(['name' => 'delete users']);
 
 
-        $store_user = Role::findOrCreate(Constants::STORE_USER_ROLE);
-        $store_user->syncPermissions('store.product.*', 'store.product.index', 'store.product.create', 'store.product.update', 'store.product.view', 'store.product.item', 'store.request.*', 'store.request.index', 'store.request.approve', 'store.request.reject', 'store.records.*', 'store.records.index', 'store.records.view', 'store.records.edit', 'store.records.delete');
 
-        $pharmacy_user = Role::findOrCreate(Constants::PHARMACY_USER);
-        $pharmacy_user->syncPermissions('pharmacy.prescriptions.*', 'pharmacy.prescriptions.index', 'pharmacy.prescriptions.approve', 'pharmacy.prescriptions.view', 'pharmacy.products.*', 'pharmacy.products.index', 'pharmacy.products.request', 'pharmacy.products.view', 'pharmacy.history.*');
 
-        // $doctorRole->syncPermissions([
-        //     'list appointments',
-        //     'view appointments',
-        //     'create appointments',
-        //     'update appointments',
-        //     'delete appointments',
+        $pharmacy_user = Role::updateOrCreate(['name' => Constants::PHARMACY_USER]);
+        $store_user = Role::updateOrCreate(['name' => Constants::STORE_USER_ROLE]);
 
-        //     'list encounters',
-        //     'view encounters',
-        //     'create encounters',
-        //     'update encounters',
-        //     'delete encounters',
 
-        //     'list labtests',
-        //     'view labtests',
-        //     'create labtests',
-        //     'update labtests',
-        //     'delete labtests',
 
-        //     'list prescriptions',
-        //     'view prescriptions',
-        //     'create prescriptions',
-        //     'update prescriptions',
-        //     'delete prescriptions',
+      //  $store_user = Role::updateOrCreate(Constants::STORE_USER_ROLE);
 
-        //     'list medicalrecords',
-        //     'view medicalrecords',
-        //     'create medicalrecords',
-        //     'update medicalrecords',
-        //     'delete medicalrecords',
+        $store_user->syncPermissions('store.*','store.product.*', 'store.product.index', 'store.product.create', 'store.product.update', 'store.product.view', 'store.product.item', 'store.request.*', 'store.request.index', 'store.request.approve', 'store.request.reject', 'store.records.*', 'store.records.index', 'store.records.view', 'store.records.edit', 'store.records.delete');
 
-        //     'list vitalsigns',
-        //     'view vitalsigns',
-        //     'create vitalsigns',
-        //     'update vitalsigns',
-        //     'delete vitalsigns',
 
-        //     'list diagnoses',
-        //     'view diagnoses',
-        //     'create diagnoses',
-        //     'update diagnoses',
-        //     'delete diagnoses',
 
-        //     'list labtestrequests',
-        //     'view labtestrequests',
-        //     'create labtestrequests',
-        //     'update labtestrequests',
-        //     'delete labtestrequests',
+        $pharmacy_user->syncPermissions('pharmacy.*','pharmacy.prescriptions.*', 'pharmacy.prescriptions.index', 'pharmacy.prescriptions.approve', 'pharmacy.prescriptions.view', 'pharmacy.products.*', 'pharmacy.products.index', 'pharmacy.products.request', 'pharmacy.products.view', 'pharmacy.history.*');
 
-        //     'list maindiagnoses',
-        //     'view maindiagnoses',
-        //     'create maindiagnoses',
-        //     'update maindiagnoses',
-        //     'delete maindiagnoses'
-        // ]);
+
+        }
+    catch (\Exception $e) {
+        Log::error('Error in PermissionsSeeder: ' . $e->getMessage());
     }
+    }
+
 }

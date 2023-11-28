@@ -5,9 +5,24 @@
         <div class="card">
             <div class="card-body">
                 <h4 class="card-title">
+
                     <a href="{{ route('clinic-users.index') }}" class="mr-4"><i class="icon ion-md-arrow-back"></i></a>
                     @lang('crud.clinic_users.edit_title')
                 </h4>
+
+
+                @if (session('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
+                @if (session('error'))
+                    <div class="alert alert-danger">
+                        {{ session('error') }}
+                    </div>
+                @endif
+
 
                 <x-form method="PUT" action="{{ route('clinic-users.update', $clinicUser) }}" class="mt-4">
                     @include('app.clinic_users.form-inputs')

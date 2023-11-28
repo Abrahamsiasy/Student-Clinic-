@@ -81,6 +81,12 @@ class ClinicUser extends Model
         return $this->belongsToMany(Clinic::class);
     }
 
+    public function clinic()
+    {
+        return $this->belongsTo(Clinic::class);
+    }
+
+
     public function rooms()
     {
         return $this->belongsToMany(Room::class);

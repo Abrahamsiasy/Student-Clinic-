@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Pharmacy;
 use App\Models\Scopes\Searchable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -55,5 +56,10 @@ class Clinic extends Model
     public function clinicUsers()
     {
         return $this->belongsToMany(ClinicUser::class);
+    }
+
+    public function clinicPharmcy()
+    {
+        return $this->hasOne(Pharmacy::class);
     }
 }

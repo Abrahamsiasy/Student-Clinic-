@@ -2,14 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants;
 
 use App\Models\Campus;
 use App\Models\Pharmacy;
+use App\Models\StoresToPharmacy;
 use Illuminate\Http\Request;
 use App\Http\Requests\PharmacyStoreRequest;
 use App\Http\Requests\PharmacyUpdateRequest;
 use App\Models\Clinic;
+use App\Models\PharmacyUser;
+use App\Models\Store;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+
 
 require_once app_path('Helper/constants.php');
 class PharmacyController extends Controller
@@ -40,11 +46,11 @@ class PharmacyController extends Controller
     {
         $this->authorize('create', Pharmacy::class);
 
-        $campuses = Campus::pluck('name', 'id');
+        // $campuses = Campus::pluck('name', 'id');
         $users=User::pluck('name','id');
         $clinics=Clinic::pluck('name','id');
-
-        return view('app.pharmacies.create', compact('campuses','users','clinics'));
+        $stores=Store::pluck('name','id');
+        return view('app.pharmacies.create', compact('users','clinics','stores'));
     }
 
     /**
@@ -53,14 +59,17 @@ class PharmacyController extends Controller
      */
     public function store(PharmacyStoreRequest $request)
     {
-        // dd($request);
+
         $this->authorize('create', Pharmacy::class);
-        $validated=
+
 
         $validated = $request->validated();
-        $validated['clinic_id']=$request->clinic_id;
-     //   dd($validated);
+        // $validated['clinic_id']=$request->clinic_id;
+        // $validated['store_id']=$request->store_id;
+
         $pharmacy = Pharmacy::create($validated);
+
+        StoresToPharmacy::create(['pharmacy_id'=>$pharmacy->id,'store_id'=>$validated['store_id']]);
 
         return redirect()
             ->route('pharmacies.index', $pharmacy)
@@ -92,7 +101,8 @@ class PharmacyController extends Controller
 
         $users=User::pluck('name','id');
         $clinics=Clinic::pluck('name','id');
-        return view('app.pharmacies.edit', compact('pharmacy', 'campuses','users','clinics'));
+        $stores=Store::pluck('name','id');
+        return view('app.pharmacies.edit', compact('pharmacy', 'campuses','users','clinics','stores'));
     }
 
     /**
@@ -105,9 +115,11 @@ class PharmacyController extends Controller
         $this->authorize('update', $pharmacy);
 
         $validated = $request->validated();
+        $validated['store_id']=$request->store_id;
+        $validated['clinic_id']=$request->clinic_id;
 
         $pharmacy->update($validated);
-
+        StoresToPharmacy::where('pharmacy_id',$pharmacy->id)->update(['store_id'=>$validated['store_id']]);
         return redirect()
             ->route('pharmacies.edit', $pharmacy)
             ->withSuccess(__('crud.common.saved'));
@@ -127,5 +139,21 @@ class PharmacyController extends Controller
         return redirect()
             ->route('pharmacies.index')
             ->withSuccess(__('crud.common.removed'));
+    }
+
+
+    public function studentHistory(Request $request){
+
+        if (Auth::user()->can('pharmacy.history.*')) {
+            $pharmacyUser = PharmacyUser::where('user_id', Auth::user()->id)->first();
+            if($pharmacyUser==null){
+                return back()->withError('Pharmacist has been assigned to any pharmacy yet ');
+            }
+            $pharmacy = Pharmacy::where('id', $pharmacyUser->pharmacy_id)->first();
+            // dd($pharmacy->id);
+
+            return view('app.history.pharmacy_student_history');
+        }
+
     }
 }

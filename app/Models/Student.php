@@ -18,7 +18,7 @@ class Student extends Model
         'sex',
         'photo',
         'id_number',
-        //'encounter_id',
+        'rfid',
     ];
 
     protected $searchableFields = ['*'];

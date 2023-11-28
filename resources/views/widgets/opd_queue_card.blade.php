@@ -19,14 +19,37 @@
                 <div class="inner">
                     {{-- @dump($encounter) --}}
                     <h3>{{ $encounter->student->id_number ?? '-' }}</h3>
-                    <p>
-                        {{-- {{ $encounter->first()->Doctor ? $encounter->first()->Doctor->user->name : '-' }} --}}
-                        {{ $encounter->Doctor ? $encounter->Doctor->name : '-' }}
+                    <div class="d-flex justify-content">
+                        <p>
+                          Called at  {{ $encounter->updated_at->diffForHumans() }} 
+                        </p>
+                        {{-- <p class="px-2">
+                        
+                            <span id="timeCounter" class="right badge badge-danger">
+                                @if ($encounter->accepted_at)
+                                    @php
+                                        $acceptedTime = \Carbon\Carbon::parse($encounter->accepted_at);
+                                        $diffInMinutes = $acceptedTime->diffInMinutes();
+                                        $diffInHours = $acceptedTime->diffInHours();
+                                        $diffInDays = $acceptedTime->diffInDays();
+                                    @endphp
 
-                        {{-- {{ dd($opdQueue->first()->Doctor->rooms->first()->name) }} --}}
+                                    @if ($diffInMinutes < 60)
+                                        {{ $diffInMinutes }} minutes ago
+                                    @elseif($diffInHours < 24)
+                                        {{ $diffInHours }} hours ago
+                                    @else
+                                        {{ $diffInDays }} days ago
+                                    @endif
+                                @else
+                                    No accepted time available.
+                                @endif
+                            </span>
 
-                    </p>
 
+
+                        </p> --}}
+                    </div>
                 </div>
                 <div class="icon">
                     <i class="ion ion-stat text-light font-weight-bold"><span class="small text-md">

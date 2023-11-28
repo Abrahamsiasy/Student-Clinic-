@@ -11,14 +11,13 @@ class StockCategory extends Model
     use HasFactory;
     use Searchable;
 
-    protected $fillable = [];
+    protected $fillable = ['name', 'description', 'status'];
+    protected $table='categories';
 
     protected $searchableFields = ['*'];
 
-    protected $table = 'stock_categories';
-
-    public function stocks()
+    public function products()
     {
-        return $this->hasMany(Stock::class);
+        return $this->hasMany(Product::class);
     }
 }

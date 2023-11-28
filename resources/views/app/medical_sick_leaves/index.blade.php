@@ -5,56 +5,73 @@
         <div class="card m-3 p-3">
             <!-- Content Wrapper. Contains page content -->
             <!-- Content Header (Page header) -->
-            <div class="content-header">
-                <div class="container">
-                    <h1 class="text-center">Medical Sick Leave Letter</h1>
-                </div>
+            <div class="row justify-content-center align-items-center">
+                <img src="https://upload.wikimedia.org/wikipedia/en/f/fe/Current_Logo_of_Jimma_University.png" alt="JU Logo"
+                    class="brand-image img-fluid" style="max-width: 100px; width: 100%;">
             </div>
+            <h2 class="text-center">Medical Sick Leave Letter</h2>
+
 
             <!-- Main content -->
-            <div class="content">
+            <div class="container">
                 <div class="card card-primary card-outline">
 
                     <div class="card-body">
                         <!-- Rest of your content -->
                         {{-- @dd($medicalSickLeaves) --}}
-                        <div class="card-body">
-                            <p class="text-right">Date: <span id="created_at">
-                                    {{ optional($medicalSickLeaves)?->created_at ?? '-' }}</span></p>
-                            <p>To whom it may concern,</p>
-                            <p>I am writing this letter to confirm that my patient,
-                                <span class="text-primary font-weight-bold ">
-                                    {{ optional($medicalSickLeaves?->student)?->first_name ?? '-' }}
-                                </span>, has been
-                                under my care and is currently suffering from
-                                <span class="text-primary font-weight-bold"> {{ $medicalSickLeaves->reason }}</span>.
-                                Due to their medical
-                                condition, I advise that
-                                they take a medical sick leave from their academic
-                                responsibilities.
-                            </p>
-                            <p>Based on my evaluation, I recommend that the medical leave be
-                                from <span
-                                    class="text-primary font-weight-bold">{{ optional($medicalSickLeaves)?->start_date ?? '-' }}
-                                </span> to <span
-                                    class="text-primary font-weight-bold">{{ optional($medicalSickLeaves)?->end_date ?? '-' }}</span>.
-                                During this period, it is essential for the patient to rest and
-                                refrain from
-                                participating in any academic activities.</p>
 
-                            <p>Your kind consideration and support for the patient during this
-                                period would be
-                                greatly appreciated.</p>
-                            <div class="signature text-right text-primary font-weight-bold">
-                                Sincerely,
-                                <br>
-                                By Dr. {{ optional($medicalSickLeaves?->encounter?->Doctor?->user)?->name ?? '-' }}
+                        <div class="container mt-4">
+                            <h3>Medical Information</h3>
 
-                                <br>
-                                {{ optional($medicalSickLeaves?->encounter?->clinic)?->name ?? '-' }}
+                            <table class="table">
+                                <tbody>
+                                    <tr>
+                                        <th scope="row">Patient Name</th>
+                                        <td>{{ optional($medicalSickLeaves?->student)?->first_name ?? '-' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Student ID</th>
+                                        <td>{{ optional($medicalSickLeaves?->student)?->id_number ?? '-' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Date Of Examination</th>
+                                        <td> {{ optional($medicalSickLeaves?->encounter)->accepted_at ?? '-' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Diagnosis</th>
+                                        <td> {{ optional($medicalSickLeaves?->encounter?->mainDiagnoses)?->first()->name ?? '-' }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Arrived At</th>
+                                        <td> {{ optional($medicalSickLeaves?->encounter)->created_at ?? '-' }}</td>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Sick Leave</th>
+                                        <td>Example</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Date of Appointment</th>
+                                        <td>-</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <div class="form-group">
+                                <label for="signature">Signature____________________</label>
 
                             </div>
+
+                            <table class="form-group">
+
+                                <th scope="row ">Name of Physician</th>
+                                <td class="px-4" style="text-decoration: underline;">
+                                    {{ optional($medicalSickLeaves?->encounter?->Doctor)?->name ?? '-' }}</td>
+                            </table>
+
                         </div>
+
 
                     </div>
                     <footer class="main-footer">

@@ -46,10 +46,22 @@
         >
     </x-inputs.group> --}}
 
+
+    <x-inputs.group class="col-sm-12">
+        <x-inputs.text
+            name="sample_id"
+            label="Sample Id"
+            :value="old('sample_id', ($editing ? $labTestRequest->sample_id : ''))"
+            maxlength="255"
+            placeholder="Enter sumple ID"
+        ></x-inputs.text>
+    </x-inputs.group>
+
     <x-inputs.group class="col-sm-12">
         <x-inputs.textarea name="result" label="Result" maxlength="255"
             >{{ old('result', ($editing ? $labTestRequest->result : ''))
-            }}</x-inputs.textarea
+            }}
+            </x-inputs.textarea
         >
     </x-inputs.group>
 
@@ -59,6 +71,9 @@
             }}</x-inputs.textarea
         >
     </x-inputs.group>
+
+
+
 
     {{-- <x-inputs.group class="col-sm-12">
         <x-inputs.text

@@ -30,11 +30,11 @@
                             max="255"></x-inputs.datetime>
 
 
-                        <script>
+                        {{-- <script>
                             $(function() {
                                 $('#appointment_a_date').datepicker();
                             });
-                        </script>
+                        </script> --}}
 
 
                     </x-inputs.group>

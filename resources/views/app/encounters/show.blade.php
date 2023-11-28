@@ -93,10 +93,436 @@
                     @endphp
 
 
-                    <span class="badge {{ $statusDetails[$encounter->status]['color'] ?? 'badge-secondary' }}"> <i
+
+                    <style>
+                        .notification-badge {
+                            animation: blinkAnimation 0.5s infinite;
+                            /* Blinking animation */
+                            color: red;
+                        }
+
+                        .notification-badge:hover {
+                            animation: none;
+                            /* Stop the animation on hover */
+                        }
+
+                        @keyframes blinkAnimation {
+                            0% {
+                                opacity: 1;
+                            }
+
+                            50% {
+                                opacity: 0;
+                            }
+
+                            100% {
+                                opacity: 1;
+                            }
+                        }
+                    </style>
+
+
+                    <div id="accordion">
+                        <div class="card">
+                            <div class="card-header" id="headingOne">
+                                <h5 class="mb-0">
+
+                                    <button class="btn btn-defult btn btn-link collapsed" data-toggle="collapse"
+                                        data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne"
+                                        style="font-size: 15px;">
+                                        <i class="fa fa-user"> </i> <u> {{ $encounter->student->fullName ?? '-' }}'s
+                                        </u>Visiting Histoty[ {{ $encounter->count() }}]
+                                    </button>
+
+
+                                    <button class="btn float-right" data-toggle="collapse" data-target="#collapseOne"><i
+                                            class="fa fa-angle-down"></i></button>
+
+
+                                </h5>
+                            </div>
+
+
+
+                            <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="card col-md-12 mb-2" style="border-radius:1%; border-top-width:2px;">
+
+                                            <ul class="nav nav-pills">
+                                                @can('view-any', App\Models\Encounter::class)
+                                                    <li class="nav-item"><a class="nav-link" href="#encounters"
+                                                            data-toggle="tab">Encounters</a>
+                                                    </li>
+                                                @endcan
+                                                @can('view-any', App\Models\MedicalRecord::class)
+                                                    <li class="nav-item"><a class="nav-link" href="#medical-records"
+                                                            data-toggle="tab">Medical Diagnosis </a>
+                                                    </li>
+                                                @endcan
+
+                                                @can('view-any', App\Models\VitalSign::class)
+                                                    <li class="nav-item"><a class="nav-link" href="#vital-signs"
+                                                            data-toggle="tab">Vital Signs</a></li>
+                                                @endcan
+
+                                                @can('view-any', App\Models\MainDiagnosis::class)
+                                                    <li class="nav-item"><a class="nav-link" href="#main-diagnoses"
+                                                            data-toggle="tab">Laboratory</a>
+                                                    </li>
+                                                @endcan
+
+                                                @can('view-any', App\Models\MedicalRecord::class)
+                                                    <li class="nav-item"><a class="nav-link" href="#medicalRecords"
+                                                            data-toggle="tab">Clinical Notes</a></li>
+                                                @endcan
+                                            </ul>
+
+                                            <div class="tab-content">
+                                                @can('view-any', App\Models\Encounter::class)
+                                                    <div class="tab-pane" id="encounters">
+                                                        <div class="card mt-4">
+                                                            <div class="card-body">
+
+                                                                <table class="table table-sm table-striped">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>#</th>
+                                                                            <th>Date of visit</th>
+                                                                            <th>Student</th>
+                                                                            <th>Health Officer</th>
+                                                                            <th>Status</th>
+                                                                            <th>Sick leave</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+
+                                                                        @foreach ($encounters->sortByDesc('created_at') as $index => $encounter)
+                                                                            <tr>
+                                                                                <td>{{ $encounter->id }}</td>
+                                                                                <td>
+                                                                                    {{ $encounter->created_at?->format('d M Y') ?? '-' }}
+                                                                                </td>
+                                                                                <td>{{ $encounter->student->fullName }}</td>
+                                                                                <td>{{ $encounter?->doctor->name ?? '-' }}</td>
+                                                                                <td>
+                                                                                    @if ($encounter->status ==3)  
+                                                                                        Closed
+                                                                                    @elseif ($encounter->status ==4)  
+                                                                                    Missed
+                                                                                    @elseif ($encounter->status ==2)
+                                                                                    In-progress
+                                                                                    @else
+
+                                                                                        <span class="badge badge-primary">Checked-in</span>
+                                                                                    @endif
+                                                                                <td>
+                                                                                    <a href="{{ route('printSickLeave', ['encounterId' => $encounter->id]) }}"
+                                                                                        class="btn btn-sm d-inline-block btn-outline-primary mr-3"
+                                                                                        target="_blank">
+                                                                                        <i class="fas fa-print"></i> Print
+                                                                                    </a>
+
+
+                                                                                    @can('view', $encounter)
+                                                                                    <a href="{{ route('encounters.show', $encounter) }}">
+                                                                                        <button type="button" class="btn btn-sm btn-outline-primary mx-1">
+                                                                                            <i class="icon fa fa-list"></i> Details
+                                                                                        </button>
+                                                                                    </a>
+                                                                                @endcan
+
+
+
+                                                                                </td>
+                                                                            </tr>
+                                                                        @endforeach
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                @endcan
+
+
+                                                @can('view-any', App\Models\MedicalRecord::class)
+                                                    <div class="tab-pane" id="medical-records">
+                                                        <div class="card mt-4">
+                                                            <div class="card-body">
+
+
+
+                                                                <table class="table table-sm table-striped">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>#</th>
+                                                                            <th>Date of visit</th>
+                                                                            <th>Main diagnosis</th>
+                                                                            <th>Health Officer</th>
+                                                                            <!-- Add more columns as needed -->
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+
+
+                                                                        @foreach ($student->encounter->sortByDesc('created_at') as $index => $enc)
+                                                                            <tr>
+                                                                                <td colspan="9">
+                                                                                    <b>{{ ucwords(strtolower($student->fullName)) }}</b>,
+
+                                                                                    &nbsp;Visit date:
+                                                                                    {{ optional($enc->created_at)->format('d M Y') ?? '-' }}
+                                                                                </td>
+                                                                            </tr>
+
+                                                                            @if ($enc->mainDiagnoses)
+                                                                                @foreach ($enc->mainDiagnoses as $maindiagnosis)
+                                                                                    <tr>
+
+                                                                                        <td> {{ $loop->index + 1 }} </td>
+                                                                                        <td>
+
+                                                                                            {{ $maindiagnosis->encounter->created_at?->format('d M Y') ?? '-' }}
+
+                                                                                        </td>
+                                                                                        <td>{{ $maindiagnosis->diagnosis->name ?? '-' }}
+                                                                                        </td>
+                                                                                        <td>{{ $maindiagnosis->encounter?->doctor->name ?? '-' }}
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                @endforeach
+                                                                            @endif
+                                                                        @endforeach
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                @endcan
+
+                                                @can('view-any', App\Models\VitalSign::class)
+                                                    <div class="tab-pane" id="vital-signs">
+                                                        <div class="card mt-4">
+                                                            <div class="card-body">
+                                                                <table class="table table-sm table-striped">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>#</th>
+                                                                            <th>Date of visit</th>
+                                                                            <th>Temprature</th>
+                                                                            <th>Blood Pressure</th>
+                                                                            <th>Pulse rate </th>
+                                                                            <th>RR </th>
+                                                                            <th>Weight</th>
+                                                                            <th>Height</th>
+                                                                            <th>MUAC</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+
+
+
+                                                                        @foreach ($student->encounter->sortByDesc('created_at') as $index => $enc)
+                                                                            <tr>
+                                                                                <td colspan="9">
+                                                                                    <b>{{ ucwords(strtolower($student->fullName)) }}</b>,
+
+                                                                                    &nbsp;Visit date:
+                                                                                    {{ optional($enc->created_at)->format('d M Y') ?? '-' }}
+                                                                                </td>
+                                                                            </tr>
+
+                                                                            @if ($enc->vitalSigns)
+                                                                                @foreach ($enc->vitalSigns as $vitalSign)
+                                                                                    <tr>
+
+                                                                                        <td> {{ $loop->index + 1 }} </td>
+                                                                                        <td> {{ $vitalSign->encounter->created_at?->format('d M Y') ?? '-' }}
+                                                                                        </td>
+
+                                                                                        <td>{{ $vitalSign->temp ?? '-' }}</td>
+                                                                                        <td>{{ $vitalSign->blood_pressure ?? '-' }}
+                                                                                        </td>
+                                                                                        <td>{{ $vitalSign->pulse_rate ?? '-' }}
+                                                                                        </td>
+                                                                                        <td>{{ $vitalSign->rr ?? '-' }}</td>
+                                                                                        <td>{{ $vitalSign->weight ?? '-' }}
+                                                                                        </td>
+                                                                                        <td>{{ $vitalSign->height ?? '-' }}
+                                                                                        </td>
+                                                                                        <td>{{ $vitalSign->muac ?? '-' }}</td>
+
+
+                                                                                    </tr>
+                                                                                @endforeach
+                                                                            @endif
+                                                                        @endforeach
+
+                                                                    </tbody>
+                                                                </table>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                @endcan
+
+
+
+
+                                                @can('view-any', App\Models\LabTestRequest::class)
+                                                    <div class="tab-pane" id="main-diagnoses">
+                                                        <div class="card mt-4">
+                                                            <div class="card-body">
+
+
+                                                                <table class="table table-sm table-striped">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>#</th>
+                                                                            <th>Date of visit</th>
+                                                                            <th>Lab</th>
+                                                                            <th>Result</th>
+
+                                                                            <th> Comment </th>
+                                                                            <th> Order on </th>
+                                                                            <th>Sample ID</th>
+                                                                            <th>Order by </th>
+                                                                            <th>Lab Technician </th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+
+
+
+
+
+
+                                                                        @if ($student->encounter)
+                                                                            @foreach ($student->encounter->sortByDesc('created_at') as $index => $enc)
+                                                                                <tr>
+                                                                                    <td colspan="9">
+                                                                                        <b>{{ ucwords(strtolower($student->fullName)) }}</b>,
+
+                                                                                        &nbsp;Encounter Date:
+                                                                                        {{ optional($enc->created_at)->format('d M Y') ?? '-' }}
+                                                                                    </td>
+                                                                                </tr>
+
+
+                                                                                @foreach ($enc->labRequests as $labTestRequest)
+                                                                                    <tr>
+
+                                                                                        <td> {{ $loop->index + 1 }} </td>
+                                                                                        <td> {{ $labTestRequest->encounter->created_at?->format('d M Y') ?? '-' }}
+                                                                                        </td>
+                                                                                        <td>{{ $labTestRequest->labTest->test_name ?? '-' }}
+                                                                                        </td>
+                                                                                        <td>{{ $labTestRequest->result ?? '-' }}
+                                                                                        </td>
+
+                                                                                        <td>{{ $labTestRequest->comment ?? '-' }}
+                                                                                        </td>
+                                                                                        <td>{{ $labTestRequest->ordered_on ?? '-' }}
+                                                                                        </td>
+                                                                                        <td>{{ $labTestRequest->sample_id ?? '-' }}
+                                                                                        </td>
+                                                                                        <td>{{ $labTestRequest->encounter->doctor->name ?? '-' }}
+                                                                                        </td>
+                                                                                        <td>{{ $labTestRequest->sample_collected_by_id ?? '-' }}
+                                                                                        </td>
+
+                                                                                    </tr>
+                                                                                @endforeach
+                                                                            @endforeach
+                                                                        @endif
+                                                                    </tbody>
+                                                                </table>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                @endcan
+
+                                                @can('view-any', App\Models\MedicalRecord::class)
+                                                    <div class="tab-pane" id="medicalRecords">
+                                                        <div class="card mt-4">
+                                                            <div class="card-body">
+
+
+
+                                                                <table class="table table-sm table-striped">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>#</th>
+
+                                                                            <th>subjective</th>
+                                                                            <th>Objective </th>
+                                                                            <th>Assessment</th>
+                                                                            <th>Plan </th>
+
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        @if ($student->encounter)
+                                                                            @foreach ($student->encounter->sortByDesc('created_at') as $index => $enc)
+                                                                                <tr>
+                                                                                    <td colspan="9">
+                                                                                        <b>{{ ucwords(strtolower($student->fullName)) }}</b>,
+
+                                                                                        &nbsp;Encounter Date:
+                                                                                        {{ optional($enc->created_at)->format('d M Y') ?? '-' }}
+                                                                                    </td>
+                                                                                </tr>
+
+
+                                                                                @foreach ($enc->medicalRecords as $medicalRecord)
+                                                                                    <tr>
+
+                                                                                        <td> {{ $loop->index + 1 }} </td>
+
+                                                                                        <td>{{ $medicalRecord->subjective ?? '-' }}
+                                                                                        </td>
+                                                                                        <td>{{ $medicalRecord->objective ?? '-' }}
+                                                                                        </td>
+
+                                                                                        <td>{{ $medicalRecord->assessment ?? '-' }}
+                                                                                        </td>
+                                                                                        <td>{{ $medicalRecord->plan ?? '-' }}
+                                                                                        </td>
+
+
+                                                                                    </tr>
+                                                                                @endforeach
+                                                                            @endforeach
+                                                                        @endif
+                                                                    </tbody>
+                                                                </table>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                @endcan
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                    {{-- <span class="badge {{ $statusDetails[$encounter->status]['color'] ?? 'badge-secondary' }}"> <i
                             class="fas fa-list"></i><span style="font-size: 15px;">
                             {{ $statusDetails[$encounter->status]['name'] ?? '-' }} encounter
-                        </span> </span>
+                        </span> 
+                    </span>
+
+                    <div
+                        class="btn btn-sm btn-outline-{{ $statusDetails[$encounter->status]['color'] ?? 'badge-secondary' }}">
+                        <i class="fas fa-door-open"></i>{{ $encounter?->Doctor?->clinicUsers?->room?->name }}
+                    </div> --}}
 
                     <!-- Status Description (Hidden) -->
                     {{-- {{ $statusDetails[$encounter->status]['description'] ?? '-' }} --}}
@@ -108,47 +534,112 @@
                         <div class="small-1 float-right d-inline-block">
                             {{-- @can('update', $encounter) --}}
                             {{-- <a href="{{ route('medical-sick-leaves.show', $encounter) }}"> --}}
-                            <button type="button" class="btn btn-sm btn-outline-primary mx-1" data-toggle="modal"
-                                data-target="#medicalSickLeaveModal">
-                                <i class="fa fa-print"></i> Sick Leave
-                            </button>
-                            {{-- </a> --}}
-                            {{-- @endcan  --}}
-                            <form action="{{ route('encounters.callNext', ['encounter' => $encounter]) }}" method="POST"
-                                class="d-inline-block">
-                                @csrf
-                                <input type="hidden" name="status" value="{{ $encounter->status }}">
-                                <button type="submit" class="btn btn-sm btn-outline-primary"><i
-                                        class="fas fa-step-forward"></i>Call Next</button>
-                            </form>
 
-                            <button type="button" class="btn btn-sm d-inline-block btn-outline-primary" data-toggle="modal"
-                                data-target="#roomChangeModal">
-                                <i class="fas fa-door-open"></i></i>&nbsp;Change Room
-                            </button>
-                            {{-- @dd($encounter->Doctor->rooms) --}}
 
-                            <button type="button" class="btn btn-sm d-inline-block btn-outline-primary" data-toggle="modal"
-                                data-target="#changeDoctorModal">
-                                <i class="fa fa-book"> </i>&nbsp;Change Doctor
-                            </button>
-                            <form action="{{ route('encounters.closeEencounter', ['encounter' => $encounter]) }}"
-                                method="POST" class="d-inline-block">
-                                @csrf
-                                <input type="hidden" name="status" value="{{ $encounter->status }}">
-                                <button type="submit" class="btn btn-sm btn-outline-primary">Close Encounter</button>
-                            </form>
-                            <a href="{{ route('encounters.index') }}"
-                                class="btn btn-sm d-inline-block btn-outline-primary mr-3">
-                                <i class="icon ion-md-arrow-back"></i>
-                                Back</a>
+                            @if ($encounter->arrived_at == null)
+                                <button type="button" class="btn btn-sm d-inline-block btn-outline-primary mr-3"
+                                    data-toggle="modal" data-target="#confirmationModal"
+                                    data-record-id="{{ $encounter->id }}"><i class="fa fa-user-minus"></i> <b>Missing? </b>
+                                </button>
+                            @endif
+                            @if ($encounter->arrived_at != null)
+                                <a href="{{ route('encounters.index') }}"
+                                    class="btn btn-sm d-inline-block btn-outline-primary mr-3">
+
+                                    <i class="fa fa-arrow-left" aria-hidden="true"></i>
+
+                                    Back</a>
+                                <button type="button" class="btn btn-sm btn-outline-primary mx-1" data-toggle="modal"
+                                    data-target="#medicalSickLeaveModal">
+                                    <i class="fa fa-print"></i> Sick Leave
+                                </button>
+                                {{-- </a> --}}
+                                {{-- @endcan  --}}
+                                <form action="{{ route('encounters.callNext', ['encounter' => $encounter]) }}"
+                                    method="POST" class="d-inline-block">
+                                    @csrf
+                                    <input type="hidden" name="status" value="{{ $encounter->status }}">
+                                    <button type="submit" class="btn btn-sm btn-outline-primary"><i
+                                            class="fas fa-step-forward"></i>Call Next</button>
+                                </form>
+
+                                <button type="button" class="btn btn-sm d-inline-block btn-outline-primary"
+                                    data-toggle="modal" data-target="#roomChangeModal">
+                                    <i class="fas fa-door-open"></i></i>&nbsp;Change Room
+                                </button>
+                                {{-- @dd($encounter->Doctor->rooms) --}}
+                                <button type="button" class="btn btn-sm d-inline-block btn-outline-primary"
+                                    data-toggle="modal" data-target="#changeDoctorModal">
+                                    <i class="fas fa-exchange-alt"></i>
+                                    &nbsp;Handover
+                                </button>
+                                <form action="{{ route('encounters.closeEencounter', ['encounter' => $encounter]) }}"
+                                    method="POST" class="d-inline-block">
+                                    @csrf
+                                    <input type="hidden" name="status" value="{{ $encounter->status }}">
+                                    <button type="submit" class="btn btn-sm btn-outline-primary"> <i
+                                            class="fa fa-check"></i>
+                                        Close Encounter</button>
+                                </form>
+
+                                <form action="{{ route('encounters.termniateEencounter', ['encounter' => $encounter]) }}"
+                                    method="POST" class="d-inline-block">
+                                    @csrf
+                                    <input type="hidden" name="status" value="{{ $encounter->status }}">
+                                    <button type="submit" class="btn btn-sm btn-outline-primary"> <i
+                                            class="fa fa-check"></i>
+                                        Terminate Encounter</button>
+                                </form>
+
+
+                                @if ($encounter->status == 4)
+                                    <button type="button" class="btn btn-sm d-inline-block btn-outline-primary mr-3"
+                                        data-toggle="modal" data-target="#confirmationModal"
+                                        data-record-id="{{ $encounter->id }}"><i class="fa fa-user-minus"></i>
+                                        Re-accept
+                                    </button>
+                                @else
+                                    <button type="button" class="btn btn-sm d-inline-block btn-outline-primary mr-1"
+                                        data-toggle="modal" data-target="#confirmationModal"
+                                        data-record-id="{{ $encounter->id }}"><i class="fa fa-user-minus"></i> Missing?
+                                    </button>
+                                @endif
+                            @endif
+
 
                         </div>
+
+                        <span>
+                            @if ($encounter->arrived_at === null)
+                                <form method="post" action="{{ route('toggleArrival') }}" class="form-inline">
+                                    @csrf
+                                    <input type="hidden" name="encounter_id" value="{{ $encounter->id }}">
+
+                                    <button type="submit"
+                                        class="btn btn-sm d-inline-block btn-outline-primary mr-1 notification-badge">
+                                        <i class="fa fa-wheelchair"></i><b> Did you meet patient?, Yes</b>
+                                    </button>
+
+
+                                </form>
+                            @else
+                                <form method="post" action="{{ route('toggleArrival') }}" class="form-inline">
+                                    @csrf
+                                    <input type="hidden" name="encounter_id" value="{{ $encounter->id }}">
+                                    <button type="submit" class="btn btn-sm btn-primary mr-1">
+                                        <i class="fa fa-wheelchair"></i> Arrived
+                                    </button>
+                                </form>
+                            @endif
+                        </span>
                     </div>
 
                 </div>
 
             </div>
+
+
+
 
             <!-- Change Room Modal Start-->
             <div class="modal fade" id="roomChangeModal" tabindex="-1" role="dialog"
@@ -168,9 +659,11 @@
 
                                 <ul class="list-group">
                                     <select id="doctorSelect" class="form-control" style="width: 100%;" name="room_id">
-                                        @foreach ($rooms as $room)
-                                            <option value="{{ $room->id }}">{{ $room->name }}</option>
-                                        @endforeach
+                                        @if ($rooms)
+                                            @foreach ($rooms as $room)
+                                                <option value="{{ $room->id }}">{{ $room->name }}</option>
+                                            @endforeach
+                                        @endif
                                     </select>
                                 </ul>
 
@@ -225,7 +718,7 @@
                                     </div>
                                 </form>
 
-                                <script>
+                                {{-- <script>
                                     $(document).ready(function() {
                                         $('#doctorSelect').select2();
 
@@ -238,7 +731,7 @@
                                             $(this).attr('data', JSON.stringify(data));
                                         });
                                     });
-                                </script>
+                                </script> --}}
                                 {{-- @endforeach --}}
                             </ul>
                         </div>
@@ -389,6 +882,36 @@
             </script> --}}
             <!-- Referral Modal End-->
 
+            <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog"
+                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Confirm missing Status Change</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure you want to change the missing status?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <form method="post" action="{{ route('changeStatuss') }}">
+                                @csrf
+                                <input type="hidden" name="encounter_id" value="{{ $encounter->id }}">
+                                <button type="submit" class="btn btn-primary">
+                                    Confirm
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
             <div class="card-body">
                 {{-- <h4 class="card-title">
                     <a href="{{ route('lab-test-request-groups.index') }}" class="mr-4"><i
@@ -407,28 +930,73 @@
                         <i class="fa fa-caret-right"></i>
                         <span>Encounter Priority:</span>
                         <span
-                            style="color: {{ $encounter->status == 0 ? 'green' : 'red' }};">{{ $encounter->status == 0 ? 'FCFS' : 'High' }}</span>
+                            style="color: {{ $encounter->status == 0 ? 'green' : 'red' }};">{{ $encounter->status == 0 ? 'FCFS' : 'FCFS' }}</span>
                     </div>
 
                     <div class="col-md-4 mb-2">
                         <i class="fa fa-caret-right"></i>
-                        <span>Encounter call status:</span>
-                        <span class="{{ $statusDetails[$encounter->status]['color'] ?? 'badge-secondary' }}">
-                            {{ $statusDetails[$encounter->status]['name'] ?? '-' }}
-                        </span>
+                        <span> Visit status:</span>
+
+                        @if ($encounter->status == 1)
+                            <span class="badge badge-secondary"> Checked-in</span>
+                        @elseif($encounter->status == 2)
+                            <span class="badge  badge-info"> In-progress</span>
+                        @elseif($encounter->status == 3)
+                            <span class="badge  badge-success"> Completed </span>
+                        @else
+                            <span class="badge  badge-danger"> Missed </span>
+                        @endif
+
+
+
                     </div>
 
                     <div class="col-md-4 mb-2">
                         <i class="fa fa-caret-right"></i>
-                        <span>Date of request:</span>
+                        <span>Date of visit:</span>
                         {{ $encounter->created_at?->format('d M Y') ?? '-' }}
 
                     </div>
 
                     <div class="col-md-4 mb-2">
                         <i class="fa fa-caret-right"></i>
-                        <span>Doctor:</span>
-                        {{ $encounter->Doctor ? $encounter->Doctor->name : '-' }}
+                        <span>Age:</span>
+                  
+
+                               
+                        @if($encounter->student->date_of_birth === null)
+                              
+                       
+                            {{-- {{ route('map-rfid') }} --}}
+                        <form method="post" action="#">  
+                            @csrf
+                            <input type="hidden" name="student_id" value="{{ $encounter->student->id }}">
+                            <input type="text"   required class="form-control-sm" autocomplete="off"  name="rfid" placeholder="Enter Age">
+                            <button type="submit" class="btn btn-sm btn-outline-primary mr-1" > <i class="icon fa fa-plus"></i> Save</button>
+                        </form>
+                   
+
+                    @else
+                        <span style="color:red;">
+                            {{ \Carbon\Carbon::parse($encounter->student->date_of_birth)->diff(\Carbon\Carbon::now())->format('%y years old') }}
+                        </span>
+
+
+                    @endif
+
+
+
+
+                    </div>
+
+
+
+
+
+                    <div class="col-md-4 mb-2">
+                        <i class="fa fa-caret-right"></i>
+                        <span>Health officer:</span>
+                        {{ $encounter->Doctor?->clinicUsers?->user->name }}
                     </div>
 
                     <div class="col-md-4 mb-2">
@@ -440,8 +1008,17 @@
                     <div class="col-md-4 mb-2">
                         <i class="fa fa-caret-right"></i>
                         <span>Receptionist:</span>
-                        {{ $encounter->RegisteredBy ? $encounter->RegisteredBy->name : '-' }}
+                        {{ $encounter?->RegisteredBy?->clinicUsers?->user->name }}
                     </div>
+
+                    <div class="col-md-4 mb-2">
+                        <i class="fa fa-caret-right"></i>
+                        <span>Patient ID:</span>
+                        {{ $encounter->student->id_number ?? '-' }}
+                    </div>
+
+
+
                 </div>
 
 
@@ -454,160 +1031,227 @@
                         </h3>
                     </div>
 
-                    <div class="card-body">
 
-                        <div class="row">
+                    @if ($encounter->arrived_at != null)
+                        <div class="card-body">
 
-                            <div class="col-5 col-sm-3">
+                            <div class="row">
 
-                                <div class="nav flex-column nav-tabs h-100" id="vert-tabs-tab" role="tablist"
-                                    aria-orientation="vertical">
+                                <div class="col-5 col-sm-3">
 
-                                    <ul class="nav nav-pills flex-column">
-                                        <li class="nav-item">
-                                            <a class="nav-link active" id="vert-tabs-profile-tab" data-toggle="pill"
-                                                href="#vert-tabs-profile" role="tab"
-                                                aria-controls="vert-tabs-profile" aria-selected="false"> <i
-                                                    class="fa fa-caret-right nav-icon"></i><b>
-                                                    Clinical Note </b></a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" id="vert-tabs-sign-tab" data-toggle="pill"
-                                                href="#vert-tabs-sign" role="tab" aria-controls="vert-tabs-sign"
-                                                aria-selected="false"> <i class="fa fa-caret-right nav-icon"></i>
-                                                <b> Vital Sign</b> </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" id="vert-tabs-main-dignosis-tab" data-toggle="pill"
-                                                href="#vert-tabs-main-dignosis" role="tab"
-                                                aria-controls="vert-tabs-main-dignosis" aria-selected="false"> <i
-                                                    class="fa fa-caret-right nav-icon"></i><b> Main
-                                                    Diagnoses </b></a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" id="vert-tabs-settings-tab" data-toggle="pill"
-                                                href="#vert-tabs-diagnosis" role="tab"
-                                                aria-controls="vert-tabs-diagnosis" aria-selected="false"> <i
-                                                    class="fa fa-caret-right nav-icon"></i><b> Laboratory </b> </a>
-                                        </li>
+                                    <div class="nav flex-column nav-tabs h-100" id="vert-tabs-tab" role="tablist"
+                                        aria-orientation="vertical">
 
-                                        <li class="nav-item">
-                                            <a class="nav-link" id="vert-tabs-medication-tab" data-toggle="pill"
-                                                href="#vert-tabs-medication" role="tab"
-                                                aria-controls="vert-tabs-medication" aria-selected="false"> <i
-                                                    class="fa fa-caret-right nav-icon"></i><b> Prescription </b> </a>
-                                        </li>
+                                        <ul class="nav nav-pills flex-column">
 
-                                        <li class="nav-item">
-                                            <a class="nav-link " id="vert-tabs-home-tab" data-toggle="pill"
-                                                href="#vert-tabs-appointment" role="tab"
-                                                aria-controls="vert-tabs-home" aria-selected="true"> <i
-                                                    class="fa fa-caret-right nav-icon"></i><b>
-                                                    Appointments </b> <span
-                                                    class="badge bg-primary float-right">12</span></a>
 
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" id="vert-tabs-refer-tab" data-toggle="pill"
-                                                href="#vert-tabs-refer" role="tab" aria-controls="vert-tabs-refer"
-                                                aria-selected="false"> <i class="fa fa-caret-right nav-icon"></i><b>
-                                                    Referral Service</b> </a>
-                                        </li>
 
-                                        <li class="nav-item">
-                                            <a class="nav-link" id="vert-tabs-history-tab  vert-tabs-history"
-                                                data-toggle="pill" href="#vert-tabs-history" role="tab"
-                                                aria-controls="vert-tabs-history" aria-selected="false"> <i
-                                                    class="fa fa-caret-right nav-icon"></i><b>
-                                                    Visit History </b> </a>
-                                        </li>
-                                    </ul>
+                                            <li class="nav-item">
+                                                <a class="nav-link active" id="vert-tabs-profile-tab" data-toggle="pill"
+                                                    href="#vert-tabs-profile" role="tab"
+                                                    aria-controls="vert-tabs-profile" aria-selected="false"> <i
+                                                        class="fa fa-caret-right nav-icon"></i><b>
+                                                        Clinical Note </b></a>
+                                            </li>
+
+                                            <li class="nav-item">
+                                                <a class="nav-link " id="vert-tabs-tb-tab" data-toggle="pill"
+                                                    href="#vert-tabs-tb" role="tab" aria-controls="vert-tabs-tb"
+                                                    aria-selected="false"> <i class="fa fa-caret-right nav-icon"></i><b>
+                                                        TB Screening </b></a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" id="vert-tabs-sign-tab" data-toggle="pill"
+                                                    href="#vert-tabs-sign" role="tab" aria-controls="vert-tabs-sign"
+                                                    aria-selected="false"> <i class="fa fa-caret-right nav-icon"></i>
+                                                    <b> Vital Sign</b> </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" id="vert-tabs-main-dignosis-tab" data-toggle="pill"
+                                                    href="#vert-tabs-main-dignosis" role="tab"
+                                                    aria-controls="vert-tabs-main-dignosis" aria-selected="false"> <i
+                                                        class="fa fa-caret-right nav-icon"></i><b> Main
+                                                        Diagnoses </b></a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" id="vert-tabs-settings-tab" data-toggle="pill"
+                                                    href="#vert-tabs-diagnosis" role="tab"
+                                                    aria-controls="vert-tabs-diagnosis" aria-selected="false"> <i
+                                                        class="fa fa-caret-right nav-icon"></i><b> Laboratory </b> </a>
+                                            </li>
+
+                                            <li class="nav-item">
+                                                <a class="nav-link" id="vert-tabs-medication-tab" data-toggle="pill"
+                                                    href="#vert-tabs-medication" role="tab"
+                                                    aria-controls="vert-tabs-medication" aria-selected="false"> <i
+                                                        class="fa fa-caret-right nav-icon"></i><b> Prescription </b> </a>
+                                            </li>
+
+                                            <li class="nav-item">
+                                                <a class="nav-link " id="vert-tabs-home-tab" data-toggle="pill"
+                                                    href="#vert-tabs-appointment" role="tab"
+                                                    aria-controls="vert-tabs-home" aria-selected="true"> <i
+                                                        class="fa fa-caret-right nav-icon"></i><b>
+                                                        Appointments </b> <span
+                                                        class="badge bg-primary float-right">0</span></a>
+
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" id="vert-tabs-refer-tab" data-toggle="pill"
+                                                    href="#vert-tabs-refer" role="tab"
+                                                    aria-controls="vert-tabs-refer" aria-selected="false"> <i
+                                                        class="fa fa-caret-right nav-icon"></i><b>
+                                                        Referral Service</b> </a>
+                                            </li>
+
+
+
+                                            <li class="nav-item">
+                                                <a class="nav-link" id="vert-tabs-history-tab  vert-tabs-history"
+                                                    data-toggle="pill" href="#vert-tabs-history" role="tab"
+                                                    aria-controls="vert-tabs-history" aria-selected="false"> <i
+                                                        class="fa fa-caret-right nav-icon"></i><b>
+                                                        Last Visit History </b> </a>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-7 col-sm-9">
-                                <div class="tab-content" id="vert-tabs-tabContent">
 
-                                    <div class="tab-pane text-left fade show active " id="vert-tabs-profile"
-                                        role="tabpanel" aria-labelledby="vert-tabs-profile-tab">
-                                        @can('view-any', App\Models\MedicalRecord::class)
+
+                                <div class="col-7 col-sm-9">
+                                    <div class="tab-content" id="vert-tabs-tabContent">
+
+                                        <div class="tab-pane text-left fade show active " id="vert-tabs-profile"
+                                            role="tabpanel" aria-labelledby="vert-tabs-profile-tab">
+                                            @can('view-any', App\Models\MedicalRecord::class)
+                                                <div class="card mt-4">
+                                                    <div class="card-body">
+                                                        <h4 class="card-title w-100 mb-2">Clinic Notes</h4>
+
+                                                        <livewire:encounter-medical-records-detail :encounter="$encounter" />
+                                                    </div>
+                                                </div>
+                                            @endcan
+
+                                        </div>
+
+
+
+                                        <div class="tab-pane fade" id="vert-tabs-sign" role="tabpanel"
+                                            aria-labelledby="vert-tabs-sign-tab">
+
+                                            @can('view-any', App\Models\VitalSign::class)
+                                                <div class="card mt-4">
+                                                    <div class="card-body">
+                                                        <h4 class="card-title w-100 mb-2">Vital Sign</h4>
+                                                        <livewire:encounter-vital-signs-detail :encounter="$encounter" />
+                                                    </div>
+                                                </div>
+                                            @endcan
+
+                                        </div>
+
+                                        <div class="tab-pane fade" id="vert-tabs-tb" role="tabpanel"
+                                            aria-labelledby="vert-tabs-tb-tab">
+
+                                            {{-- @can('view-any', App\Models\VitalSign::class) --}}
                                             <div class="card mt-4">
                                                 <div class="card-body">
-                                                    <h4 class="card-title w-100 mb-2">Clinic Notes</h4>
-
-                                                    <livewire:encounter-medical-records-detail :encounter="$encounter" />
+                                                    <h4 class="card-title w-100 mb-2">TB Screening</h4><br>
+                                                    <hr>
+                                                    -
+                                                    {{-- <livewire:encounter-vital-signs-detail :encounter="$encounter" /> --}}
                                                 </div>
                                             </div>
-                                        @endcan
+                                            {{-- @endcan --}}
 
-                                    </div>
+                                        </div>
 
 
 
-                                    <div class="tab-pane fade" id="vert-tabs-sign" role="tabpanel"
-                                        aria-labelledby="vert-tabs-sign-tab">
 
-                                        @can('view-any', App\Models\VitalSign::class)
+                                        <div class="tab-pane fade" id="vert-tabs-refer" role="tabpanel"
+                                            aria-labelledby="vert-tabs-refer-tab">
+
+                                            {{-- @can('view-any', App\Models\VitalSign::class) --}}
                                             <div class="card mt-4">
                                                 <div class="card-body">
-                                                    <h4 class="card-title w-100 mb-2">Vital Sign</h4>
-                                                    <livewire:encounter-vital-signs-detail :encounter="$encounter" />
+                                                    <h4 class="card-title w-100 mb-2">Patient Referral Service</h4><br>
+                                                    <hr>
+                                                    -
+                                                    {{-- <livewire:encounter-vital-signs-detail :encounter="$encounter" /> --}}
                                                 </div>
                                             </div>
-                                        @endcan
+                                            {{-- @endcan --}}
 
-                                    </div>
-
-
+                                        </div>
 
 
+                                        <div class="tab-pane fade" id="vert-tabs-history" role="tabpanel"
+                                            aria-labelledby="vert-tabs-history-tab">
 
-                                    <div class="tab-pane fade" id="vert-tabs-sign" role="tabpanel"
-                                        aria-labelledby="vert-tabs-sign-tab">
-
-                                        @can('view-any', App\Models\VitalSign::class)
+                                            {{-- @can('view-any', App\Models\VitalSign::class) --}}
                                             <div class="card mt-4">
                                                 <div class="card-body">
-                                                    <h4 class="card-title w-100 mb-2">Vital Sign</h4>
-                                                    <livewire:encounter-vital-signs-detail :encounter="$encounter" />
+                                                    <h4 class="card-title w-100 mb-2">Visit History</h4><br>
+                                                    <hr>
+                                                    -
+                                                    {{-- <livewire:encounter-vital-signs-detail :encounter="$encounter" /> --}}
                                                 </div>
                                             </div>
-                                        @endcan
+                                            {{-- @endcan --}}
 
-                                    </div>
+                                        </div>
 
-                                    <div class="tab-pane fade" id="vert-tabs-appointment" role="tabpanel"
-                                        aria-labelledby="vert-tabs-appointment-tab">
 
-                                        @can('view-any', App\Models\Appointment::class)
+
+                                        <div class="tab-pane fade" id="vert-tabs-sign" role="tabpanel"
+                                            aria-labelledby="vert-tabs-sign-tab">
+
+                                            @can('view-any', App\Models\VitalSign::class)
+                                                <div class="card mt-4">
+                                                    <div class="card-body">
+                                                        <h4 class="card-title w-100 mb-2">Vital Sign</h4>
+                                                        <livewire:encounter-vital-signs-detail :encounter="$encounter" />
+                                                    </div>
+                                                </div>
+                                            @endcan
+
+                                        </div>
+
+                                        <div class="tab-pane fade" id="vert-tabs-appointment" role="tabpanel"
+                                            aria-labelledby="vert-tabs-appointment-tab">
+
+                                            @can('view-any', App\Models\Appointment::class)
+                                                <div class="card mt-4">
+                                                    <div class="card-body">
+                                                        <h4 class="card-title w-100 mb-2">Appointments</h4>
+
+                                                        <livewire:encounter-appointments-detail :encounter="$encounter" />
+                                                    </div>
+                                                </div>
+                                            @endcan
+
+                                        </div>
+
+                                        <div class="tab-pane fade" id="vert-tabs-main-dignosis" role="tabpanel"
+                                            aria-labelledby="vert-tabs-main-dignosis-tab">
+                                            @can('view-any', App\Models\MainDiagnosis::class)
+                                                <div class="card mt-4">
+                                                    <div class="card-body">
+                                                        <h4 class="card-title w-100 mb-2">Main Diagnoses</h4>
+
+                                                        <livewire:encounter-main-diagnoses-detail :encounter="$encounter" />
+                                                    </div>
+                                                </div>
+                                            @endcan
+                                        </div>
+
+                                        <div class="tab-pane fade" id="vert-tabs-diagnosis" role="tabpanel"
+                                            aria-labelledby="vert-tabs-diagnosis-tab">
+
                                             <div class="card mt-4">
-                                                <div class="card-body">
-                                                    <h4 class="card-title w-100 mb-2">Appointments</h4>
-
-                                                    <livewire:encounter-appointments-detail :encounter="$encounter" />
-                                                </div>
-                                            </div>
-                                        @endcan
-
-                                    </div>
-
-                                    <div class="tab-pane fade" id="vert-tabs-main-dignosis" role="tabpanel"
-                                        aria-labelledby="vert-tabs-main-dignosis-tab">
-                                        @can('view-any', App\Models\MainDiagnosis::class)
-                                            <div class="card mt-4">
-                                                <div class="card-body">
-                                                    <h4 class="card-title w-100 mb-2">Main Diagnoses</h4>
-
-                                                    <livewire:encounter-main-diagnoses-detail :encounter="$encounter" />
-                                                </div>
-                                            </div>
-                                        @endcan
-                                    </div>
-
-                                    <div class="tab-pane fade" id="vert-tabs-diagnosis" role="tabpanel"
-                                        aria-labelledby="vert-tabs-diagnosis-tab">
-
-                                        <div class="card mt-4">
-                                            {{-- @can('view-any', App\Models\LabTestRequestGroup::class)
+                                                {{-- @can('view-any', App\Models\LabTestRequestGroup::class)
                                      
                                                 <div class="card-body">
                                                     <h4 class="card-title w-100 mb-2"> Lab Test Group </h4>
@@ -617,78 +1261,79 @@
                                                 </div>
                                                 @endcan    --}}
 
-                                            @can('view-any', App\Models\LabTestRequest::class)
-                                                <div class="card-body">
-                                                    <h4 class="card-title w-100 mb-2"> Lab Test Requests </h4>
-                                                    <livewire:encounter-lab-test-requests-detail :encounter="$encounter" />
-                                                </div>
-                                            @endcan
-                                            
+                                                @can('view-any', App\Models\LabTestRequest::class)
+                                                    <div class="card-body">
+                                                        <h4 class="card-title w-100 mb-2"> Lab Test Requests </h4>
+                                                        <livewire:encounter-lab-test-requests-detail :encounter="$encounter" />
+                                                    </div>
+                                                @endcan
 
-                                            <style>
-                                                select.form-control[multiple],
-                                                select.form-control[size] {
-                                                    height: 400px !important;
-                                                }
-                                            </style>
 
-                                            <form id="demoform" method="POST" name="lab"
-                                                action="{{ route('labTest.insert') }}">
-                                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                                <input type="hidden" name="encounter" value="{{ $encounter->id }}">
+                                                <style>
+                                                    select.form-control[multiple],
+                                                    select.form-control[size] {
+                                                        height: 400px !important;
+                                                    }
+                                                </style>
 
-                                                <div class="card-body">
-                                                    <div class="row">
-                                                        <div class="col-12">
-                                                            <div class="form-group">
-                                                                <select multiple="multiple" size="72"
-                                                                    max-height="500px" overflow-y="auto"
-                                                                    name="duallistbox_demo1[]"
-                                                                    title="duallistbox_demo1[]">
-                                                                    @foreach ($labCategories as $labCategory)
-                                                                        <optgroup id="label"
-                                                                            label="{{ $labCategory->lab_name }}">
-                                                                            @foreach ($labCategory->labTests as $lab)
-                                                                                <option value="{{ $lab->id }}">
-                                                                                    {{ $lab->labCatagory->lab_name }}-{{ $lab->test_name }}
-                                                                                </option>
-                                                                            @endforeach
-                                                                        </optgroup>
-                                                                    @endforeach
-                                                                </select>
-                                                                <br>
-                                                                <div class="row">
-                                                                    <div class="col-md-6 offset-md-6">
-                                                                        <button type="submit"
-                                                                            class="btn btn-primary w-100">Send lab
-                                                                            request</button>
+                                                <form id="demoform" method="POST" name="lab"
+                                                    action="{{ route('labTest.insert') }}">
+                                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                                    <input type="hidden" name="encounter" value="{{ $encounter->id }}">
+
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                <div class="form-group">
+                                                                    <select multiple="multiple" size="72"
+                                                                        max-height="500px" overflow-y="auto"
+                                                                        name="duallistbox_demo1[]"
+                                                                        title="duallistbox_demo1[]">
+                                                                        @foreach ($labCategories as $labCategory)
+                                                                            <optgroup id="label"
+                                                                                label="{{ $labCategory->lab_name }}">
+                                                                                {{-- @foreach ($labCategory->labTests as $lab) --}}
+                                                                                @foreach ($labCategory?->labTests->where('is_available', 1) as $lab)
+                                                                                    <option value="{{ $lab->id }}">
+                                                                                        {{ $lab->labCatagory->lab_name }}-{{ $lab->test_name }}
+                                                                                    </option>
+                                                                                @endforeach
+                                                                            </optgroup>
+                                                                        @endforeach
+                                                                    </select>
+                                                                    <br>
+                                                                    <div class="row">
+                                                                        <div class="col-md-6 offset-md-6">
+                                                                            <button type="submit"
+                                                                                class="btn btn-primary w-100">Send lab
+                                                                                request</button>
+                                                                        </div>
                                                                     </div>
-                                                                </div>
 
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </form>
+                                                </form>
 
+
+                                            </div>
 
                                         </div>
 
-                                    </div>
 
 
+                                        <div class="tab-pane fade" id="vert-tabs-medication" role="tabpanel"
+                                            aria-labelledby="vert-tabs-medication-tab">
+                                            @can('view-any', App\Models\Prescription::class)
+                                                <div class="card mt-4">
+                                                    <div class="card-body">
+                                                        <h4 class="card-title w-100 mb-2">Medicine Prescription</h4>
 
-                                    <div class="tab-pane fade" id="vert-tabs-medication" role="tabpanel"
-                                        aria-labelledby="vert-tabs-medication-tab">
-                                        @can('view-any', App\Models\Prescription::class)
-                                            <div class="card mt-4">
-                                                {{-- <div class="card-body">
-                                                    <h4 class="card-title w-100 mb-2">Medicine Prescription</h4>
+                                                        <livewire:encounter-prescriptions-detail :encounter="$encounter" />
+                                                    </div>
 
-                                                    <livewire:encounter-prescriptions-detail :encounter="$encounter" />
-                                                </div> --}}
-
-                                                <div class="p-3">
+                                                    {{-- <div class="p-3">
                                                     <div class="prescription-view">
                                                         <h3>Medicine Prescription</h3>
                                                         <div class="prescription-info">
@@ -706,8 +1351,8 @@
                                                                 </div>
                                                                 <div class="col-md-6">
                                                                     <p>
-                                                                        <strong>Doctor Name:</strong>
-                                                                        {{ $encounter->Doctor ? $encounter->Doctor->name : '-' }}
+                                                                        <strong>Health Officer:</strong>
+                                                                  {{ $encounter->Doctor?->clinicUsers?->user->name  }}
 
                                                                     </p>
 
@@ -719,20 +1364,15 @@
                                                             <table class="table table-bordered">
                                                                 <livewire:encounter-prescriptions-detail :encounter="$encounter" />
                                                             </table>
-                                                            <div class="signature-section">
-                                                                <p>
-                                                                    <strong>Doctor's Signature:</strong>
-                                                                    ________________________
-                                                                </p>
-                                                            </div>
+
                                                         </div>
 
                                                     </div>
+                                                </div> --}}
                                                 </div>
-                                            </div>
-                                        @endcan
-                                    </div>
-
+                                            @endcan
+                                        </div>
+                                        {{-- 
                                     <div class="tab-pane fade" id="vert-tabs-appointment" role="tabpanel"
                                         aria-labelledby="vert-tabs-appointment-tab">
 
@@ -746,9 +1386,9 @@
                                             </div>
                                         @endcan
 
-                                    </div>
+                                    </div> --}}
 
-                                    <div class="tab-pane fade" id="vert-tabs-sign-tab" role="tabpanel"
+                                        {{-- <div class="tab-pane fade" id="vert-tabs-sign-tab" role="tabpanel"
                                         aria-labelledby="vert-tabs-sign">
 
                                         @can('view-any', App\Models\VitalSign::class)
@@ -760,9 +1400,9 @@
                                             </div>
                                         @endcan
 
-                                    </div>
+                                    </div> --}}
 
-                                    <div class="tab-pane fade" id="vert-tabs-sign" role="tabpanel"
+                                        {{-- <div class="tab-pane fade" id="vert-tabs-sign" role="tabpanel"
                                         aria-labelledby="vert-tabs-sign-tab">
 
                                         @can('view-any', App\Models\VitalSign::class)
@@ -778,65 +1418,68 @@
                                             Tab 6 Visit history
                                         </div>
 
+                                    </div> --}}
+
                                     </div>
-
                                 </div>
+
                             </div>
-
-                        </div>
-                        <!-- /.card -->
-                    </div>
-                    <!-- /.card -->
-
+                            <!-- /.card -->
+                    @endif
                 </div>
-            </div>
+                <!-- /.card -->
 
+            </div>
         </div>
 
-        <!-- Bootstrap4 Duallistbox -->
+    </div>
 
-        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
 
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-        <!-- plugin -->
-        <script src="{{ asset('plugins/jquery.bootstrap-duallistbox.js') }}"></script>
+    {{-- <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> --}}
 
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        {{-- <script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <!-- plugin -->
+    <script src="{{ asset('plugins/jquery.bootstrap-duallistbox.js') }}"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    {{-- <script>
 
            //Bootstrap Duallistbox
     $('.duallistbox').bootstrapDualListbox()
 
     </script> --}}
 
-        <script>
-            var demo1 = $('select[name="duallistbox_demo1[]"]').bootstrapDualListbox({
-                nonSelectedListLabel: 'Available labs',
-                selectedListLabel: 'Selected labs',
-                preserveSelectionOnMove: 'moved',
-                moveAllLabel: '>>',
-                removeAllLabel: '<<'
+    <script>
+        var demo1 = $('select[name="duallistbox_demo1[]"]').bootstrapDualListbox({
+            nonSelectedListLabel: 'Available labs',
+            selectedListLabel: 'Selected labs',
+            preserveSelectionOnMove: 'moved',
+            moveAllLabel: '>>',
+            removeAllLabel: '<<'
 
-            });
-
-
-            //  $("#demoform").submit(function(event) {
-            //   event.preventDefault();
-
-            $("#demoform").submit(function() {
+        });
 
 
-                alert('Are you sure to send all selected labs?\n' + $('[name="duallistbox_demo1[]"]').val());
-                //   Swal.fire({
-                //   title: 'Error!',
-                //   text: 'Do you want to continue',
-                //   icon: 'error',
-                //   confirmButtonText: 'Cool'
-                // })
+        //  $("#demoform").submit(function(event) {
+        //   event.preventDefault();
 
-                return true
+        $("#demoform").submit(function() {
 
 
-            });
-        </script>
-    @endsection
+            alert('Are you sure to send all selected labs?\n' + $('[name="duallistbox_demo1[]"]').val());
+            //   Swal.fire({
+            //   title: 'Error!',
+            //   text: 'Do you want to continue',
+            //   icon: 'error',
+            //   confirmButtonText: 'Cool'
+            // })
+
+            return true
+
+
+        });
+    </script>
+
+@endsection

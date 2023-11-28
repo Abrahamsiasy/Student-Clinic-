@@ -32,4 +32,11 @@ class LabTest extends Model
     {
         return $this->belongsTo(LabCatagory::class);
     }
+
+    public function labTestRequests()
+    {
+        return $this->hasMany(LabTestRequest::class);
+    }
+
+   
 }

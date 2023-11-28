@@ -1,76 +1,42 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container prescription-paper">
-        <div class="row prescription-header">
-            {{-- <div class="col-2">
-                <img src="{{ asset('your-logo.png') }}" alt="Logo" class="logo-img">
-            </div> --}}
-            <div class="col-10">
-                <h4 class="prescription-title">Medical Prescription</h4>
-            </div>
+    <div class="card prescription-card">
+        <div class="card-header prescription-header">
+            <h4 class="card-title">Medical Prescription</h4>
         </div>
 
-        <div class="row prescription-body">
-            <div class="col-md-6">
-                <div class="prescription-details">
-                    <div class="mb-4">
-                        <span class="prescription-label">Patient Name:</span>
-                        <span class="prescription-value">{{ $prescription->encounter->student->first_name ?? '-' }}</span>
+        <div class="card-body prescription-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="prescription-details">
+                        <p><strong>Patient Name:</strong> {{ $prescription->encounter->student->first_name ?? '-' }}</p>
+                        <p><strong>Date:</strong> {{ $prescription->created_at ?? '-' }}</p>
                     </div>
-                    <div class="mb-4">
-                        <span class="prescription-label">Date:</span>
-                        <span class="prescription-value">{{ $prescription->created_at ?? '-' }}</span>
+                </div>
+                <div class="col-md-6">
+                    <div class="prescription-details">
+                        <p><strong>Doctor Name:</strong> {{ optional($prescription->encounter->Doctor)->name ?? '-' }}
+                        </p>
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="prescription-details">
-                    <div class="mb-4">
-                        <span class="prescription-label">Doctor Name:</span>
-                        <span
-                            class="prescription-value">{{ optional($prescription->encounter->Doctor)->user->name ?? '-' }}</span>
 
-                    </div>
+            <hr>
 
-                </div>
-            </div>
-        </div>
-
-        <div class="row prescription-details">
-            <div class="col-12">
+            <div class="prescription-details">
                 <h5 class="prescription-subtitle">Prescription Details:</h5>
-                <div class="mb-4">
-                    <span class="prescription-label">Drug Name:</span>
-                    <span class="prescription-value">{{ $prescription->drug_name ?? '-' }}</span>
-                </div>
-                <div class="mb-4">
-                    <span class="prescription-label">Dose:</span>
-                    <span class="prescription-value">{{ $prescription->dose ?? '-' }}</span>
-                </div>
-                <div class="mb-4">
-                    <span class="prescription-label">Frequency:</span>
-                    <span class="prescription-value">{{ $prescription->frequency ?? '-' }}</span>
-                </div>
-                <div class="mb-4">
-                    <span class="prescription-label">Duration:</span>
-                    <span class="prescription-value">{{ $prescription->duration ?? '-' }}</span>
-                </div>
-                <div class="mb-4">
-                    <span class="prescription-label">Other Info:</span>
-                    <span class="prescription-value">{{ $prescription->other_info ?? '-' }}</span>
-                </div>
-                <div class="mb-4">
-                    <span class="prescription-label">Main Diagnosis ID:</span>
-                    <span class="prescription-value">{{ optional($prescription->mainDiagnosis)->id ?? '-' }}</span>
-                </div>
+                <p><strong>Drug Name:</strong> {{ $prescription->drug_name ?? '-' }}</p>
+                <p><strong>Dose:</strong> {{ $prescription->dose ?? '-' }}</p>
+                <p><strong>Frequency:</strong> {{ $prescription->frequency ?? '-' }}</p>
+                <p><strong>Duration:</strong> {{ $prescription->duration ?? '-' }}</p>
+                <p><strong>Other Info:</strong> {{ $prescription->other_info ?? '-' }}</p>
+                <p><strong>Main Diagnosis ID:</strong> {{ optional($prescription->mainDiagnosis)->id ?? '-' }}</p>
             </div>
         </div>
 
-        <div class="row prescription-footer mt-4">
-            <div class="col-12">
-                <p class="prescription-signature">Doctor's Signature: ________________________</p>
-            </div>
+        <div class="card-footer prescription-footer">
+            <p class="prescription-signature"><strong>Doctor's Signature:</strong> ________________________</p>
         </div>
     </div>
 @endsection

@@ -102,7 +102,7 @@ class UserController extends Controller
 
         // ): RedirectResponse {
         // dd($request->roles);
-        if (in_array(Constants::PHARMACY_USER_ROLE_ID, $request->roles) and  in_array(Constants::STORE_USER_ROLE_ID, $request->roles)) {
+        if (in_array(Constants::PHARMACY_USER_ROLE_ID, $request->roles) and in_array(Constants::STORE_USER_ROLE_ID, $request->roles)) {
             return redirect()->back()->with('error', 'Store user and Pharmacy user can\'t be assigned simultaneously');
         }
         $this->authorize('update', $user);
@@ -122,12 +122,14 @@ class UserController extends Controller
 
         if (in_array(Constants::PHARMACY_USER_ROLE_ID, $request->roles)) {
             $pharmacy = true;
-            $pharmacies = Pharmacy::pluck('name', 'id');;
+            $pharmacies = Pharmacy::pluck('name', 'id');
+
 
             return view('app.roles.assignPlaceForPharmacyOrStore', compact('pharmacy', 'pharmacies', 'user'));
         } elseif (in_array(Constants::STORE_USER_ROLE_ID, $request->roles)) {
             $pharmacy = false;
-            $stores = Store::pluck('name', 'id');;
+            $stores = Store::pluck('name', 'id');
+
 
             return view('app.roles.assignPlaceForPharmacyOrStore', compact('pharmacy', 'stores', 'user'));
         }
@@ -153,23 +155,111 @@ class UserController extends Controller
 
     public function assignPharamacyPlace(Request $request, Pharmacy $pharmacy, User $user)
     {
+        PharmacyUser::where('user_id', $user->id)->delete();
         $pharmacyUser = PharmacyUser::create([
             'user_id' => $user->id,
             'pharmacy_id' => $request->pharmacy_id
         ]);
         return redirect()
-            ->route('users.index', $user)
+            ->back()
             ->withSuccess(__('User has been assigned to Pharmacy'));
     }
 
     public function assignStorePlace(Request $request, Store $store, User $user)
     {
+        StoreUser::where('user_id', $user->id)->delete();
         $storeUser = StoreUser::create([
             'user_id' => $user->id,
             'store_id' => $request->store_id
         ]);
         return redirect()
-            ->route('users.index', $user)
+            ->back()
+            ->withSuccess(__('User has been assigned to Store'));
+    }
+
+    public function store_users(Request $request)
+    {
+
+        $storeUsersWithStore = User::whereHas('roles', function ($query) {
+            $query->where('name', Constants::STORE_USER_ROLE); // Adjust 'name' based on your actual column
+        })
+        ->with('storeUser.store')
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
+
+
+
+
+            return view('app.store_and_pharmacy_users.store', compact('storeUsersWithStore', ));
+
+
+    }
+    public function pharmacy_users(Request $request)
+    {
+
+
+
+        $pharmacyUsersWithPharmacy = User::whereHas('roles', function ($query) {
+            $query->where('name', Constants::PHARMACY_USER);
+        })
+            ->with('pharmacyUsers.pharmacy') // Eager load the relationship
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
+
+        return view('app.store_and_pharmacy_users.pharmacy', compact('pharmacyUsersWithPharmacy'));
+
+
+    }
+
+    public function assignPharmacyView(User $user){
+        $pharmacies = Pharmacy::pluck('name', 'id');
+
+
+        return view('app.store_and_pharmacy_users.assign_pharmacy', compact( 'pharmacies', 'user',));
+
+
+    }
+
+
+
+
+    public function assignStoreView(User $user){
+
+
+        $stores = Store::pluck('name', 'id');
+
+
+        return view('app.store_and_pharmacy_users.assign_store', compact( 'stores', 'user'));
+
+
+    }
+    public function assignPharmacy(Request $request, Pharmacy $pharmacy, User $user)
+    {
+        PharmacyUser::where('user_id', $user->id)->delete();
+        $pharmacyUser = PharmacyUser::create([
+            'user_id' => $user->id,
+            'pharmacy_id' => $request->pharmacy_id
+        ]);
+        return redirect()
+            ->route('store_and_pharmacy_users.pharmacy')
+            ->withSuccess(__('User has been assigned to Pharmacy'));
+    }
+
+    public function assignStore(Request $request, Store $store, User $user)
+    {
+        // dd($request);
+
+        StoreUser::where('user_id', $user->id)->delete();
+        $storeUser = StoreUser::create([
+            'user_id' => $user->id,
+            'store_id' => $request->store_id
+        ]);
+        return redirect()
+            ->route('store_and_pharmacy_users.store')
             ->withSuccess(__('User has been assigned to Store'));
     }
 }
