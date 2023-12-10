@@ -182,7 +182,7 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::resource('students', StudentController::class);
     Route::resource('suppliers', SupplierController::class);
 
-
+    Route::post('user/{user}/role_permission_update', [UserController::class, 'updateRoleAndPermission'])->name('user.role.permission.update');
     Route::post('/user/{user}/assignPharmacy', [UserController::class, 'assignPharamacyPlace'])->name('user.assignPharamacyPlace');
     Route::post('/user/{user}/assignStore', [UserController::class, 'assignStorePlace'])->name('user.assignStorePlace');
     Route::get('/store_and_pharmacy_users/pharmacy/assignPharmacy/{user}', [UserController::class, 'assignPharmacyView'])->name('store_and_pharmacy_users.assignPharamacyPlace');
@@ -238,6 +238,11 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::get('/prescriptions/history', [PrescriptionController::class, 'history'])->name('prescriptions.history');
     Route::get('/prescriptions/approve/{prescription}', [PrescriptionController::class, 'approve'])->name('prescriptions.approve');
     Route::get('/prescriptions/reject/{prescription}', [PrescriptionController::class, 'reject'])->name('prescriptions.reject');
+
+
+    Route::get('/allRequest/approve', [ProductRequestController::class, 'toBeApprove'])->name('request.approve.index');
+    Route::post('/allRequest/approve/', [ProductRequestController::class, 'approveByAdmin'])->name('request.approve.approve');
+    Route::post('/allRequest/reject/', [ProductRequestController::class, 'approveByAdmin'])->name('request.approve.reject');
 
     Route::resource('stores', StoreController::class);
     Route::resource('products', ProductController::class);
