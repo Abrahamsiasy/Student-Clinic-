@@ -36,7 +36,7 @@ class OPDReportExport implements FromView, ShouldAutoSize
 
     public function view(): View
     {
-        return view('app.report.table',['diagnoses' => $this->diagnoses]);
+        return view('table',['diagnoses' => $this->diagnoses]);
     }
     
 }
