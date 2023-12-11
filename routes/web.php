@@ -15,6 +15,7 @@ use App\Http\Controllers\StoreController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\CampusController;
 use App\Http\Controllers\ClinicController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SpeechController;
 use App\Http\Controllers\CollageController;
 use App\Http\Controllers\LabTestController;
@@ -253,4 +254,6 @@ Route::prefix('/')->middleware('auth')->group(function () {
 
     Route::get('/submit', [SpeechController::class, 'submit'])->name('submit');
     Route::post('/changeRoomAll', [EncounterController::class, 'roomChangeAll'])->name('encounters.all');
+    Route::resource('report', ReportController::class);
+    Route::get('report/export-excel/{startDate}/{endDate}',[ReportController::class, 'exportExcel'])->name('opd-report.exportExcel');
 });

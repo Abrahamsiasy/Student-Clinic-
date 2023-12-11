@@ -649,6 +649,14 @@
                                             <p>HMIS Report</p>
                                         </a>
                                     </li>
+                                    @can(['view report','export report'])
+                                        <li class="nav-item">
+                                            <a href="{{route('report.index')}}" class="nav-link ">
+                                                <i class="fa fa-caret-right nav-icon"></i>
+                                                <p> OPD Report</p>
+                                            </a>
+                                        </li>
+                                    @endcan
 
                                 </ul>
                             </li>

@@ -234,7 +234,8 @@ class PermissionsSeeder extends Seeder
         Permission::updateOrCreate(['name' => 'update users']);
         Permission::updateOrCreate(['name' => 'delete users']);
 
-
+        Permission::updateOrCreate(['name' => 'view report']);
+        Permission::updateOrCreate(['name' => 'export report']);
 
 
         $pharmacy_user = Role::updateOrCreate(['name' => Constants::PHARMACY_USER]);
