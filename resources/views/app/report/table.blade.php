@@ -5,20 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    {{-- <title>Document</title>
-
-    <style>
-        table,
-        td,
-        th {
-            border: 1px solid;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-    </style> --}}
 </head>
 
 <body>
@@ -26,10 +12,10 @@
     <table>
         <thead>
             <tr>
-                <th colspan="15" class="text-center" style="text-align:center;font-size: 19px;">Health Facility Monthly OPD Service Report Form</th>
+                <th colspan="15"  style="text-align:center;font-size: 19px;">Health Facility Monthly OPD Service Report Form</th>
             </tr>
             <tr>
-                <th colspan="15" class="text-center" style="text-align:center;">
+                <th colspan="15"  style="text-align:center;">
                     Zone ____  Woreda  ___  Name of  Health Facility ___Jumc healt center__Year_______ Month_______  Date ____________
                 </th>
             </tr>
@@ -37,8 +23,8 @@
                 <th rowspan="2">S.No</th>
                 <th rowspan="2">National classification of Disease(NCoD)</th>
                 <th rowspan="2">Min. NCoD Code</th>
-                <th colspan="6" class="text-center" style="background:#d2d6de;text-align: center">Male</th>
-                <th colspan="6" class="text-center" style="background:#a8c7fa;text-align: center">Female</th>
+                <th colspan="6"  style="background:#d2d6de;text-align: center">Male</th>
+                <th colspan="6"  style="background:#a8c7fa;text-align: center">Female</th>
             </tr>
             <tr >
                 <th style="background:#d2d6de">
