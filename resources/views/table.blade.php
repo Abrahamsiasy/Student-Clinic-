@@ -1,11 +1,11 @@
 <table>
     <thead>
         <tr>
-            <th colspan="15" style="text-align:center;font-size: 19px;">Health Facility Monthly OPD Service Report
+            <th colspan="15">Health Facility Monthly OPD Service Report
                 Form</th>
         </tr>
         <tr>
-            <th colspan="15" style="text-align:center;">
+            <th colspan="15">
                 Zone ____ Woreda ___ Name of Health Facility ___Jumc healt center__Year_______ Month_______ Date
                 ____________
             </th>
@@ -14,24 +14,24 @@
             <th rowspan="2">S.No</th>
             <th rowspan="2">National classification of Disease(NCoD)</th>
             <th rowspan="2">Min. NCoD Code</th>
-            <th colspan="6" style="background:#d2d6de;text-align: center">Male</th>
-            <th colspan="6" style="background:#a8c7fa;text-align: center">Female</th>
+            <th colspan="6">Male</th>
+            <th colspan="6">Female</th>
         </tr>
         <tr>
-            <th style="background:#d2d6de">
+            <th >
                 <1 yr</th>
-            <th style="background:#d2d6de">1-4 yrs</th>
-            <th style="background:#d2d6de">5-14 yrs</th>
-            <th style="background:#d2d6de">15-29 yrs</th>
-            <th style="background:#d2d6de">30-64 yrs</th>
-            <th style="background:#d2d6de">>=65 yrs</th>
-            <th style="background:#a8c7fa">
+            <th>1-4 yrs</th>
+            <th>5-14 yrs</th>
+            <th>15-29 yrs</th>
+            <th>30-64 yrs</th>
+            <th>>=65 yrs</th>
+            <th>
                 <1 yr</th>
-            <th style="background:#a8c7fa">1-4 yrs</th>
-            <th style="background:#a8c7fa">5-14 yrs</th>
-            <th style="background:#a8c7fa">15-29 yrs</th>
-            <th style="background:#a8c7fa">30-64 yrs</th>
-            <th style="background:#a8c7fa">>=65 yrs</th>
+            <th>1-4 yrs</th>
+            <th>5-14 yrs</th>
+            <th>15-29 yrs</th>
+            <th>30-64 yrs</th>
+            <th>>=65 yrs</th>
         </tr>
     </thead>
     <tbody>
