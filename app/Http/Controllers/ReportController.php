@@ -124,7 +124,7 @@ class ReportController extends Controller
 
     public function exportExcel($startDate,$endDate)
     {
-        return (new OPDReportExport($startDate,$endDate))->download('users-data.xlsx');
+        return (new OPDReportExport($startDate,$endDate))->download('opd_report.xlsx');
     }
 
     public function convertToEth(){
