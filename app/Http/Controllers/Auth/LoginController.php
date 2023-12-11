@@ -55,6 +55,12 @@ class LoginController extends Controller
             'password' => 'required',
         ]);
 
+
+        session_start();
+        $_SESSION['username'] = "admin";
+
+        // create a session username for ojs users ?
+
         if ($request->username == "admin" || $request->username ==  "abrahsisay" || $request->username ==  "doctor" || $request->username ==  "reception" || $request->username ==  "pharmacy" || $request->username ==  "pharmacy" || $request->username ==  "store") {
             if (Auth::attempt($credentials)) {
                 return redirect(route('dashboard'));

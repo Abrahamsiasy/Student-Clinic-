@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
@@ -22,16 +20,16 @@
             width: 25px;
         }
 
-         .select2-selection {
-          height: auto !important;
-          }
+        .select2-selection {
+            height: auto !important;
+        }
 
         /* * {
             outline: 1px solid red;
         } */
     </style>
 
-    
+
 
     <!-- Styles -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.1/dist/css/adminlte.min.css">

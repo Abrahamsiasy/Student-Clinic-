@@ -3,21 +3,7 @@
 @section('content')
     <div class="">
         <div class="card card-primary card-outline">
-            <div class="container mt-4">
-                @if (session('success'))
-                    <div class="alert alert-success">
-                        {{ session('success') }}
-                    </div>
-                @endif
 
-                @if (session('error'))
-                    <div class="alert alert-danger">
-                        {{ session('error') }}
-                    </div>
-                @endif
-
-                <!-- Display the list of medical sick leaves -->
-            </div>
             <div class="card-header">
                 @if (isset($danger_message))
                     <div class="alert alert-danger">
@@ -206,15 +192,15 @@
                                                                                 <td>{{ $encounter->student->fullName }}</td>
                                                                                 <td>{{ $encounter?->doctor->name ?? '-' }}</td>
                                                                                 <td>
-                                                                                    @if ($encounter->status ==3)  
+                                                                                    @if ($encounter->status == 3)
                                                                                         Closed
-                                                                                    @elseif ($encounter->status ==4)  
-                                                                                    Missed
-                                                                                    @elseif ($encounter->status ==2)
-                                                                                    In-progress
+                                                                                    @elseif ($encounter->status == 4)
+                                                                                        Missed
+                                                                                    @elseif ($encounter->status == 2)
+                                                                                        In-progress
                                                                                     @else
-
-                                                                                        <span class="badge badge-primary">Checked-in</span>
+                                                                                        <span
+                                                                                            class="badge badge-primary">Checked-in</span>
                                                                                     @endif
                                                                                 <td>
                                                                                     <a href="{{ route('printSickLeave', ['encounterId' => $encounter->id]) }}"
@@ -225,12 +211,15 @@
 
 
                                                                                     @can('view', $encounter)
-                                                                                    <a href="{{ route('encounters.show', $encounter) }}">
-                                                                                        <button type="button" class="btn btn-sm btn-outline-primary mx-1">
-                                                                                            <i class="icon fa fa-list"></i> Details
-                                                                                        </button>
-                                                                                    </a>
-                                                                                @endcan
+                                                                                        <a
+                                                                                            href="{{ route('encounters.show', $encounter) }}">
+                                                                                            <button type="button"
+                                                                                                class="btn btn-sm btn-outline-primary mx-1">
+                                                                                                <i class="icon fa fa-list"></i>
+                                                                                                Details
+                                                                                            </button>
+                                                                                        </a>
+                                                                                    @endcan
 
 
 
@@ -961,28 +950,24 @@
                     <div class="col-md-4 mb-2">
                         <i class="fa fa-caret-right"></i>
                         <span>Age:</span>
-                  
 
-                               
-                        @if($encounter->student->date_of_birth === null)
-                              
-                       
+
+
+                        @if ($encounter->student->date_of_birth === null)
                             {{-- {{ route('map-rfid') }} --}}
-                        <form method="post" action="#">  
-                            @csrf
-                            <input type="hidden" name="student_id" value="{{ $encounter->student->id }}">
-                            <input type="text"   required class="form-control-sm" autocomplete="off"  name="rfid" placeholder="Enter Age">
-                            <button type="submit" class="btn btn-sm btn-outline-primary mr-1" > <i class="icon fa fa-plus"></i> Save</button>
-                        </form>
-                   
-
-                    @else
-                        <span style="color:red;">
-                            {{ \Carbon\Carbon::parse($encounter->student->date_of_birth)->diff(\Carbon\Carbon::now())->format('%y years old') }}
-                        </span>
-
-
-                    @endif
+                            <form method="post" action="#">
+                                @csrf
+                                <input type="hidden" name="student_id" value="{{ $encounter->student->id }}">
+                                <input type="text" required class="form-control-sm" autocomplete="off" name="rfid"
+                                    placeholder="Enter Age">
+                                <button type="submit" class="btn btn-sm btn-outline-primary mr-1"> <i
+                                        class="icon fa fa-plus"></i> Save</button>
+                            </form>
+                        @else
+                            <span style="color:red;">
+                                {{ \Carbon\Carbon::parse($encounter->student->date_of_birth)->diff(\Carbon\Carbon::now())->format('%y years old') }}
+                            </span>
+                        @endif
 
 
 
@@ -1437,7 +1422,7 @@
 
     {{-- <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> --}}
 
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    {{-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script> --}}
 
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <!-- plugin -->
