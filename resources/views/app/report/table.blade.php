@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    {{-- <title>Document</title>
 
     <style>
         table,
@@ -18,12 +18,12 @@
             width: 100%;
             border-collapse: collapse;
         }
-    </style>
+    </style> --}}
 </head>
 
 <body>
     
-    <table class="table table-bordered table-hover  table-sm table-condensed">
+    <table>
         <thead>
             <tr>
                 <th colspan="15" class="text-center" style="text-align:center;font-size: 19px;">Health Facility Monthly OPD Service Report Form</th>
