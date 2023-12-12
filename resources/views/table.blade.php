@@ -82,26 +82,12 @@
     </tbody>
 </table> --}}
 
-{{-- <table>
-    <tbody>
-        <thead>
-            <tr>
-                <th>Health Facility Monthly OPD Service Report Form</th>
-            </tr>
-        </thead>
-        <tbody>
-
-        </tbody>
-    </tbody>
-</table> --}}
 
 <table>
     <thead>
         <tr>
             <th>Health Facility Monthly OPD Service Report Form</th>
-            <th>Contact</th>
-            <th>Country</th>
-          </tr>
+        </tr>
     </thead>
     <tbody>
         <tr>
