@@ -1,4 +1,4 @@
-{{-- <table>
+<table>
     <thead>
         <tr>
             <th colspan="15">Health Facility Monthly OPD Service Report
@@ -18,15 +18,15 @@
             <th colspan="6">Female</th>
         </tr>
         <tr>
-            <th >
-                <1 yr</th>
+            {{-- <th >
+                <1 yr</th> --}}
             <th>1-4 yrs</th>
             <th>5-14 yrs</th>
             <th>15-29 yrs</th>
             <th>30-64 yrs</th>
             <th>>=65 yrs</th>
-            <th>
-                <1 yr</th>
+            {{-- <th>
+                <1 yr</th> --}}
             <th>1-4 yrs</th>
             <th>5-14 yrs</th>
             <th>15-29 yrs</th>
@@ -80,51 +80,7 @@
             </tr>
         @endforeach
     </tbody>
-</table> --}}
+</table>
 
 
-<table>
-    <thead>
-        <tr>
-            <th colspan="3" style="text-align: center">Health Facility Monthly OPD Service Report Form</th>
-        </tr>
-        <tr>
-            <th>Zone ____ Woreda ___ Name of Health Facility ___Jumc healt center__Year_______ Month_______ Date____________</th>
-        </tr>
-        <tr>
-            <th rowspan="2">S.No</th>
-            <th rowspan="2">National classification of Disease(NCoD)</th>
-            <th rowspan="2">Min. NCoD Code</th>
-            <th colspan="6">Male</th>
-            <th colspan="6">Female</th>
-        </tr>
-        <tr>
-            {{-- <th>
-                <1 yr</th> --}}
-            <th>1-4 yrs</th>
-            <th>5-14 yrs</th>
-            <th>15-29 yrs</th>
-            <th>30-64 yrs</th>
-            <th>>=65 yrs</th>
-            <th>
-                {{-- <1 yr</th> --}}
-            <th>1-4 yrs</th>
-            <th>5-14 yrs</th>
-            <th>15-29 yrs</th>
-            <th>30-64 yrs</th>
-            <th>>=65 yrs</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>Alfreds Futterkiste</td>
-            <td>Maria Anders</td>
-            <td>Germany</td>
-          </tr>
-          <tr>
-            <td>Centro comercial Moctezuma</td>
-            <td>Francisco Chang</td>
-            <td>Mexico</td>
-          </tr>
-    </tbody>
-  </table>
+
