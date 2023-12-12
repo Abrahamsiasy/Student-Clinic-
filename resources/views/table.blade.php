@@ -98,7 +98,7 @@
 <table>
     <thead>
         <tr>
-            <th>Company</th>
+            <th>Health Facility Monthly OPD Service Report Form</th>
             <th>Contact</th>
             <th>Country</th>
           </tr>
