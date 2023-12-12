@@ -91,6 +91,29 @@
         <tr>
             <th>Zone ____ Woreda ___ Name of Health Facility ___Jumc healt center__Year_______ Month_______ Date____________</th>
         </tr>
+        <tr>
+            <th rowspan="2">S.No</th>
+            <th rowspan="2">National classification of Disease(NCoD)</th>
+            <th rowspan="2">Min. NCoD Code</th>
+            <th colspan="6">Male</th>
+            <th colspan="6">Female</th>
+        </tr>
+        <tr>
+            <th>
+                <1 yr</th>
+            <th>1-4 yrs</th>
+            <th>5-14 yrs</th>
+            <th>15-29 yrs</th>
+            <th>30-64 yrs</th>
+            <th>>=65 yrs</th>
+            <th>
+                <1 yr</th>
+            <th>1-4 yrs</th>
+            <th>5-14 yrs</th>
+            <th>15-29 yrs</th>
+            <th>30-64 yrs</th>
+            <th>>=65 yrs</th>
+        </tr>
     </thead>
     <tbody>
         <tr>
