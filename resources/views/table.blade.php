@@ -98,22 +98,22 @@
             <th colspan="6">Male</th>
             <th colspan="6">Female</th>
         </tr>
-        {{-- <tr>
-            <th>
-                <1 yr</th>
+        <tr>
+            {{-- <th>
+                <1 yr</th> --}}
             <th>1-4 yrs</th>
             <th>5-14 yrs</th>
             <th>15-29 yrs</th>
             <th>30-64 yrs</th>
             <th>>=65 yrs</th>
             <th>
-                <1 yr</th>
+                {{-- <1 yr</th> --}}
             <th>1-4 yrs</th>
             <th>5-14 yrs</th>
             <th>15-29 yrs</th>
             <th>30-64 yrs</th>
             <th>>=65 yrs</th>
-        </tr> --}}
+        </tr>
     </thead>
     <tbody>
         <tr>
