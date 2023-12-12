@@ -86,7 +86,7 @@
 <table>
     <thead>
         <tr>
-            <th>Health Facility Monthly OPD Service Report Form</th>
+            <th colspan="3">Health Facility Monthly OPD Service Report Form</th>
         </tr>
     </thead>
     <tbody>
