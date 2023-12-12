@@ -19,14 +19,14 @@
           </tr>
           <tr>
               <th style="background:#d2d6de">
-                  <1 yr</th>
+                &lt;1 yr</th>
               <th style="background:#d2d6de">1-4 yrs</th>
               <th style="background:#d2d6de">5-14 yrs</th>
               <th style="background:#d2d6de">15-29 yrs</th>
               <th style="background:#d2d6de">30-64 yrs</th>
               <th style="background:#d2d6de">>=65 yrs</th>
               <th style="background:#a8c7fa">
-                  <1 yr</th>
+                &lt;1 yr</th>
               <th style="background:#a8c7fa">1-4 yrs</th>
               <th style="background:#a8c7fa">5-14 yrs</th>
               <th style="background:#a8c7fa">15-29 yrs</th>
