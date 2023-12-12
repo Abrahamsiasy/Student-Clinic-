@@ -34,7 +34,7 @@
             <th>>=65 yrs</th>
         </tr>
     </thead>
-    <tbody>
+    {{-- <tbody>
 
         @foreach ($diagnoses as $code => $diagnosisData)
             <tr>
@@ -79,5 +79,5 @@
                 </td>
             </tr>
         @endforeach
-    </tbody>
+    </tbody> --}}
 </table>
