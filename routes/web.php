@@ -241,9 +241,9 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::get('/prescriptions/reject/{prescription}', [PrescriptionController::class, 'reject'])->name('prescriptions.reject');
 
 
-    Route::get('/allRequest/approve', [ProductRequestController::class, 'toBeApprove'])->name('request.approve.index');
-    Route::post('/allRequest/approve/', [ProductRequestController::class, 'approveByAdmin'])->name('request.approve.approve');
-    Route::post('/allRequest/reject/', [ProductRequestController::class, 'approveByAdmin'])->name('request.approve.reject');
+    Route::get('/groupRequest/approve', [ProductRequestController::class, 'toBeApprove'])->name('groupRequest.index');
+    Route::post('/groupRequest/approve/', [ProductRequestController::class, 'approveByAdmin'])->name('groupRequest.approve');
+    Route::post('/groupRequest/reject/', [ProductRequestController::class, 'approveByAdmin'])->name('groupRequest.reject');
 
     Route::resource('stores', StoreController::class);
     Route::resource('products', ProductController::class);

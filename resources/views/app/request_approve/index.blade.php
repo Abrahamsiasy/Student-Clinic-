@@ -58,7 +58,7 @@
                                 </div>
 
                                 <div class="row ml-auto">
-                                    <form action="{{ route('request.approve.approve') }}"
+                                    <form action="{{ route('groupRequest.approve') }}"
                                     method="POST">
                                     @csrf
                                     <input type="hidden" name="groupofRequest" value="{{ json_encode($groupofRequest) }}">
@@ -67,7 +67,7 @@
 
                                     </form>
 
-                                    <form action="{{ route('request.approve.reject') }}"
+                                    <form action="{{ route('groupRequest.reject') }}"
                                     method="POST">
                                     <input type="hidden" name="groupofRequest" value="{{ json_encode($groupofRequest) }}">
 

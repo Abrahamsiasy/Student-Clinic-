@@ -119,7 +119,6 @@ class ProductRequestController extends Controller
             );
         }
         abort(Response::HTTP_UNAUTHORIZED, 'Unauthorized access.');
-
     }
 
 
@@ -299,7 +298,7 @@ class ProductRequestController extends Controller
 
             $productRequest->status = 'Approved';
             $productRequest->approval_amount = $request->approvalAmount;
-            $productRequest->appoved_at=Carbon::now()->format('Y-m-d');
+            $productRequest->appoved_at = Carbon::now()->format('Y-m-d');
             $productRequest->save();
 
             return redirect()
@@ -309,11 +308,12 @@ class ProductRequestController extends Controller
         abort(Response::HTTP_UNAUTHORIZED, 'Unauthorized access.');
     }
 
+    ///This function will fetch the requests that has been accepted by the stores from pharmacies but yet haven't been approved by the approved
     public function toBeApprove(Request $request)
     {
         // if (Auth::user()->can('requests.list')) {
 
-        $approvedRequests = ProductRequest::            where('status', 'Approved')
+        $approvedRequests = ProductRequest::where('status', 'Approved')
             ->orderByRaw("approved_at DESC, store_id ASC, pharmacy_id ASC")
             ->get();
 
@@ -327,14 +327,15 @@ class ProductRequestController extends Controller
 
 
             array_push($request, $approvedRequests[0]);
-
         }
         // dd($approvedRequests[0]);
         while ($i < count($approvedRequests)) {
             while (true) {
-                if ($approvedRequests[$i]->store_id == $request[0]->store_id and
-                 $approvedRequests[$i]->pharmacy_id == $request[0]->pharmacy_id and
-                 $approvedRequests[$i]->approved_at == $request[0]->approved_at) {
+                if (
+                    $approvedRequests[$i]->store_id == $request[0]->store_id and
+                    $approvedRequests[$i]->pharmacy_id == $request[0]->pharmacy_id and
+                    $approvedRequests[$i]->approved_at == $request[0]->approved_at
+                ) {
 
 
                     array_push($request, $approvedRequests[$i]);
@@ -348,10 +349,7 @@ class ProductRequestController extends Controller
                     $i++;
                     break;
                 }
-
-
             }
-
         }
         array_push($groupofRequests, $request);
         // dd($request);
@@ -362,15 +360,16 @@ class ProductRequestController extends Controller
         // }
         // }
 
-        return view('app.request_approve.index',compact('groupofRequests'));
+        return view('app.request_approve.index', compact('groupofRequests'));
         // abort(Response::HTTP_UNAUTHORIZED, 'Unauthorized access.');
 
     }
+    ///This function will approve the requests that has been accepted by the stores from pharmacies but yet haven't been approved by the approved
     public function approveByAdmin(Request $request)
     {
         $groupofRequest = json_decode($request->input('groupofRequest'));
 
-
+        
         dd($groupofRequest);
 
         if (Auth::user()->can('requests.approve')) {
@@ -382,21 +381,17 @@ class ProductRequestController extends Controller
         }
 
         abort(Response::HTTP_UNAUTHORIZED, 'Unauthorized access.');
-
-   }
+    }
+     ///This function will reject the requests that has been accepted by the stores from pharmacies but yet haven't been approved by the approved
     public function rejectByAdmin($groupofRequest)
     {
         if (Auth::user()->can('requests.approve')) {
 
             foreach ($groupofRequest as $request) {
-
-
             }
         }
 
         abort(Response::HTTP_UNAUTHORIZED, 'Unauthorized access.');
-
-
     }
 
     // public function reject(Request $request ,ProductRequest $productRequest)
