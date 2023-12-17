@@ -274,34 +274,12 @@ class ProductRequestController extends Controller
             $productRequest->to_be_approved = $request->approvalAmount;
 
 
-            // $items = Item::where('product_id', $productRequest->product_id)->orderBy('expire_date')->get();
-            // // dd($items);
-            // $approvedAmount = $request->approvalAmount;
-            // foreach ($items as $item) {
-            //     if ($item->number_of_units >= $approvedAmount) {
-            //         $t = ItemsInPharmacy::firstOrCreate(['item_id' => $item->id, 'pharmacy_id' => $productRequest->pharmacy_id]);
-            //         $t->count = $t->count + $approvedAmount;
-            //         $t->save();
-            //         $item->number_of_units = $item->number_of_units - $approvedAmount;
-            //         $item->save();
-            //         break;
-            //     } else {
-            //         $approvedAmount = $approvedAmount - $item->number_of_units;
-            //         $t = ItemsInPharmacy::firstOrCreate(['item_id' => $item->id, 'pharmacy_id' => $productRequest->pharmacy_id]);
-            //         $t->count = $t->count + $item->number_of_units;
-            //         $t->save();
 
-            //         $item->number_of_units = 0;
-            //         $item->save();
-            //     }
-            // }
-
-            // dd($items);
 
 
             $productRequest->status = 'Accepted';
             $productRequest->approval_amount = $request->approvalAmount;
-            $productRequest->appoved_at = Carbon::now()->format('Y-m-d');
+            $productRequest->approved_at = Carbon::now()->format('Y-m-d');
             $productRequest->save();
 
             return redirect()
@@ -333,7 +311,7 @@ class ProductRequestController extends Controller
         }
 
         while ($i < count($acceptedRequests)) {
-            while (true and $i<count($acceptedRequests)) {
+            while (true and $i < count($acceptedRequests)) {
                 if (
                     $acceptedRequests[$i]->store_id == $requests[0]->store_id and
                     $acceptedRequests[$i]->pharmacy_id == $requests[0]->pharmacy_id and
@@ -354,13 +332,13 @@ class ProductRequestController extends Controller
                 }
             }
         }
-        if($requests){
+        if ($requests) {
 
             array_push($groupofRequests, $requests);
         }
 
 
-        return view('app.request_approve.index', compact('groupofRequests'));
+        return view('app.group_requests.index', compact('groupofRequests'));
         // abort(Response::HTTP_UNAUTHORIZED, 'Unauthorized access.');
 
     }
@@ -368,6 +346,8 @@ class ProductRequestController extends Controller
     public function approveByAdmin(Request $request)
     {
         if (Auth::user()->can('groupRequest.approve')) {
+
+            $approver_id=Auth::user()->id;
             $groupofRequest = json_decode($request->input('groupofRequest'));
 
 
@@ -385,6 +365,7 @@ class ProductRequestController extends Controller
                 $productResponse->tin_number = $newTinNumber;
                 $productResponse->status = 1;
                 $productResponse->product_request_id = $re->id;
+                $productResponse->approved_by=$approver_id;
                 $productResponse->save();
 
 
@@ -410,12 +391,10 @@ class ProductRequestController extends Controller
                     }
                 }
 
-                $p=ProductRequest::find($re->id);
+                $p = ProductRequest::find($re->id);
                 // dd($p);
-                $p->status="Approved";
+                $p->status = "Approved";
                 $p->save();
-
-
             }
             return redirect()
                 ->route('groupRequest.index')
@@ -435,52 +414,24 @@ class ProductRequestController extends Controller
         $groupofRequest = json_decode($request->input('groupofRequest'));
 
         if (Auth::user()->can('groupRequest.reject')) {
-
+            $approved_by=Auth::user()->id;
             foreach ($groupofRequest as $re) {
                 $productResponse = new ProductResponse();
                 $productResponse->status = 0;
                 $productResponse->product_request_id = $re->id;
+                $productResponse->approved_by=$approved_by;
                 $productResponse->save();
 
 
-                // $items = Item::where('product_id', $re->product_id)->orderBy('expire_date')->get();
-                // // dd($items);
-                // $approvedAmount = $re->approval_amount;
-                // foreach ($items as $item) {
-                //     if ($item->number_of_units >= $approvedAmount) {
-                //         $t = ItemsInPharmacy::firstOrCreate(['item_id' => $item->id, 'pharmacy_id' => $re->pharmacy_id]);
-                //         $t->count = $t->count + $approvedAmount;
-                //         $t->save();
-                //         $item->number_of_units = $item->number_of_units - $approvedAmount;
-                //         $item->save();
-                //         break;
-                //     } else {
-                //         $approvedAmount = $approvedAmount - $item->number_of_units;
-                //         $t = ItemsInPharmacy::firstOrCreate(['item_id' => $item->id, 'pharmacy_id' => $re->pharmacy_id]);
-                //         $t->count = $t->count + $item->number_of_units;
-                //         $t->save();
-
-                //         $item->number_of_units = 0;
-                //         $item->save();
-                //     }
-                // }
-
-                $p=ProductRequest::find($re->id);
+                $p = ProductRequest::find($re->id);
                 // dd($p);
-                $p->status="Rejected";
+                $p->status = "Rejected";
                 $p->save();
-
-                // $re->status = 'Approved';
-                // $re->save();
-
-
-
             }
 
             return redirect()
                 ->route('groupRequest.index')
                 ->withSuccess(__('A group of request has been rejected successfully'));
-
         }
 
         abort(Response::HTTP_UNAUTHORIZED, 'Unauthorized access.');
@@ -511,7 +462,7 @@ class ProductRequestController extends Controller
     public function reject(Request $request, ProductRequest $productRequest)
     {
 
-        // dd($request);
+
         if (Auth::user()->can('store.request.*')) {
             $storeUser = StoreUser::where('user_id', Auth::user()->id)->first();
             if ($storeUser == null) {

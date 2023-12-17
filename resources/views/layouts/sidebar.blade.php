@@ -303,17 +303,17 @@
                                     </p>
                                 </a>
                                 <ul class="nav nav-treeview">
-                                    @can('sync-student')
+                                    @can('groupRequest.index')
                                         <li class="nav-item">
-                                            <a href="{{ route('groupRequest.index') }}" class="nav-link ">
+                                            <a href="{{ route('groupRequest.index') }}" class="nav-link {{ Request::is('groupRequest') ? 'active' : '' }} ">
                                                 <i class="fa fa-caret-right nav-icon"></i>
                                                 <p>To be approved</p>
                                             </a>
                                         </li>
                                     @endcan
-                                    @can('sync-photo')
+                                    @can('groupRequest.index')
                                         <li class="nav-item">
-                                            <a href="#" class="nav-link">
+                                            <a href="{{route('groupRequest.approvedList')}}" class="nav-link {{ Request::is('groupRequests/approved') ? 'active' : '' }}">
                                                 <i class="fa fa-caret-right nav-icon"></i>
                                                 <p>Approved requests</p>
                                             </a>

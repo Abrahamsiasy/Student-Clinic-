@@ -43,6 +43,7 @@ use App\Http\Controllers\ProductRequestController;
 use App\Http\Controllers\ItemsInPharmacyController;
 use App\Http\Controllers\MedicalSickLeaveController;
 use App\Http\Controllers\LabTestRequestGroupController;
+use App\Http\Controllers\ProductResponseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -241,9 +242,10 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::get('/prescriptions/reject/{prescription}', [PrescriptionController::class, 'reject'])->name('prescriptions.reject');
 
 
-    Route::get('/groupRequest/approve', [ProductRequestController::class, 'toBeApprove'])->name('groupRequest.index');
+    Route::get('/groupRequest/', [ProductRequestController::class, 'toBeApprove'])->name('groupRequest.index');
     Route::post('/groupRequest/approve/', [ProductRequestController::class, 'approveByAdmin'])->name('groupRequest.approve');
     Route::post('/groupRequest/reject/', [ProductRequestController::class, 'rejectByAdmin'])->name('groupRequest.reject');
+    Route::get('/groupRequests/approved',[ProductResponseController::class,'approved'])->name('groupRequest.approvedList');
 
     Route::resource('stores', StoreController::class);
     Route::resource('products', ProductController::class);
