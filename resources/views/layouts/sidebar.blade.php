@@ -321,7 +321,7 @@
                                     @endcan
                                     @can('groupRequest.index')
                                         <li class="nav-item">
-                                            <a href="{{route('groupRequest.rejectedList')}}" class="nav-link {{ Request::is('groupRequests/approved') ? 'active' : '' }}">
+                                            <a href="{{route('groupRequest.rejectedList')}}" class="nav-link {{ Request::is('groupRequests/rejected') ? 'active' : '' }}">
                                                 <i class="fa fa-caret-right nav-icon"></i>
                                                 <p>Rejected requests</p>
                                             </a>
