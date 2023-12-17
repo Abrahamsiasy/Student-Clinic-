@@ -305,7 +305,7 @@
                                 <ul class="nav nav-treeview">
                                     @can('groupRequest.index')
                                         <li class="nav-item">
-                                            <a href="{{ route('groupRequest.index') }}" class="nav-link {{ Request::is('groupRequest') ? 'active' : '' }} ">
+                                            <a href="{{ route('groupRequest.index') }}" class="nav-link {{ Request::is('groupRequests') ? 'active' : '' }} ">
                                                 <i class="fa fa-caret-right nav-icon"></i>
                                                 <p>To be approved</p>
                                             </a>
@@ -316,6 +316,14 @@
                                             <a href="{{route('groupRequest.approvedList')}}" class="nav-link {{ Request::is('groupRequests/approved') ? 'active' : '' }}">
                                                 <i class="fa fa-caret-right nav-icon"></i>
                                                 <p>Approved requests</p>
+                                            </a>
+                                        </li>
+                                    @endcan
+                                    @can('groupRequest.index')
+                                        <li class="nav-item">
+                                            <a href="{{route('groupRequest.rejectedList')}}" class="nav-link {{ Request::is('groupRequests/approved') ? 'active' : '' }}">
+                                                <i class="fa fa-caret-right nav-icon"></i>
+                                                <p>Rejected requests</p>
                                             </a>
                                         </li>
                                     @endcan

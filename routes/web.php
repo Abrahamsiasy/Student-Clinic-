@@ -242,10 +242,11 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::get('/prescriptions/reject/{prescription}', [PrescriptionController::class, 'reject'])->name('prescriptions.reject');
 
 
-    Route::get('/groupRequest/', [ProductRequestController::class, 'toBeApprove'])->name('groupRequest.index');
+    Route::get('/groupRequests/', [ProductRequestController::class, 'toBeApprove'])->name('groupRequest.index');
     Route::post('/groupRequest/approve/', [ProductRequestController::class, 'approveByAdmin'])->name('groupRequest.approve');
     Route::post('/groupRequest/reject/', [ProductRequestController::class, 'rejectByAdmin'])->name('groupRequest.reject');
     Route::get('/groupRequests/approved',[ProductResponseController::class,'approved'])->name('groupRequest.approvedList');
+    Route::get('/groupRequests/rejected',[ProductResponseController::class,'rejected'])->name('groupRequest.rejectedList');
 
     Route::resource('stores', StoreController::class);
     Route::resource('products', ProductController::class);
@@ -263,4 +264,5 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::post('/changeRoomAll', [EncounterController::class, 'roomChangeAll'])->name('encounters.all');
     Route::resource('report', ReportController::class);
     Route::get('report/export-excel/{startDate}/{endDate}',[ReportController::class, 'exportExcel'])->name('opd-report.exportExcel');
+
 });

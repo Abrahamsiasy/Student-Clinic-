@@ -366,6 +366,7 @@ class ProductRequestController extends Controller
                 $productResponse->status = 1;
                 $productResponse->product_request_id = $re->id;
                 $productResponse->approved_by=$approver_id;
+                $productResponse->approved_at = Carbon::now()->format('Y-m-d');
                 $productResponse->save();
 
 
@@ -420,6 +421,8 @@ class ProductRequestController extends Controller
                 $productResponse->status = 0;
                 $productResponse->product_request_id = $re->id;
                 $productResponse->approved_by=$approved_by;
+                $productResponse->rejected_at = Carbon::now()->format('Y-m-d');
+
                 $productResponse->save();
 
 

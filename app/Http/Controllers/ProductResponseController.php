@@ -132,6 +132,46 @@ class ProductResponseController extends Controller
     }
 
 
+    public function rejected(Request $request){
+
+
+        $tinNumber = $request->input('search');
+
+        $latestResponses = ProductResponse::get();
+        // ($tinNumber, function ($query) use ($tinNumber) {
+        //     return $query->where('tin_number', $tinNumber);
+        // })->get();
+        $groupedResponses = $latestResponses->groupBy('rejected_at');
+
+        $perPage = 5; // Number of items per page
+        $page = request()->get('page', 1); // Get the current page from the request or default to 1
+
+        // Use the 'forPage' method to get a specific page from the grouped collection
+        $paginatedGroupedResponses = $groupedResponses->forPage($page, $perPage);
+        // Create a LengthAwarePaginator instance
+        $paginator = new \Illuminate\Pagination\LengthAwarePaginator(
+            $paginatedGroupedResponses,
+            $groupedResponses->count(), // Total number of items in the original grouped collection
+            $perPage, // Number of items per page
+            $page, // Current page
+            ['path' => request()->url()] // Additional options for the paginator
+        );
+
+//    foreach($paginator as $key=>$datas){
+//             foreach($datas as $data){
+//                 dump($data->approvedBy                ->name);
+//             }
+//         }
+// dd($paginator);
+//         dd($paginator);
+
+        return view('app.group_requests.rejected', compact('paginator'));
+    }
+
+
+
+
+
 
 
 
