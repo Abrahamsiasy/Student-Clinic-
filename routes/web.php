@@ -243,7 +243,7 @@ Route::prefix('/')->middleware('auth')->group(function () {
 
     Route::get('/groupRequest/approve', [ProductRequestController::class, 'toBeApprove'])->name('groupRequest.index');
     Route::post('/groupRequest/approve/', [ProductRequestController::class, 'approveByAdmin'])->name('groupRequest.approve');
-    Route::post('/groupRequest/reject/', [ProductRequestController::class, 'approveByAdmin'])->name('groupRequest.reject');
+    Route::post('/groupRequest/reject/', [ProductRequestController::class, 'rejectByAdmin'])->name('groupRequest.reject');
 
     Route::resource('stores', StoreController::class);
     Route::resource('products', ProductController::class);
