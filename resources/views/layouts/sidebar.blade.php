@@ -224,7 +224,18 @@
                                         </li>
                                     @endcan
 
+                                    @if (env('PERMISSION_CHANGE'))
 
+                                    @can('view-any', Spatie\Permission\Models\Permission::class)
+                                        <li class="nav-item">
+                                            <a href="{{ route('permissions.index') }}"
+                                                class="nav-link {{ Request::is('permissions*') ? 'active' : '' }}">
+                                                <i class="fa fa-caret-right nav-icon"></i>
+                                                <p>Permissions</p>
+                                            </a>
+                                        </li>
+                                    @endcan
+                                    @endif
 
                                     @can('view-any', App\Models\User::class)
                                         <li class="nav-item">
@@ -245,7 +256,7 @@
                                             </a>
                                         </li>
                                     @endcan
-                                    
+
                                 </ul>
                             </li>
                         @endif
@@ -276,6 +287,43 @@
                                             <a href="#" class="nav-link">
                                                 <i class="fa fa-caret-right nav-icon"></i>
                                                 <p>Fetch Photo</p>
+                                            </a>
+                                        </li>
+                                    @endcan
+                                </ul>
+                            </li>
+                        @endcanany
+                        @can('groupRequest.*')
+                            <li class="nav-item has-treeview ">
+                                <a href="#" class="nav-link">
+                                    <i class="nav-icon fa fa-book"></i>
+                                    <p>
+                                        Request Approval
+                                        <i class="right fas fa-angle-left"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    @can('groupRequest.index')
+                                        <li class="nav-item">
+                                            <a href="{{ route('groupRequest.index') }}" class="nav-link {{ Request::is('groupRequests') ? 'active' : '' }} ">
+                                                <i class="fa fa-caret-right nav-icon"></i>
+                                                <p>To be approved</p>
+                                            </a>
+                                        </li>
+                                    @endcan
+                                    @can('groupRequest.index')
+                                        <li class="nav-item">
+                                            <a href="{{route('groupRequest.approvedList')}}" class="nav-link {{ Request::is('groupRequests/approved') ? 'active' : '' }}">
+                                                <i class="fa fa-caret-right nav-icon"></i>
+                                                <p>Approved requests</p>
+                                            </a>
+                                        </li>
+                                    @endcan
+                                    @can('groupRequest.index')
+                                        <li class="nav-item">
+                                            <a href="{{route('groupRequest.rejectedList')}}" class="nav-link {{ Request::is('groupRequests/rejected') ? 'active' : '' }}">
+                                                <i class="fa fa-caret-right nav-icon"></i>
+                                                <p>Rejected requests</p>
                                             </a>
                                         </li>
                                     @endcan
@@ -435,7 +483,7 @@
                                     </li>
                                 @endcan
 
-                                  
+
 
                                     @can('waiting-queue')
                                         <li class="nav-item">
@@ -649,6 +697,14 @@
                                             <p>HMIS Report</p>
                                         </a>
                                     </li>
+                                    @can(['view report','export report'])
+                                        <li class="nav-item">
+                                            <a href="{{route('report.index')}}" class="nav-link ">
+                                                <i class="fa fa-caret-right nav-icon"></i>
+                                                <p> OPD Report</p>
+                                            </a>
+                                        </li>
+                                    @endcan
 
                                 </ul>
                             </li>

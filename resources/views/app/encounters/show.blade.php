@@ -252,7 +252,7 @@
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
-
+                                                                        
 
                                                                         @foreach ($student->encounter->sortByDesc('created_at') as $index => $enc)
                                                                             <tr>
@@ -562,19 +562,19 @@
                                     <i class="fas fa-exchange-alt"></i>
                                     &nbsp;Handover
                                 </button>
-                                <form action="{{ route('encounters.closeEencounter', ['encounter' => $encounter]) }}"
+                                <form action="{{ route('encounters.closeEencounter', ['encounter' => $encounters->last()]) }}"
                                     method="POST" class="d-inline-block">
                                     @csrf
-                                    <input type="hidden" name="status" value="{{ $encounter->status }}">
+                                    <input type="hidden" name="status" value="{{ $encounters->last()->status }}">
                                     <button type="submit" class="btn btn-sm btn-outline-primary"> <i
                                             class="fa fa-check"></i>
                                         Close Encounter</button>
                                 </form>
 
-                                <form action="{{ route('encounters.termniateEencounter', ['encounter' => $encounter]) }}"
+                                <form action="{{ route('encounters.termniateEencounter', ['encounter' => $encounters->last()]) }}"
                                     method="POST" class="d-inline-block">
                                     @csrf
-                                    <input type="hidden" name="status" value="{{ $encounter->status }}">
+                                    <input type="hidden" name="status" value="{{ $encounters->last()->status }}">
                                     <button type="submit" class="btn btn-sm btn-outline-primary"> <i
                                             class="fa fa-check"></i>
                                         Terminate Encounter</button>
@@ -599,10 +599,10 @@
                         </div>
 
                         <span>
-                            @if ($encounter->arrived_at === null)
+                            @if($encounters->last()->arrived_at === null)
                                 <form method="post" action="{{ route('toggleArrival') }}" class="form-inline">
                                     @csrf
-                                    <input type="hidden" name="encounter_id" value="{{ $encounter->id }}">
+                                    <input type="hidden" name="encounter_id" value="{{ $encounters->last()->id }}">
 
                                     <button type="submit"
                                         class="btn btn-sm d-inline-block btn-outline-primary mr-1 notification-badge">

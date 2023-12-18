@@ -16,6 +16,7 @@ use App\Http\Controllers\StoreController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\CampusController;
 use App\Http\Controllers\ClinicController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SpeechController;
 use App\Http\Controllers\CollageController;
 use App\Http\Controllers\LabTestController;
@@ -43,6 +44,7 @@ use App\Http\Controllers\ProductRequestController;
 use App\Http\Controllers\ItemsInPharmacyController;
 use App\Http\Controllers\MedicalSickLeaveController;
 use App\Http\Controllers\LabTestRequestGroupController;
+use App\Http\Controllers\ProductResponseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -244,9 +246,11 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::get('/prescriptions/reject/{prescription}', [PrescriptionController::class, 'reject'])->name('prescriptions.reject');
 
 
-    Route::get('/allRequest/approve', [ProductRequestController::class, 'toBeApprove'])->name('request.approve.index');
-    Route::post('/allRequest/approve/', [ProductRequestController::class, 'approveByAdmin'])->name('request.approve.approve');
-    Route::post('/allRequest/reject/', [ProductRequestController::class, 'approveByAdmin'])->name('request.approve.reject');
+    Route::get('/groupRequests/', [ProductRequestController::class, 'toBeApprove'])->name('groupRequest.index');
+    Route::post('/groupRequest/approve/', [ProductRequestController::class, 'approveByAdmin'])->name('groupRequest.approve');
+    Route::post('/groupRequest/reject/', [ProductRequestController::class, 'rejectByAdmin'])->name('groupRequest.reject');
+    Route::get('/groupRequests/approved',[ProductResponseController::class,'approved'])->name('groupRequest.approvedList');
+    Route::get('/groupRequests/rejected',[ProductResponseController::class,'rejected'])->name('groupRequest.rejectedList');
 
     Route::resource('stores', StoreController::class);
     Route::resource('products', ProductController::class);
@@ -262,4 +266,7 @@ Route::prefix('/')->middleware('auth')->group(function () {
 
     Route::get('/submit', [SpeechController::class, 'submit'])->name('submit');
     Route::post('/changeRoomAll', [EncounterController::class, 'roomChangeAll'])->name('encounters.all');
+    Route::resource('report', ReportController::class);
+    Route::get('report/export-excel/{startDate}/{endDate}',[ReportController::class, 'exportExcel'])->name('opd-report.exportExcel');
+
 });

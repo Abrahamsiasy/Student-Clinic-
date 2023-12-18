@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('product_id')->nullable();
             $table->unsignedBigInteger('store_id')->nullable();
             $table->unsignedBigInteger('pharmacy_id');
-            $table->enum('status', ['Approved', 'Requested', 'Rejected'])->default('Requested'); // Added status column
+            $table->enum('status', ['Accepted','Approved', 'Requested', 'Rejected'])->default('Requested'); // Added status column
             $table->timestamps();
         });
     }
