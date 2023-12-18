@@ -134,16 +134,42 @@ class HomeController extends Controller
         return redirect()->route('home')->with('error', 'Student not found or RFID unmapping failed.');
     }
 
-    public function getEncouter()
+    // public function getEncouter()
+    // {
+    //     $users = ClinicUser::all();
+    //     $encounterLists = Encounter::orderBy('id', 'desc')->paginate(15);
+    //     return view('app.encounters.encounter-list', compact('encounterLists', 'users'));
+    // }
+    public function getEncouter(Request $request)
     {
-
-
+        // Get all clinic users
         $users = ClinicUser::all();
 
-        $encounterLists = Encounter::orderBy('id', 'desc')->paginate(15);
+        // Retrieve encounters with student information
+        $encounterLists = Encounter::with('student')
+            ->orderBy('id', 'desc');
+
+        // Check if search parameters are provided
+        if ($request->has('search')) {
+            $search = $request->input('search');
+
+            // Perform search on student name and ID number
+            $encounterLists->where(function ($query) use ($search) {
+                $query->whereHas('student', function ($subquery) use ($search) {
+                    $subquery->where('students.first_name', 'like', '%' . $search . '%')
+                        ->orWhere('students.middle_name', 'like', '%' . $search . '%')
+                        ->orWhere('students.last_name', 'like', '%' . $search . '%')
+                        ->orWhere('students.id_number', 'like', '%' . $search . '%');
+                });
+            });
+        }
+
+        // Paginate the results
+        $encounterLists = $encounterLists->paginate(15);
 
         return view('app.encounters.encounter-list', compact('encounterLists', 'users'));
     }
+
 
     public function autoSearch(Request $request)
     {
