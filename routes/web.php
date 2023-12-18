@@ -5,6 +5,7 @@ use App\Models\ClinicUser;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SRSController;
+use App\Http\Controllers\GateController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\RoomController;
@@ -70,6 +71,7 @@ Auth::routes();
 // Route::get('/home', [HomeController::class, 'home'])->name('home');
 
 Route::get('/sync-data', [SRSController::class, 'insert'])->name('sync');
+Route::get('/sync-photo', [SRSController::class, 'fetchPhoto'])->name('sync-photo');
 Route::get('/sync-program', [SRSController::class, 'srsData'])->name('sync.program');
 Route::get('/sync-products', [ProductController::class, 'sync'])->name('sync.product');
 
@@ -151,6 +153,8 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::resource('stock-units', StockUnitController::class);
     Route::resource('students', StudentController::class);
     Route::resource('suppliers', SupplierController::class);
+    Route::resource('gate', GateController::class);
+
 
     Route::resource('videos', VideoController::class);
 
@@ -200,7 +204,7 @@ Route::prefix('/')->middleware('auth')->group(function () {
 
     Route::get('/encounters/opened', [EncounterController::class, 'openedEencounter'])->name('encounters.opened');
 
-    Route::get('/print-sick-leave/{encounterId}',[EncounterController::class, 'generateSickLeavePdf'])->name('printSickLeave');
+    Route::get('/print-sick-leave/{encounterId}', [EncounterController::class, 'generateSickLeavePdf'])->name('printSickLeave');
 
 
     Route::resource('encounters', EncounterController::class);
