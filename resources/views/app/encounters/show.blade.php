@@ -1260,6 +1260,7 @@
                                                                                 @csrf
 
                                                                                 <!-- Hidden inputs -->
+
                                                                                 <input type="hidden" id="studentId"
                                                                                     name="student_id"
                                                                                     value="{{ $encounter->student_id }}">
@@ -1271,11 +1272,14 @@
                                                                                     value="{{ $encounter?->Doctor?->clinicUsers?->id }}">
 
                                                                                 <!-- Diagnosis Select using Select2 with wider class -->
+                                                                                <label> Please select dignosis</label>
                                                                                 <select id="diagnosisSelect" name="diagnosis_id[]"
                                                                                     class="form-control select2"
                                                                                     multiple="multiple" style="width: 100%;">
+
                                                                                     @foreach ($allDignosis as $diagnosis)
-                                                                                        <option value="{{ $diagnosis->id }}">
+                                                                                        <option value="{{ $diagnosis->id }}"
+                                                                                            class="form-control">
                                                                                             {{ $diagnosis->name }}</option>
                                                                                     @endforeach
                                                                                 </select>
