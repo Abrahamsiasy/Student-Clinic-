@@ -56,8 +56,10 @@
                             placeholder="Number Of Units"></x-inputs.number>
                     </x-inputs.group>
                     <x-inputs.group class="col-sm-12">
-
-                        <x-inputs.select name="item.unit_type" label="Unit Type" wire:model="item.unit_type"
+                        <label class="'label " for="item.unit_type">
+                           Unit Type
+                        </label>
+                        <select class="form-control" name="item.unit_type" label="Unit Type" wire:model="item.unit_type"
                             placeholder="Unit Type">
 
                             <option value="">select unit type</option>
@@ -70,7 +72,7 @@
                             <option value="Sachet">Sachet</option>
                             <option value="Dozen">Dozen</option>
 
-                        </x-inputs.select>
+                        </select>
                     </x-inputs.group>
 
                     <x-inputs.group class="col-sm-12">

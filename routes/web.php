@@ -5,6 +5,7 @@ use App\Models\ClinicUser;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SRSController;
+use App\Http\Controllers\GateController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\RoomController;
@@ -15,6 +16,7 @@ use App\Http\Controllers\StoreController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\CampusController;
 use App\Http\Controllers\ClinicController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SpeechController;
 use App\Http\Controllers\CollageController;
 use App\Http\Controllers\LabTestController;
@@ -42,6 +44,7 @@ use App\Http\Controllers\ProductRequestController;
 use App\Http\Controllers\ItemsInPharmacyController;
 use App\Http\Controllers\MedicalSickLeaveController;
 use App\Http\Controllers\LabTestRequestGroupController;
+use App\Http\Controllers\ProductResponseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -68,6 +71,7 @@ Auth::routes();
 // Route::get('/home', [HomeController::class, 'home'])->name('home');
 
 Route::get('/sync-data', [SRSController::class, 'insert'])->name('sync');
+Route::get('/sync-photo', [SRSController::class, 'fetchPhoto'])->name('sync-photo');
 Route::get('/sync-program', [SRSController::class, 'srsData'])->name('sync.program');
 Route::get('/sync-products', [ProductController::class, 'sync'])->name('sync.product');
 
@@ -131,6 +135,9 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::get('/reception', [EncounterController::class, 'reception'])->name('reception');
     Route::get('/lab-waiting', [EncounterController::class, 'labWaiting'])->name('lab.waiting');
 
+    Route::post('/dignosis-encounter-create', [EncounterController::class, 'createMainDignosis'])->name('encounter.maindignosis');
+
+
     Route::resource('lab-catagories', LabCatagoryController::class);
     Route::resource('lab-tests', LabTestController::class);
     Route::resource('lab-test-requests', LabTestRequestController::class);
@@ -149,6 +156,8 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::resource('stock-units', StockUnitController::class);
     Route::resource('students', StudentController::class);
     Route::resource('suppliers', SupplierController::class);
+    Route::resource('gate', GateController::class);
+
 
     Route::resource('videos', VideoController::class);
 
@@ -182,7 +191,7 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::resource('students', StudentController::class);
     Route::resource('suppliers', SupplierController::class);
 
-
+    Route::post('user/{user}/role_permission_update', [UserController::class, 'updateRoleAndPermission'])->name('user.role.permission.update');
     Route::post('/user/{user}/assignPharmacy', [UserController::class, 'assignPharamacyPlace'])->name('user.assignPharamacyPlace');
     Route::post('/user/{user}/assignStore', [UserController::class, 'assignStorePlace'])->name('user.assignStorePlace');
     Route::get('/store_and_pharmacy_users/pharmacy/assignPharmacy/{user}', [UserController::class, 'assignPharmacyView'])->name('store_and_pharmacy_users.assignPharamacyPlace');
@@ -198,7 +207,7 @@ Route::prefix('/')->middleware('auth')->group(function () {
 
     Route::get('/encounters/opened', [EncounterController::class, 'openedEencounter'])->name('encounters.opened');
 
-    Route::get('/print-sick-leave/{encounterId}',[EncounterController::class, 'generateSickLeavePdf'])->name('printSickLeave');
+    Route::get('/print-sick-leave/{encounterId}', [EncounterController::class, 'generateSickLeavePdf'])->name('printSickLeave');
 
 
     Route::resource('encounters', EncounterController::class);
@@ -239,6 +248,13 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::get('/prescriptions/approve/{prescription}', [PrescriptionController::class, 'approve'])->name('prescriptions.approve');
     Route::get('/prescriptions/reject/{prescription}', [PrescriptionController::class, 'reject'])->name('prescriptions.reject');
 
+
+    Route::get('/groupRequests/', [ProductRequestController::class, 'toBeApprove'])->name('groupRequest.index');
+    Route::post('/groupRequest/approve/', [ProductRequestController::class, 'approveByAdmin'])->name('groupRequest.approve');
+    Route::post('/groupRequest/reject/', [ProductRequestController::class, 'rejectByAdmin'])->name('groupRequest.reject');
+    Route::get('/groupRequests/approved', [ProductResponseController::class, 'approved'])->name('groupRequest.approvedList');
+    Route::get('/groupRequests/rejected', [ProductResponseController::class, 'rejected'])->name('groupRequest.rejectedList');
+
     Route::resource('stores', StoreController::class);
     Route::resource('products', ProductController::class);
     Route::resource('pharmacies', PharmacyController::class);
@@ -253,4 +269,6 @@ Route::prefix('/')->middleware('auth')->group(function () {
 
     Route::get('/submit', [SpeechController::class, 'submit'])->name('submit');
     Route::post('/changeRoomAll', [EncounterController::class, 'roomChangeAll'])->name('encounters.all');
+    Route::resource('report', ReportController::class);
+    Route::get('report/export-excel/{startDate}/{endDate}', [ReportController::class, 'exportExcel'])->name('opd-report.exportExcel');
 });

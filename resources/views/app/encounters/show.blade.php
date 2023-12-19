@@ -3,21 +3,7 @@
 @section('content')
     <div class="">
         <div class="card card-primary card-outline">
-            <div class="container mt-4">
-                @if (session('success'))
-                    <div class="alert alert-success">
-                        {{ session('success') }}
-                    </div>
-                @endif
 
-                @if (session('error'))
-                    <div class="alert alert-danger">
-                        {{ session('error') }}
-                    </div>
-                @endif
-
-                <!-- Display the list of medical sick leaves -->
-            </div>
             <div class="card-header">
                 @if (isset($danger_message))
                     <div class="alert alert-danger">
@@ -206,15 +192,15 @@
                                                                                 <td>{{ $encounter->student->fullName }}</td>
                                                                                 <td>{{ $encounter?->doctor->name ?? '-' }}</td>
                                                                                 <td>
-                                                                                    @if ($encounter->status ==3)  
+                                                                                    @if ($encounter->status == 3)
                                                                                         Closed
-                                                                                    @elseif ($encounter->status ==4)  
-                                                                                    Missed
-                                                                                    @elseif ($encounter->status ==2)
-                                                                                    In-progress
+                                                                                    @elseif ($encounter->status == 4)
+                                                                                        Missed
+                                                                                    @elseif ($encounter->status == 2)
+                                                                                        In-progress
                                                                                     @else
-
-                                                                                        <span class="badge badge-primary">Checked-in</span>
+                                                                                        <span
+                                                                                            class="badge badge-primary">Checked-in</span>
                                                                                     @endif
                                                                                 <td>
                                                                                     <a href="{{ route('printSickLeave', ['encounterId' => $encounter->id]) }}"
@@ -225,12 +211,15 @@
 
 
                                                                                     @can('view', $encounter)
-                                                                                    <a href="{{ route('encounters.show', $encounter) }}">
-                                                                                        <button type="button" class="btn btn-sm btn-outline-primary mx-1">
-                                                                                            <i class="icon fa fa-list"></i> Details
-                                                                                        </button>
-                                                                                    </a>
-                                                                                @endcan
+                                                                                        <a
+                                                                                            href="{{ route('encounters.show', $encounter) }}">
+                                                                                            <button type="button"
+                                                                                                class="btn btn-sm btn-outline-primary mx-1">
+                                                                                                <i class="icon fa fa-list"></i>
+                                                                                                Details
+                                                                                            </button>
+                                                                                        </a>
+                                                                                    @endcan
 
 
 
@@ -573,19 +562,21 @@
                                     <i class="fas fa-exchange-alt"></i>
                                     &nbsp;Handover
                                 </button>
-                                <form action="{{ route('encounters.closeEencounter', ['encounter' => $encounter]) }}"
+                                <form
+                                    action="{{ route('encounters.closeEencounter', ['encounter' => $encounters->last()]) }}"
                                     method="POST" class="d-inline-block">
                                     @csrf
-                                    <input type="hidden" name="status" value="{{ $encounter->status }}">
+                                    <input type="hidden" name="status" value="{{ $encounters->last()->status }}">
                                     <button type="submit" class="btn btn-sm btn-outline-primary"> <i
                                             class="fa fa-check"></i>
                                         Close Encounter</button>
                                 </form>
 
-                                <form action="{{ route('encounters.termniateEencounter', ['encounter' => $encounter]) }}"
+                                <form
+                                    action="{{ route('encounters.termniateEencounter', ['encounter' => $encounters->last()]) }}"
                                     method="POST" class="d-inline-block">
                                     @csrf
-                                    <input type="hidden" name="status" value="{{ $encounter->status }}">
+                                    <input type="hidden" name="status" value="{{ $encounters->last()->status }}">
                                     <button type="submit" class="btn btn-sm btn-outline-primary"> <i
                                             class="fa fa-check"></i>
                                         Terminate Encounter</button>
@@ -610,10 +601,10 @@
                         </div>
 
                         <span>
-                            @if ($encounter->arrived_at === null)
+                            @if ($encounters->last()->arrived_at === null)
                                 <form method="post" action="{{ route('toggleArrival') }}" class="form-inline">
                                     @csrf
-                                    <input type="hidden" name="encounter_id" value="{{ $encounter->id }}">
+                                    <input type="hidden" name="encounter_id" value="{{ $encounters->last()->id }}">
 
                                     <button type="submit"
                                         class="btn btn-sm d-inline-block btn-outline-primary mr-1 notification-badge">
@@ -961,28 +952,24 @@
                     <div class="col-md-4 mb-2">
                         <i class="fa fa-caret-right"></i>
                         <span>Age:</span>
-                  
 
-                               
-                        @if($encounter->student->date_of_birth === null)
-                              
-                       
+
+
+                        @if ($encounter->student->date_of_birth === null)
                             {{-- {{ route('map-rfid') }} --}}
-                        <form method="post" action="#">  
-                            @csrf
-                            <input type="hidden" name="student_id" value="{{ $encounter->student->id }}">
-                            <input type="text"   required class="form-control-sm" autocomplete="off"  name="rfid" placeholder="Enter Age">
-                            <button type="submit" class="btn btn-sm btn-outline-primary mr-1" > <i class="icon fa fa-plus"></i> Save</button>
-                        </form>
-                   
-
-                    @else
-                        <span style="color:red;">
-                            {{ \Carbon\Carbon::parse($encounter->student->date_of_birth)->diff(\Carbon\Carbon::now())->format('%y years old') }}
-                        </span>
-
-
-                    @endif
+                            <form method="post" action="#">
+                                @csrf
+                                <input type="hidden" name="student_id" value="{{ $encounter->student->id }}">
+                                <input type="text" required class="form-control-sm" autocomplete="off" name="rfid"
+                                    placeholder="Enter Age">
+                                <button type="submit" class="btn btn-sm btn-outline-primary mr-1"> <i
+                                        class="icon fa fa-plus"></i> Save</button>
+                            </form>
+                        @else
+                            <span style="color:red;">
+                                {{ \Carbon\Carbon::parse($encounter->student->date_of_birth)->diff(\Carbon\Carbon::now())->format('%y years old') }}
+                            </span>
+                        @endif
 
 
 
@@ -1241,8 +1228,145 @@
                                                     <div class="card-body">
                                                         <h4 class="card-title w-100 mb-2">Main Diagnoses</h4>
 
-                                                        <livewire:encounter-main-diagnoses-detail :encounter="$encounter" />
+
+                                                        {{-- <livewire:encounter-main-diagnoses-detail :encounter="$encounter" /> --}}
+                                                        @can('create', App\Models\MainDiagnosis::class)
+                                                            <!-- Button trigger modal -->
+                                                            <button type="button" class="btn btn-primary" data-toggle="modal"
+                                                                data-target="#diagnosisModal">
+                                                                <i class="icon ion-md-add"></i>
+                                                                @lang('crud.common.new')
+                                                            </button>
+
+                                                            <!-- Modal -->
+                                                            <div class="modal fade" id="diagnosisModal" tabindex="-1"
+                                                                role="dialog" aria-labelledby="diagnosisModalLabel"
+                                                                aria-hidden="true">
+                                                                <div class="modal-dialog modal-lg" role="document">
+                                                                    <!-- modal-lg class for a wider modal -->
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-header">
+                                                                            <h5 class="modal-title" id="diagnosisModalLabel">
+                                                                                Select Diagnosis</h5>
+                                                                            <button type="button" class="close"
+                                                                                data-dismiss="modal" aria-label="Close">
+                                                                                <span aria-hidden="true">&times;</span>
+                                                                            </button>
+                                                                        </div>
+
+                                                                        <div class="modal-body">
+                                                                            <form id="diagnosisForm" method="POST"
+                                                                                action="{{ route('encounter.maindignosis') }}">
+                                                                                @csrf
+
+                                                                                <!-- Hidden inputs -->
+
+                                                                                <input type="hidden" id="studentId"
+                                                                                    name="student_id"
+                                                                                    value="{{ $encounter->student_id }}">
+                                                                                <input type="hidden" id="encounterId"
+                                                                                    name="encounter_id"
+                                                                                    value="{{ $encounter->id }}">
+                                                                                <input type="hidden" id="clinicUserId"
+                                                                                    name="clinic_user_id"
+                                                                                    value="{{ $encounter?->Doctor?->clinicUsers?->id }}">
+
+                                                                                <!-- Diagnosis Select using Select2 with wider class -->
+                                                                                <label> Please select dignosis</label>
+                                                                                <select id="diagnosisSelect" name="diagnosis_id[]"
+                                                                                    class="form-control select2"
+                                                                                    multiple="multiple" style="width: 100%;">
+
+                                                                                    @foreach ($allDignosis as $diagnosis)
+                                                                                        <option value="{{ $diagnosis->id }}"
+                                                                                            class="form-control">
+                                                                                            {{ $diagnosis->name }}</option>
+                                                                                    @endforeach
+                                                                                </select>
+
+                                                                                <div class="modal-footer">
+                                                                                    <button type="button"
+                                                                                        class="btn btn-secondary"
+                                                                                        data-dismiss="modal">Close</button>
+                                                                                    <button type="submit"
+                                                                                        class="btn btn-primary">Save
+                                                                                        changes</button>
+                                                                                </div>
+                                                                            </form>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            {{-- @endcan @can('delete-any', App\Models\MainDiagnosis::class)
+                                                            <button class="btn btn-danger"
+                                                                {{ empty($selected) ? 'disabled' : '' }}
+                                                                onclick="confirm('Are you sure?') || event.stopImmediatePropagation()"
+                                                                wire:click="destroySelected">
+                                                                <i class="icon ion-md-trash"></i> Delete
+                                                                @lang('crud.common.delete_selected')
+                                                            </button> --}}
+                                                        @endcan
+
+
                                                     </div>
+                                                </div>
+
+
+                                                <div class="table-responsive">
+                                                    <table class="table table-hover  table-sm table-condensed">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>
+                                                                    <input type="checkbox" wire:model="allSelected"
+                                                                        wire:click="toggleFullSelection"
+                                                                        title="{{ trans('crud.common.select_all') }}" />
+                                                                </th>
+                                                                <th class="text-left">
+                                                                    @lang('crud.encounter_main_diagnoses.inputs.clinic_user_id')
+                                                                </th>
+                                                                {{-- <th class="text-left">
+                                                                    @lang('crud.encounter_main_diagnoses.inputs.student_id')
+                                                                </th> --}}
+                                                                <th class="text-left">
+                                                                    @lang('crud.encounter_main_diagnoses.inputs.diagnosis_id')
+                                                                </th>
+                                                                <th></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody class="text-gray-600">
+                                                            @foreach ($maindiagnosises as $mainDiagnosis)
+                                                                <tr class="hover:bg-gray-100">
+                                                                    <td class="text-left">
+                                                                        <input type="checkbox"
+                                                                            value="{{ $mainDiagnosis->id }}"
+                                                                            wire:model="selected" />
+                                                                    </td>
+                                                                    <td class="text-left">
+                                                                        {{ optional($mainDiagnosis->Doctor)?->user->name ?? '-' }}
+                                                                    </td>
+                                                                    {{-- <td class="text-left">
+                                                                        {{ optional($mainDiagnosis->student)->first_name ?? '-' }}
+                                                                    </td> --}}
+                                                                    <td class="text-left">
+                                                                        {{ optional($mainDiagnosis->diagnosis)->name ?? '-' }}
+                                                                    </td>
+                                                                    <td class="text-right">
+                                                                        <div role="group" aria-label="Row Actions"
+                                                                            class="relative inline-flex align-middle">
+                                                                            @can('update', $mainDiagnosis)
+                                                                                <button type="button" class="btn btn-light"
+                                                                                    wire:click="editMainDiagnosis({{ $mainDiagnosis->id }})">
+                                                                                    <i class="fa fa-edit"></i> Edit
+                                                                                </button>
+                                                                            @endcan
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                            @endforeach
+                                                        </tbody>
+
+                                                    </table>
                                                 </div>
                                             @endcan
                                         </div>
@@ -1437,7 +1561,7 @@
 
     {{-- <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> --}}
 
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    {{-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script> --}}
 
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <!-- plugin -->

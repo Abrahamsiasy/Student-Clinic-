@@ -1,5 +1,15 @@
 @extends('layouts.app')
-
+@push('style')
+    <link rel="stylesheet" href="{{ asset('plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css') }}">
+@endpush
+@push('scripts')
+    <script src="{{ asset('plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js') }}"></script>
+    <script>
+        $(function() {
+            $('.duallistbox').bootstrapDualListbox()
+        })
+    </script>
+@endpush
 @section('content')
 <div class="">
     <div class="card">
@@ -53,7 +63,7 @@
         </div>
     </div>
 
-    @can('view-any', App\Models\ClinicUser::class)
+    {{-- @can('view-any', App\Models\ClinicUser::class)
     <div class="card mt-4">
         <div class="card-body">
             <h4 class="card-title w-100 mb-2">Clinic Users</h4>
@@ -61,6 +71,44 @@
             <livewire:user-clinic-users-detail :user="$user" />
         </div>
     </div>
-    @endcan
+    @endcan --}}
+
+    <div class="card-body">
+        <div class="row">
+            <div class="col-12">
+                <form method="POST" action="{{ route('user.role.permission.update', ['user'=>$user->id]) }}">
+                    @csrf
+                    <div class="form-group">
+                        <label for="role">Select Role</label>
+                        <select name="role" id="role" class="select2 form-control">
+                            <option value=""></option>
+                            @foreach ($roles as $role)
+
+                                <option value="{{ $role->id }}" {{ $user->hasRole($role->name) ? 'selected' : '' }}>
+                                    {{ $role->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Select Direct Permission</label>
+                        <select name="input_permissions[]" class="duallistbox" multiple="multiple">
+                            <option value=""></option>
+                            @foreach ($permissions as $permission)
+                                <option value="{{ $permission->id }}"
+                                    {{ $user->hasPermissionTo($permission->name) ? 'selected' : '' }}>
+                                    {{ $permission->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Assign Permission" class="btn btn-primary">
+                    </div>
+                </form>
+                <!-- /.form-group -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </div>
 </div>
 @endsection

@@ -15,6 +15,7 @@ use App\Models\Pharmacy;
 use App\Models\PharmacyUser;
 use App\Models\Store;
 use App\Models\StoreUser;
+use Spatie\Permission\Models\Permission;
 
 require_once app_path('Helper/constants.php');
 class UserController extends Controller
@@ -76,8 +77,10 @@ class UserController extends Controller
     public function show(Request $request, User $user): View
     {
         $this->authorize('view', $user);
+        $roles = Role::all();
+        $permissions = Permission::all();
 
-        return view('app.users.show', compact('user'));
+        return view('app.users.show', compact('user','roles','permissions'));
     }
 
     /**
@@ -151,6 +154,37 @@ class UserController extends Controller
         return redirect()
             ->route('users.index')
             ->withSuccess(__('crud.common.removed'));
+    }
+
+
+    public function updateRoleAndPermission(User $user, Request $request)
+    {
+
+        $data['permissions'] = null;
+        $data = $request->validate([
+            'role' => 'nullable',
+            'input_permissions' => 'nullable',
+        ]);
+        $userRoles = $user->roles;
+        foreach ($userRoles as $userRole) {
+            $user->removeRole($userRole->name);
+        }
+        $user->assignRole($data['role']);
+
+        $directPermissions = $user->getAllPermissions();
+        foreach ($directPermissions as $key => $directPermission) {
+            $user->revokePermissionTo($directPermission->name);
+        }
+        if (array_key_exists('input_permissions', $data)) {
+            foreach ($data['input_permissions'] as $permission) {
+                if ($permission == null)
+                    continue;
+                $permissionName = Permission::findById($permission)->name;
+                if ($user->hasPermissionTo($permissionName) == false)
+                    $user->givePermissionTo($permissionName);
+            }
+        }
+        return redirect()->back()->with('success', 'User role and permission updated successfully');
     }
 
     public function assignPharamacyPlace(Request $request, Pharmacy $pharmacy, User $user)

@@ -35,7 +35,7 @@
                                     </tr>
                                     <tr>
                                         <th scope="row">Date Of Examination</th>
-                                        <td> {{ optional($medicalSickLeaves?->encounter)->accepted_at ?? '-' }}</td>
+                                        <td> {{ optional($medicalSickLeaves?->encounter)?->accepted_at ?? '-' }}</td>
                                     </tr>
                                     <tr>
                                         <th scope="row">Diagnosis</th>
