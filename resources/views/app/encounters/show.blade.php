@@ -1242,7 +1242,8 @@
                                                             <div class="modal fade" id="diagnosisModal" tabindex="-1"
                                                                 role="dialog" aria-labelledby="diagnosisModalLabel"
                                                                 aria-hidden="true">
-                                                                <div class="modal-dialog" role="document">
+                                                                <div class="modal-dialog modal-lg" role="document">
+                                                                    <!-- modal-lg class for a wider modal -->
                                                                     <div class="modal-content">
                                                                         <div class="modal-header">
                                                                             <h5 class="modal-title" id="diagnosisModalLabel">
@@ -1254,7 +1255,6 @@
                                                                         </div>
 
                                                                         <div class="modal-body">
-
                                                                             <form id="diagnosisForm" method="POST"
                                                                                 action="{{ route('encounter.maindignosis') }}">
                                                                                 @csrf
@@ -1270,16 +1270,15 @@
                                                                                     name="clinic_user_id"
                                                                                     value="{{ $encounter?->Doctor?->clinicUsers?->id }}">
 
-                                                                                <!-- Diagnosis Select using Select2 -->
+                                                                                <!-- Diagnosis Select using Select2 with wider class -->
                                                                                 <select id="diagnosisSelect" name="diagnosis_id[]"
                                                                                     class="form-control select2"
-                                                                                    multiple="multiple">
+                                                                                    multiple="multiple" style="width: 100%;">
                                                                                     @foreach ($allDignosis as $diagnosis)
                                                                                         <option value="{{ $diagnosis->id }}">
                                                                                             {{ $diagnosis->name }}</option>
                                                                                     @endforeach
                                                                                 </select>
-
 
                                                                                 <div class="modal-footer">
                                                                                     <button type="button"
@@ -1290,11 +1289,11 @@
                                                                                         changes</button>
                                                                                 </div>
                                                                             </form>
-
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
+
                                                             {{-- @endcan @can('delete-any', App\Models\MainDiagnosis::class)
                                                             <button class="btn btn-danger"
                                                                 {{ empty($selected) ? 'disabled' : '' }}
