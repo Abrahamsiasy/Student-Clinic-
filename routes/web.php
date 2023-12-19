@@ -135,6 +135,9 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::get('/reception', [EncounterController::class, 'reception'])->name('reception');
     Route::get('/lab-waiting', [EncounterController::class, 'labWaiting'])->name('lab.waiting');
 
+    Route::post('/dignosis-encounter-create', [EncounterController::class, 'createMainDignosis'])->name('encounter.maindignosis');
+
+
     Route::resource('lab-catagories', LabCatagoryController::class);
     Route::resource('lab-tests', LabTestController::class);
     Route::resource('lab-test-requests', LabTestRequestController::class);
@@ -249,8 +252,8 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::get('/groupRequests/', [ProductRequestController::class, 'toBeApprove'])->name('groupRequest.index');
     Route::post('/groupRequest/approve/', [ProductRequestController::class, 'approveByAdmin'])->name('groupRequest.approve');
     Route::post('/groupRequest/reject/', [ProductRequestController::class, 'rejectByAdmin'])->name('groupRequest.reject');
-    Route::get('/groupRequests/approved',[ProductResponseController::class,'approved'])->name('groupRequest.approvedList');
-    Route::get('/groupRequests/rejected',[ProductResponseController::class,'rejected'])->name('groupRequest.rejectedList');
+    Route::get('/groupRequests/approved', [ProductResponseController::class, 'approved'])->name('groupRequest.approvedList');
+    Route::get('/groupRequests/rejected', [ProductResponseController::class, 'rejected'])->name('groupRequest.rejectedList');
 
     Route::resource('stores', StoreController::class);
     Route::resource('products', ProductController::class);
@@ -267,6 +270,5 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::get('/submit', [SpeechController::class, 'submit'])->name('submit');
     Route::post('/changeRoomAll', [EncounterController::class, 'roomChangeAll'])->name('encounters.all');
     Route::resource('report', ReportController::class);
-    Route::get('report/export-excel/{startDate}/{endDate}',[ReportController::class, 'exportExcel'])->name('opd-report.exportExcel');
-
+    Route::get('report/export-excel/{startDate}/{endDate}', [ReportController::class, 'exportExcel'])->name('opd-report.exportExcel');
 });
