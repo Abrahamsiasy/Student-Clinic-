@@ -145,7 +145,7 @@ class EncounterController extends Controller
 
         $otherStatusEncounters = $otherStatusEncountersQuery
             ->orderBy('created_at', 'asc')
-            ->paginate(10)
+            ->paginate(50)
             ->withQueryString();
 
 
