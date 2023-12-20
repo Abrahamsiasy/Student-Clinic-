@@ -254,9 +254,11 @@ class ProductRequestController extends Controller
         abort(Response::HTTP_UNAUTHORIZED, 'Unauthorized access l.');
     }
 
-    public function approve(Request $request, ProductRequest $productRequest)
+    public function approve(Request $request)
     {
-
+        $productR_id=$request->productRequest_id;
+        $productRequest=ProductRequest::where('id',$productR_id)->first();
+        // dd($productR_id);
         // dd($request);
         if (Auth::user()->can('store.request.*')) {
             $storeUser = StoreUser::where('user_id', Auth::user()->id)->first();
@@ -265,10 +267,11 @@ class ProductRequestController extends Controller
             }
             $store = Store::where('id', $storeUser->store_id)->first();
             $totalAmountInStore = Item::where('product_id', $productRequest->product_id)->sum('number_of_units');
-            if ($productRequest->amount > $totalAmountInStore) {
+            // dd($totalAmountInStore,$productRequest->amount);
+            if ($request->approvalAmount > $totalAmountInStore) {
 
                 // dd($productRequest->amount, $totalAmountInStore, $productRequest->product_id,"There is no available amount for the given request ");
-                return redirect()->back()->with('error', 'There is no available amount for the given request');
+                return redirect()->back()->with('enough', 'There is no available amount for the given request');
             }
 
             $productRequest->to_be_approved = $request->approvalAmount;
@@ -462,9 +465,12 @@ class ProductRequestController extends Controller
 
 
 
-    public function reject(Request $request, ProductRequest $productRequest)
+    public function reject(Request $request)
     {
+        
 
+        $productR_id=$request->productRequest_id_r;
+        $productRequest=ProductRequest::where('id',$productR_id)->first();
 
         if (Auth::user()->can('store.request.*')) {
             $storeUser = StoreUser::where('user_id', Auth::user()->id)->first();
@@ -497,6 +503,11 @@ class ProductRequestController extends Controller
             }
             $pharmacy = Pharmacy::where('id', $pharmacyUser->pharmacy_id)->first();
 
+            $searchAccepted = $request->get('searchAccepted', '');
+            $AcceptedProductRequests = ProductRequest::where('pharmacy_id', $pharmacy->id)->where('status', "Accepted")->orderBy('updated_at', 'desc')->search($searchAccepted)
+                ->latest()
+                ->paginate(5)
+                ->withQueryString();
             $searchApproved = $request->get('searchApproved', '');
             $ApprovedProductRequests = ProductRequest::where('pharmacy_id', $pharmacy->id)->where('status', "Approved")->orderBy('updated_at', 'desc')->search($searchApproved)
                 ->latest()
@@ -515,7 +526,7 @@ class ProductRequestController extends Controller
 
             return view(
                 'app.product_requests.sentRequests',
-                compact('ApprovedProductRequests', 'RequestedProductRequests', 'RejectedProductRequests', 'searchApproved', 'RequestedSearch', 'searchRejected')
+                compact('AcceptedProductRequests','ApprovedProductRequests', 'RequestedProductRequests', 'RejectedProductRequests', 'searchApproved', 'RequestedSearch', 'searchRejected')
             );
         }
         abort(Response::HTTP_UNAUTHORIZED, 'Unauthorized access.');

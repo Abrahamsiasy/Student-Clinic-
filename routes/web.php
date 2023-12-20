@@ -239,8 +239,8 @@ Route::prefix('/')->middleware('auth')->group(function () {
 
     Route::get('/store_and_pharmacy_users/pharmacy_users', [UserController::class, 'pharmacy_users'])->name('store_and_pharmacy_users.pharmacy');
     Route::get('/store_and_pharmacy_users/store_users', [UserController::class, 'store_users'])->name('store_and_pharmacy_users.store');
-    Route::get('/product-requests/approve/{productRequest}', [ProductRequestController::class, 'approve'])->name('product-requests.approve');
-    Route::get('/product-requests/reject/{productRequest}', [ProductRequestController::class, 'reject'])->name('product-requests.reject');
+    Route::Post('/product-requests/approve/', [ProductRequestController::class, 'approve'])->name('product-requests.approve');
+    Route::Post('/product-requests/reject/', [ProductRequestController::class, 'reject'])->name('product-requests.reject');
     Route::get('/product-requests/sentRequests', [ProductRequestController::class, 'sentRequests'])->name('product-requests.sentRequests');
     Route::get('/product-requests/records', [ProductRequestController::class, 'recordsOfRequests'])->name('product-requests.recordsOfRequests');
 
