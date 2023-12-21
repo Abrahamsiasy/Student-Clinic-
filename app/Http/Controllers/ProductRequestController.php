@@ -256,7 +256,8 @@ class ProductRequestController extends Controller
 
     public function approve(Request $request)
     {
-        $productR_id=$request->productRequest_id;
+        // dd($request);
+        $productR_id=$request->productRequest_id_a;
         $productRequest=ProductRequest::where('id',$productR_id)->first();
         // dd($productR_id);
         // dd($request);
@@ -288,6 +289,33 @@ class ProductRequestController extends Controller
             return redirect()
                 ->route('product-requests.index')
                 ->withSuccess(__('crud.common.approved'));
+        }
+        abort(Response::HTTP_UNAUTHORIZED, 'Unauthorized access.');
+    }
+
+    public function reject(Request $request)
+    {
+
+
+        $productR_id=$request->productRequest_id_r;
+        $productRequest=ProductRequest::where('id',$productR_id)->first();
+
+        if (Auth::user()->can('store.request.*')) {
+            $storeUser = StoreUser::where('user_id', Auth::user()->id)->first();
+            if ($storeUser == null) {
+                return back()->withError('Store user hasn\'t been assigned to any store yet ');
+            }
+            $store = Store::where('id', $storeUser->store_id)->first();
+            $products = Product::where('store_id', $store->id);
+
+            $productRequest->reason_of_rejection = $request->reason;
+            $productRequest->status = 'Rejected';
+            $productRequest->rejected_at = Carbon::now()->format('Y-m-d');
+            $productRequest->save();
+
+            return redirect()
+                ->route('product-requests.index')
+                ->withSuccess(__('crud.common.rejected'));
         }
         abort(Response::HTTP_UNAUTHORIZED, 'Unauthorized access.');
     }
@@ -465,32 +493,7 @@ class ProductRequestController extends Controller
 
 
 
-    public function reject(Request $request)
-    {
-        
 
-        $productR_id=$request->productRequest_id_r;
-        $productRequest=ProductRequest::where('id',$productR_id)->first();
-
-        if (Auth::user()->can('store.request.*')) {
-            $storeUser = StoreUser::where('user_id', Auth::user()->id)->first();
-            if ($storeUser == null) {
-                return back()->withError('Store user hasn\'t been assigned to any store yet ');
-            }
-            $store = Store::where('id', $storeUser->store_id)->first();
-            $products = Product::where('store_id', $store->id);
-
-            $productRequest->reason_of_rejection = $request->reason;
-            $productRequest->status = 'Rejected';
-            $productRequest->rejected_at = Carbon::now()->format('Y-m-d');
-            $productRequest->save();
-
-            return redirect()
-                ->route('product-requests.index')
-                ->withSuccess(__('crud.common.rejected'));
-        }
-        abort(Response::HTTP_UNAUTHORIZED, 'Unauthorized access.');
-    }
 
 
     public function sentRequests(Request $request)
