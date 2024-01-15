@@ -23,10 +23,9 @@ class SRSController extends Controller
 
     public function insert()
     {
-
-
         try {
             $dbcon = DB::connection('mysql_srs');
+            set_time_limit(2147483647);
         } catch (\Throwable $th) {
             dd($th->getMessage());
         }
@@ -35,7 +34,7 @@ class SRSController extends Controller
         IF(ifo.is_registered = 1, 1, 0) AS is_registered, s.admission_year, 'Ethiopian' AS nationality, ifo.section, ifo.semester, s.birth_date,
         sd.entrance_exam_id, sd.mother_name AS adopter_name,
         sd.zone_id AS school_zone, sd.woreda AS school_woreda, sd.kebele AS school_kebele,
-        sd.telephone AS phone, sd.family_phone
+        sd.telephone AS phone, sd.family_phone, sd.campus_id
         FROM student s JOIN sf_guard_user sf ON sf.id = s.sf_guard_user_id JOIN  student_info ifo ON s.id = ifo.student_id
         JOIN student_detail sd ON s.id = sd.student_id
         WHERE ifo.record_status = 1 AND s.id != 0 AND ifo.year != 0
@@ -73,12 +72,39 @@ class SRSController extends Controller
                         'semester' => $value['semester'],
                         'date_of_birth' => $value['birth_date'],
                         'entrance_reg_no' => $value['entrance_exam_id'],
+                        'campus_id' => $value['campus_id'],
                     ]
                 );
             } catch (\Throwable $th) {
                 // dd($th->getMessage());
             }
         }
+        ///////////////////////////// PROGRAM SYNC ///////////////////////////////////////////////////////////
+        $data = $results;
+
+        $fieldp = ['id', 'name', 'department_id'];
+        $query = "SELECT " . implode(', ', $fieldp) . " FROM program";
+        $programs =  $dbcon->select($query);
+        $targetTable = 'programs';
+        foreach ($programs as $value) {
+            $value = (array) $value; 
+            try {
+                $sis = DB::connection('mysql');
+                $result = $sis->table($targetTable)->updateOrInsert(
+
+                [
+                    'program_id' => $value['id'],
+                    'name' => $value['name'],
+                    'department_id' => $value['department_id'],
+                ]
+
+
+                );
+            } catch (\Throwable $th) {
+                dd($th->getMessage());
+            }
+        }
+
         if ($result) {
             return redirect()->route('dashboard')->with('success', 'Data Successfully Synchronized');
         }
@@ -112,34 +138,35 @@ class SRSController extends Controller
                 dd($th->getMessage());
             }
         }
+       
         if ($result) {
             return redirect()->route('dashboard')->with('success', 'Department Successfully Synchronized');
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////
-        $fieldp = ['id', 'name'];
-        $query = "SELECT " . implode(', ', $fieldp) . " FROM program";
-        $programs =  $dbcon->select($query);
-        $targetTable = 'programs';
-        foreach ($programs as $value) {
-            $value = (array) $value; //// Convert the result object to an associative array
-            try {
-                $sis = DB::connection('mysql');
-                $result = $sis->table($targetTable)->updateOrInsert(
+        // $fieldp = ['id', 'name'];
+        // $query = "SELECT " . implode(', ', $fieldp) . " FROM program";
+        // $programs =  $dbcon->select($query);
+        // $targetTable = 'programs';
+        // foreach ($programs as $value) {
+        //     $value = (array) $value; //// Convert the result object to an associative array
+        //     try {
+        //         $sis = DB::connection('mysql');
+        //         $result = $sis->table($targetTable)->updateOrInsert(
 
-                    ['program_id' => $value['id']],
-                    [
-                        'name' => $value['name']
-                    ]
+        //             ['program_id' => $value['id']],
+        //             [
+        //                 'name' => $value['name']
+        //             ]
 
-                );
-            } catch (\Throwable $th) {
-                dd($th->getMessage());
-            }
-        }
-        if ($result) {
-            return redirect()->route('dashboard')->with('success', 'Program Successfully Synchronized');
-        }
+        //         );
+        //     } catch (\Throwable $th) {
+        //         dd($th->getMessage());
+        //     }
+        // }
+        // if ($result) {
+        //     return redirect()->route('dashboard')->with('success', 'Program Successfully Synchronized');
+        // }
     }
 
     public function srsPhoto(Request $request)
