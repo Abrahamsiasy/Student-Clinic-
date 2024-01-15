@@ -56,6 +56,11 @@
                                 onclick="setTabCookie(0)">OnGoing</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" id="schedule-tab" data-toggle="pill" href="#accepted-tabs" role="tab"
+                                aria-controls="custom-tabs-one-tabs" aria-selected="false"
+                                onclick="setTabCookie(1)">Accepted Requestes</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" id="schedule-tab" data-toggle="pill" href="#approved-tabs" role="tab"
                                 aria-controls="custom-tabs-one-tabs" aria-selected="false"
                                 onclick="setTabCookie(1)">Approved Requestes</a>
@@ -75,6 +80,98 @@
 
 
                 <div class="tab-content" id="records-of-requested">
+                    <div class="tab-pane fade" id="accepted-tabs" role="tabpanel"
+                        aria-labelledby="custom-tabs-three-home-tab">
+
+
+
+                        <div style="display: flex; justify-content: space-between;">
+                            <h4 class="card-title">
+                                Accepted Requestes
+                            </h4>
+                        </div>
+
+                        <div class="searchbar mt-4 mb-5">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <form>
+                                        <div class="input-group">
+                                            <input id="indexSearch" type="text" name="$searchAccepted"
+                                                placeholder="{{ __('crud.common.search') }}" value="{{ $search ?? '' }}"
+                                                class="form-control" autocomplete="off" />
+                                            <div class="input-group-append">
+                                                <button type="submit" class="btn btn-primary">
+                                                    <i class="icon ion-md-search"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover  table-sm table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th class="text-left">
+                                            @lang('crud.product_requests.inputs.product_id')
+                                        </th>
+                                        <th class="text-left">
+                                            Requested Amount
+                                        </th>
+                                        <th class="text-left">
+                                            Accepted Amount
+                                        </th>
+
+                                        <th class="text-left">
+                                            Store
+                                        </th>
+
+                                        <th>Accepted Date</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $i = 1;
+                                    @endphp
+                                    @forelse($AcceptedProductRequests as $AcceptedRequest)
+                                        <tr>
+                                            <td>{{ $i++ }}</td>
+                                            <td>
+                                                {{ optional($AcceptedRequest->product)->name ?? '-' }}
+                                            </td>
+                                            <td>{{ $AcceptedRequest->amount ?? '-' }}</td>
+                                            <td>{{ $AcceptedRequest->approval_amount ?? '-' }}</td>
+                                            <td>
+                                                {{ optional($AcceptedRequest->store)->name ?? '-' }}
+                                            </td>
+                                            <td>{{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $AcceptedRequest->updated_at)->format('d-m-Y') }}
+                                            </td>
+
+
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="5">
+                                                @lang('crud.common.no_items_found')
+                                            </td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="5">
+                                            {!! $AcceptedProductRequests->render() !!}
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+
+                    </div>
                     <div class="tab-pane fade" id="approved-tabs" role="tabpanel"
                         aria-labelledby="custom-tabs-three-home-tab">
 

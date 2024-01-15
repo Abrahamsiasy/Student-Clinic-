@@ -35,9 +35,9 @@ class HomeController extends Controller
 
         $user = Auth::user();
         if ($user) {
-            $encounters = Encounter::whereDate('created_at', today())->where('registered_by', $user->id)->where('status', 1)->orwhere('status', 4)->orderby('id','desc')->paginate(15);
+            $encounters = Encounter::whereDate('created_at', today())->where('registered_by', $user->id)->where('status', 1)->orwhere('status', 4)->orderby('id', 'desc')->paginate(15);
         } else {
-            $encounters = Encounter::whereDate('created_at', today())->where('status', 1)->orwhere('status', 4)->orderby('id','desc')->paginate(15);
+            $encounters = Encounter::whereDate('created_at', today())->where('status', 1)->orwhere('status', 4)->orderby('id', 'desc')->paginate(15);
         }
         return view('home', compact('encounters'));
     }
@@ -50,26 +50,22 @@ class HomeController extends Controller
         $now = Carbon::now();
 
         $studentId = trim($request->input('student_id'));
-        $student = Student::where('id_number', $studentId)
-            ->orWhere('rfid', $studentId)
-            ->first();
+        $student = Student::where('id_number', $studentId)->orWhere('rfid', $studentId)->first();
 
         if ($student) {
             $alreadyCheckedInToday = Encounter::where('student_id', $student->id)->whereDate('created_at', today())->count();
             if ($alreadyCheckedInToday > 0) {
                 return redirect()->route('home')->with('error', 'Already checked in today!');
-            } 
+            }
 
             $opened = Encounter::where('student_id', $student->id)->where('status', 2)->count();
-            if ($opened > 0){
+            if ($opened > 0) {
                 $openedCase = Encounter::where('student_id', $student->id)->where('status', 2);
-               // dd(  $openedCase->id);
-               //return redirect()->route('home')->with('error', 'There is existing opened case associated with given ID');
-               return view('app.encounters.confirm', compact('student')); // A
-         
-            }
-            
-            else {
+                // dd(  $openedCase->id);
+                //return redirect()->route('home')->with('error', 'There is existing opened case associated with given ID');
+                return view('app.encounters.confirm', compact('student')); // A
+
+            } else {
                 Encounter::create([
                     'student_id' => $student->id,
                     'status' => 1,
@@ -91,16 +87,15 @@ class HomeController extends Controller
         }
     }
 
-    public function closeOpenCase(Request $request){
+    public function closeOpenCase(Request $request)
+    {
 
 
         Encounter::where('student_id', $request->id)->where('status', 2)->update(['status' => STATUS_COMPLETED]);
 
         // Encounter::where('id', $request->id)->update(['status' => STATUS_COMPLETED]);
 
-         return redirect()->route('home')->with('success', 'Opened case succssfully closed!');
-
-
+        return redirect()->route('home')->with('success', 'Opened case succssfully closed!');
     }
 
 
@@ -139,45 +134,67 @@ class HomeController extends Controller
         return redirect()->route('home')->with('error', 'Student not found or RFID unmapping failed.');
     }
 
-    public function getEncouter(){
-
-
+    // public function getEncouter()
+    // {
+    //     $users = ClinicUser::all();
+    //     $encounterLists = Encounter::orderBy('id', 'desc')->paginate(15);
+    //     return view('app.encounters.encounter-list', compact('encounterLists', 'users'));
+    // }
+    public function getEncouter(Request $request)
+    {
+        // Get all clinic users
         $users = ClinicUser::all();
-       
-        $encounterLists = Encounter::orderBy('id', 'desc')->paginate(15);
-         
-            return view('app.encounters.encounter-list', compact('encounterLists','users'));
-        
 
+        // Retrieve encounters with student information
+        $encounterLists = Encounter::with('student')
+            ->orderBy('id', 'desc');
+
+        // Check if search parameters are provided
+        if ($request->has('search')) {
+            $search = $request->input('search');
+
+            // Perform search on student name and ID number
+            $encounterLists->where(function ($query) use ($search) {
+                $query->whereHas('student', function ($subquery) use ($search) {
+                    $subquery->where('students.first_name', 'like', '%' . $search . '%')
+                        ->orWhere('students.middle_name', 'like', '%' . $search . '%')
+                        ->orWhere('students.last_name', 'like', '%' . $search . '%')
+                        ->orWhere('students.id_number', 'like', '%' . $search . '%');
+                });
+            });
+        }
+
+        // Paginate the results
+        $encounterLists = $encounterLists->paginate(15);
+
+        return view('app.encounters.encounter-list', compact('encounterLists', 'users'));
     }
+
 
     public function autoSearch(Request $request)
     {
         try {
-           
 
-           $query = trim($request->input('query'));
+
+            $query = trim($request->input('query'));
             if (empty($query)) {
                 $encounterLists = Encounter::all();
 
-               // return redirect()->route('encouter-list');
-            }
-             else {
-             $student = Student::where('rfid', 'LIKE', "%$query%")->first();
+                // return redirect()->route('encouter-list');
+            } else {
+                $student = Student::where('rfid', 'LIKE', "%$query%")->first();
 
-            if (!$student) {
-                return response()->json(['error' => 'Student not found.'], 404);
+                if (!$student) {
+                    return response()->json(['error' => 'Student not found.'], 404);
+                }
+
+                $encounterLists = Encounter::where('id', $query)->get();
             }
 
-            $encounterLists = Encounter::where('id', $query)->get();
+            return response()->json($encounterLists);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
         }
-        
-      return response()->json($encounterLists);
-        } 
-    catch (\Exception $e) {
-        return response()->json(['error' => $e->getMessage()], 500);
-    }
-    
     }
     public function dashboard()
     {
@@ -196,42 +213,42 @@ class HomeController extends Controller
 
 
         $genderCounts = Encounter::join('students', 'encounters.student_id', '=', 'students.id')
-        ->select('students.sex', DB::raw('COUNT(*) as count'))
-        ->groupBy('students.sex')
-        ->get();
-       
-       // Initialize counters
-       $maleCount = 0;
-       $femaleCount = 0;
-       // Count male and female encounters
-       foreach ($genderCounts as $genderCount) {
-        if ($genderCount->sex === 'M') {
-            $maleCount = $genderCount->count;
-        } elseif ($genderCount->sex === 'F') {
-            $femaleCount = $genderCount->count;
+            ->select('students.sex', DB::raw('COUNT(*) as count'))
+            ->groupBy('students.sex')
+            ->get();
+
+        // Initialize counters
+        $maleCount = 0;
+        $femaleCount = 0;
+        // Count male and female encounters
+        foreach ($genderCounts as $genderCount) {
+            if ($genderCount->sex === 'M') {
+                $maleCount = $genderCount->count;
+            } elseif ($genderCount->sex === 'F') {
+                $femaleCount = $genderCount->count;
+            }
         }
-       }
-    
-  // Calculate percentages
-  $totalEncounters = $maleCount + $femaleCount;
 
-  // Avoid division by zero
-  $malePercentage = ($totalEncounters > 0) ? round(($maleCount / $totalEncounters) * 100) : 0;
-  $femalePercentage = ($totalEncounters > 0) ? round(($femaleCount / $totalEncounters) * 100) : 0;
+        // Calculate percentages
+        $totalEncounters = $maleCount + $femaleCount;
 
-   
-  $closed = Encounter::where('status',STATUS_COMPLETED )->count();
-  $today = Encounter::whereDate('created_at', today())->count();
-// Retrieve data for the current month grouped by week
-$startDate = now()->startOfMonth();
-$endDate = now()->endOfMonth();
-$dataPoints = Encounter::selectRaw('MONTH(created_at) as x, COUNT(id) as y')
-    ->whereYear('created_at', now()->year)
-    ->groupBy('x')
-    ->orderBy('x', 'asc') // Order by the month number (x)
-    ->get()
-    ->toArray();
-   // dd($dataPoints);
+        // Avoid division by zero
+        $malePercentage = ($totalEncounters > 0) ? round(($maleCount / $totalEncounters) * 100) : 0;
+        $femalePercentage = ($totalEncounters > 0) ? round(($femaleCount / $totalEncounters) * 100) : 0;
+
+
+        $closed = Encounter::where('status', STATUS_COMPLETED)->count();
+        $today = Encounter::whereDate('created_at', today())->count();
+        // Retrieve data for the current month grouped by week
+        $startDate = now()->startOfMonth();
+        $endDate = now()->endOfMonth();
+        $dataPoints = Encounter::selectRaw('MONTH(created_at) as x, COUNT(id) as y')
+            ->whereYear('created_at', now()->year)
+            ->groupBy('x')
+            ->orderBy('x', 'asc') // Order by the month number (x)
+            ->get()
+            ->toArray();
+        // dd($dataPoints);
 
 
 

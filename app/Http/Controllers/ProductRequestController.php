@@ -15,6 +15,7 @@ use App\Models\Item;
 use App\Models\ItemsInPharmacy;
 use App\Models\Pharmacy;
 use App\Models\PharmacyUser;
+use App\Models\ProductResponse;
 use App\Models\StoresToPharmacy;
 use App\Models\StoreUser;
 use Illuminate\Http\Response;
@@ -119,7 +120,6 @@ class ProductRequestController extends Controller
             );
         }
         abort(Response::HTTP_UNAUTHORIZED, 'Unauthorized access.');
-
     }
 
 
@@ -254,9 +254,12 @@ class ProductRequestController extends Controller
         abort(Response::HTTP_UNAUTHORIZED, 'Unauthorized access l.');
     }
 
-    public function approve(Request $request, ProductRequest $productRequest)
+    public function approve(Request $request)
     {
-
+        // dd($request);
+        $productR_id=$request->productRequest_id_a;
+        $productRequest=ProductRequest::where('id',$productR_id)->first();
+        // dd($productR_id);
         // dd($request);
         if (Auth::user()->can('store.request.*')) {
             $storeUser = StoreUser::where('user_id', Auth::user()->id)->first();
@@ -265,41 +268,22 @@ class ProductRequestController extends Controller
             }
             $store = Store::where('id', $storeUser->store_id)->first();
             $totalAmountInStore = Item::where('product_id', $productRequest->product_id)->sum('number_of_units');
-            if ($productRequest->amount > $totalAmountInStore) {
+            // dd($totalAmountInStore,$productRequest->amount);
+            if ($request->approvalAmount > $totalAmountInStore) {
 
                 // dd($productRequest->amount, $totalAmountInStore, $productRequest->product_id,"There is no available amount for the given request ");
-                return redirect()->back()->with('error', 'There is no available amount for the given request');
+                return redirect()->back()->with('enough', 'There is no available amount for the given request');
             }
 
-
-            $items = Item::where('product_id', $productRequest->product_id)->orderBy('expire_date')->get();
-            // dd($items);
-            $approvedAmount = $request->approvalAmount;
-            foreach ($items as $item) {
-                if ($item->number_of_units >= $approvedAmount) {
-                    $t = ItemsInPharmacy::firstOrCreate(['item_id' => $item->id, 'pharmacy_id' => $productRequest->pharmacy_id]);
-                    $t->count = $t->count + $approvedAmount;
-                    $t->save();
-                    $item->number_of_units = $item->number_of_units - $approvedAmount;
-                    $item->save();
-                    break;
-                } else {
-                    $approvedAmount = $approvedAmount - $item->number_of_units;
-                    $t = ItemsInPharmacy::firstOrCreate(['item_id' => $item->id, 'pharmacy_id' => $productRequest->pharmacy_id]);
-                    $t->count = $t->count + $item->number_of_units;
-                    $t->save();
-
-                    $item->number_of_units = 0;
-                    $item->save();
-                }
-            }
-
-            // dd($items);
+            $productRequest->to_be_approved = $request->approvalAmount;
 
 
-            $productRequest->status = 'Approved';
+
+
+
+            $productRequest->status = 'Accepted';
             $productRequest->approval_amount = $request->approvalAmount;
-            $productRequest->appoved_at=Carbon::now()->format('Y-m-d');
+            $productRequest->approved_at = Carbon::now()->format('Y-m-d');
             $productRequest->save();
 
             return redirect()
@@ -309,71 +293,144 @@ class ProductRequestController extends Controller
         abort(Response::HTTP_UNAUTHORIZED, 'Unauthorized access.');
     }
 
+    public function reject(Request $request)
+    {
+
+
+        $productR_id=$request->productRequest_id_r;
+        $productRequest=ProductRequest::where('id',$productR_id)->first();
+
+        if (Auth::user()->can('store.request.*')) {
+            $storeUser = StoreUser::where('user_id', Auth::user()->id)->first();
+            if ($storeUser == null) {
+                return back()->withError('Store user hasn\'t been assigned to any store yet ');
+            }
+            $store = Store::where('id', $storeUser->store_id)->first();
+            $products = Product::where('store_id', $store->id);
+
+            $productRequest->reason_of_rejection = $request->reason;
+            $productRequest->status = 'Rejected';
+            $productRequest->rejected_at = Carbon::now()->format('Y-m-d');
+            $productRequest->save();
+
+            return redirect()
+                ->route('product-requests.index')
+                ->withSuccess(__('crud.common.rejected'));
+        }
+        abort(Response::HTTP_UNAUTHORIZED, 'Unauthorized access.');
+    }
+
+    ///This function will fetch the requests that has been accepted by the stores from pharmacies but yet haven't been approved by the approved
     public function toBeApprove(Request $request)
     {
         // if (Auth::user()->can('requests.list')) {
 
-        $approvedRequests = ProductRequest::            where('status', 'Approved')
+        $acceptedRequests = ProductRequest::where('status', 'Accepted')
             ->orderByRaw("approved_at DESC, store_id ASC, pharmacy_id ASC")
             ->get();
 
-        // dd(($approvedRequests));
+        // dd(($acceptedRequests));
 
 
         $groupofRequests = [];
         $i = 1;
-        $request = [];
-        if ($approvedRequests != null) {
+        $requests = [];
+        if (count($acceptedRequests)) {
 
 
-            array_push($request, $approvedRequests[0]);
-
+            array_push($requests, $acceptedRequests[0]);
         }
-        // dd($approvedRequests[0]);
-        while ($i < count($approvedRequests)) {
-            while (true) {
-                if ($approvedRequests[$i]->store_id == $request[0]->store_id and
-                 $approvedRequests[$i]->pharmacy_id == $request[0]->pharmacy_id and
-                 $approvedRequests[$i]->approved_at == $request[0]->approved_at) {
+
+        while ($i < count($acceptedRequests)) {
+            while (true and $i < count($acceptedRequests)) {
+                if (
+                    $acceptedRequests[$i]->store_id == $requests[0]->store_id and
+                    $acceptedRequests[$i]->pharmacy_id == $requests[0]->pharmacy_id and
+                    $acceptedRequests[$i]->approved_at == $requests[0]->approved_at
+                ) {
 
 
-                    array_push($request, $approvedRequests[$i]);
+                    array_push($requests, $acceptedRequests[$i]);
 
                     $i++;
                 } else {
 
-                    array_push($groupofRequests, $request);
-                    $request = [];
-                    array_push($request, $approvedRequests[$i]);
+                    array_push($groupofRequests, $requests);
+                    $requests = [];
+                    array_push($requests, $acceptedRequests[$i]);
                     $i++;
                     break;
                 }
-
-
             }
-
         }
-        array_push($groupofRequests, $request);
-        // dd($request);
+        if ($requests) {
 
-        // dd($groupofRequests[0][0]->product);
-        // foreach ($approvedRequests as $req) {
+            array_push($groupofRequests, $requests);
+        }
 
-        // }
-        // }
 
-        return view('app.request_approve.index',compact('groupofRequests'));
+        return view('app.group_requests.index', compact('groupofRequests'));
         // abort(Response::HTTP_UNAUTHORIZED, 'Unauthorized access.');
 
     }
+    ///This function will approve the requests that has been accepted by the stores from pharmacies but yet haven't been approved by the approved
     public function approveByAdmin(Request $request)
     {
-        $groupofRequest = json_decode($request->input('groupofRequest'));
+        if (Auth::user()->can('groupRequest.approve')) {
+
+            $approver_id=Auth::user()->id;
+            $groupofRequest = json_decode($request->input('groupofRequest'));
 
 
-        dd($groupofRequest);
+            // dd($groupofRequest);
+            $latestRecord = ProductResponse::latest()->first();
+            if ($latestRecord) {
+                $newTinNumber = str_pad((int)$latestRecord->tin_number + 1, strlen($latestRecord->tin_number), '0', STR_PAD_LEFT);
+            } else {
+                // If no rows are found, start with '0001' or any initial value
+                $newTinNumber = '00001';
+            }
 
-        if (Auth::user()->can('requests.approve')) {
+            foreach ($groupofRequest as $re) {
+                $productResponse = new ProductResponse();
+                $productResponse->tin_number = $newTinNumber;
+                $productResponse->status = 1;
+                $productResponse->product_request_id = $re->id;
+                $productResponse->approved_by=$approver_id;
+                $productResponse->approved_at = Carbon::now()->format('Y-m-d');
+                $productResponse->save();
+
+
+                $items = Item::where('product_id', $re->product_id)->orderBy('expire_date')->get();
+                // dd($items);
+                $approvedAmount = $re->approval_amount;
+                foreach ($items as $item) {
+                    if ($item->number_of_units >= $approvedAmount) {
+                        $t = ItemsInPharmacy::firstOrCreate(['item_id' => $item->id, 'pharmacy_id' => $re->pharmacy_id]);
+                        $t->count = $t->count + $approvedAmount;
+                        $t->save();
+                        $item->number_of_units = $item->number_of_units - $approvedAmount;
+                        $item->save();
+                        break;
+                    } else {
+                        $approvedAmount = $approvedAmount - $item->number_of_units;
+                        $t = ItemsInPharmacy::firstOrCreate(['item_id' => $item->id, 'pharmacy_id' => $re->pharmacy_id]);
+                        $t->count = $t->count + $item->number_of_units;
+                        $t->save();
+
+                        $item->number_of_units = 0;
+                        $item->save();
+                    }
+                }
+
+                $p = ProductRequest::find($re->id);
+                // dd($p);
+                $p->status = "Approved";
+                $p->save();
+            }
+            return redirect()
+                ->route('groupRequest.index')
+                ->withSuccess(__('A group of request has been approved successfully'));
 
             // foreach ($groupofRequest as $request) {
 
@@ -382,21 +439,36 @@ class ProductRequestController extends Controller
         }
 
         abort(Response::HTTP_UNAUTHORIZED, 'Unauthorized access.');
-
-   }
-    public function rejectByAdmin($groupofRequest)
+    }
+    ///This function will reject the requests that has been accepted by the stores from pharmacies but yet haven't been approved by the approved
+    public function rejectByAdmin(Request $request)
     {
-        if (Auth::user()->can('requests.approve')) {
+        $groupofRequest = json_decode($request->input('groupofRequest'));
 
-            foreach ($groupofRequest as $request) {
+        if (Auth::user()->can('groupRequest.reject')) {
+            $approved_by=Auth::user()->id;
+            foreach ($groupofRequest as $re) {
+                $productResponse = new ProductResponse();
+                $productResponse->status = 0;
+                $productResponse->product_request_id = $re->id;
+                $productResponse->approved_by=$approved_by;
+                $productResponse->rejected_at = Carbon::now()->format('Y-m-d');
+
+                $productResponse->save();
 
 
+                $p = ProductRequest::find($re->id);
+                // dd($p);
+                $p->status = "Rejected";
+                $p->save();
             }
+
+            return redirect()
+                ->route('groupRequest.index')
+                ->withSuccess(__('A group of request has been rejected successfully'));
         }
 
         abort(Response::HTTP_UNAUTHORIZED, 'Unauthorized access.');
-
-
     }
 
     // public function reject(Request $request ,ProductRequest $productRequest)
@@ -421,29 +493,7 @@ class ProductRequestController extends Controller
 
 
 
-    public function reject(Request $request, ProductRequest $productRequest)
-    {
 
-        // dd($request);
-        if (Auth::user()->can('store.request.*')) {
-            $storeUser = StoreUser::where('user_id', Auth::user()->id)->first();
-            if ($storeUser == null) {
-                return back()->withError('Store user hasn\'t been assigned to any store yet ');
-            }
-            $store = Store::where('id', $storeUser->store_id)->first();
-            $products = Product::where('store_id', $store->id);
-
-            $productRequest->reason_of_rejection = $request->reason;
-            $productRequest->status = 'Rejected';
-            $productRequest->rejected_at = Carbon::now()->format('Y-m-d');
-            $productRequest->save();
-
-            return redirect()
-                ->route('product-requests.index')
-                ->withSuccess(__('crud.common.rejected'));
-        }
-        abort(Response::HTTP_UNAUTHORIZED, 'Unauthorized access.');
-    }
 
 
     public function sentRequests(Request $request)
@@ -456,6 +506,11 @@ class ProductRequestController extends Controller
             }
             $pharmacy = Pharmacy::where('id', $pharmacyUser->pharmacy_id)->first();
 
+            $searchAccepted = $request->get('searchAccepted', '');
+            $AcceptedProductRequests = ProductRequest::where('pharmacy_id', $pharmacy->id)->where('status', "Accepted")->orderBy('updated_at', 'desc')->search($searchAccepted)
+                ->latest()
+                ->paginate(5)
+                ->withQueryString();
             $searchApproved = $request->get('searchApproved', '');
             $ApprovedProductRequests = ProductRequest::where('pharmacy_id', $pharmacy->id)->where('status', "Approved")->orderBy('updated_at', 'desc')->search($searchApproved)
                 ->latest()
@@ -474,7 +529,7 @@ class ProductRequestController extends Controller
 
             return view(
                 'app.product_requests.sentRequests',
-                compact('ApprovedProductRequests', 'RequestedProductRequests', 'RejectedProductRequests', 'searchApproved', 'RequestedSearch', 'searchRejected')
+                compact('AcceptedProductRequests','ApprovedProductRequests', 'RequestedProductRequests', 'RejectedProductRequests', 'searchApproved', 'RequestedSearch', 'searchRejected')
             );
         }
         abort(Response::HTTP_UNAUTHORIZED, 'Unauthorized access.');
