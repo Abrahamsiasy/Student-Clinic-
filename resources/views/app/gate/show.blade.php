@@ -284,7 +284,7 @@
                     }
                 },
                 error: function() {
-                    if (countdown === 5) {
+                    if (countdown === 50) {
                         $('#detail-card').hide()
                         $('#checkIn').show()
                         countdown = 0;
@@ -332,6 +332,7 @@
                         $('#list-all').show();
                         $('#profile_img').show()
                         if (response) {
+                            console.log(date);
                             $('#detail-card').show()
                             $('#checkIn').hide()
                             $('#search-stud').css("display", 'inline-block')
@@ -352,7 +353,7 @@
                             $('#full_name').html(response.data.first_name + ' ' + response.data
                                 .middle_name + ' ' + response.data.last_name);
                             $('#id_num').html(response.data.id_number);
-                            $('#program').html('UNKNOWN');
+                            $('#program').html('-');
                             $('#year').html(response.data.academic_year);
                             var obj = document.createElement("audio");
                             var sound = '{{ URL::asset('assets/sound/beep-02.wav') }}';
