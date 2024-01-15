@@ -25,6 +25,7 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\PharmacyController;
 use App\Http\Controllers\ReligionController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\WellcomeController;
 use App\Http\Controllers\DiagnosisController;
 use App\Http\Controllers\EncounterController;
 use App\Http\Controllers\StockUnitController;
@@ -43,6 +44,8 @@ use App\Http\Controllers\ProductRequestController;
 use App\Http\Controllers\ItemsInPharmacyController;
 use App\Http\Controllers\MedicalSickLeaveController;
 use App\Http\Controllers\LabTestRequestGroupController;
+
+require_once "route_gate.php";
 
 /*
 |--------------------------------------------------------------------------
@@ -77,6 +80,7 @@ Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard'
 Route::get('/logout', '\App\Http\Controllers\Auth\LoginController@logout');
 Route::get('/lab-queue', [QueueController::class, 'getLabQueue'])->name('lab-queue');
 Route::get('/opd-queue', [QueueController::class, 'getOPDQueue'])->name('opd-queue');
+Route::get('/wellcome', [WellcomeController::class, 'index'])->name('wellcome');
 Route::prefix('/')->middleware('auth')->group(function () {
     //->middleware('redirectIfDoctor');
     Route::resource('roles', RoleController::class);

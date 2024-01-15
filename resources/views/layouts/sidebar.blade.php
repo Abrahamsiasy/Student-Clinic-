@@ -671,7 +671,9 @@
                             </a>
 
                         </li>
-
+                        @if(Request::is(['gate','gate/*']))
+                            @include('layouts.sidebar.sidebar_gate')
+                        @endif
                     @endauth
                 </ul>
             </nav>
