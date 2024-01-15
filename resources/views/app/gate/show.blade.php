@@ -332,7 +332,6 @@
                         $('#list-all').show();
                         $('#profile_img').show()
                         if (response) {
-                            console.log(date);
                             $('#detail-card').show()
                             $('#checkIn').hide()
                             $('#search-stud').css("display", 'inline-block')
