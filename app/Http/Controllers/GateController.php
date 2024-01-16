@@ -7,6 +7,7 @@ use App\Models\Student;
 use App\Models\GateScanner;
 use Illuminate\Http\Request;
 use App\Models\CurrentCardRead;
+use App\Models\Program;
 use Illuminate\Support\Facades\DB;
 
 class GateController extends Controller
@@ -110,7 +111,15 @@ class GateController extends Controller
         $check = 0;
         $id_number = $request->get('id_number');
         $student = Student::where('id_number',$id_number)->orWhere('rfid',$id_number)->first();
-        return response()->json(['data' => $student, 'check'=>$check]);
+        if($student){
+            $campus = Campus::find($student->campus_id);
+            $program = Program::where('program_id', $student->program_id)->first();
+            if($campus){
+                return response()->json(['data' => $student, 'check'=>$check, 'campus' => $campus,'program' => $program]);
+            }else{
+                return response()->json(['data' => $student, 'check'=>$check, 'campus' => '' ,'program' => $program]);
+            }
+        }
     }
 
     public function checkCurrentData(Request $request){

@@ -185,7 +185,7 @@
                                             <div class="product-info">
                                                 <span class="product-title">Department
                                                 </span>
-                                                <span class="product-description" id="program">
+                                                <span class="product-description" id="department">
 
                                                 </span>
                                             </div>
@@ -340,9 +340,13 @@
                             src = "{{ asset('assets/check-success.png') }}"
                             $('#check-img').css("background-image", 'url(' + src + ')')
                             image = response.data.photo
-                            var studimg = 'https://srs.ju.edu.et/uploads/student/' + image;
-                            profile_image = studimg;
-                            console.log(profile_image)
+                            if(image){
+                                var studimg = 'https://srs.ju.edu.et/uploads/student/' + image;
+                                profile_image = studimg;
+                            }else{
+                                src = "{{ asset('assets/profile-img.png') }}"
+                                profile_image = src;
+                            }
                             $('#status').attr('src', src)
                             $('#status').attr('width', '200')
                             $('#status_2').attr('src', src)
@@ -352,7 +356,8 @@
                             $('#full_name').html(response.data.first_name + ' ' + response.data
                                 .middle_name + ' ' + response.data.last_name);
                             $('#id_num').html(response.data.id_number);
-                            $('#program').html('-');
+                            $('#program').html(response.campus.name);
+                            $('#department').html(response.program.name);
                             $('#year').html(response.data.academic_year);
                             var obj = document.createElement("audio");
                             var sound = '{{ URL::asset('assets/sound/beep-02.wav') }}';
