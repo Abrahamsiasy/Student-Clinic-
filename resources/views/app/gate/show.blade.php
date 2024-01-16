@@ -454,6 +454,7 @@
         function searchStudent() {
             $('#id_number').val($('#scannID').val());
             $('#search-stud').submit();
+            countdown = 0;
         }
     </script>
 </body>
