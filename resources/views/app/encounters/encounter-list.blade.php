@@ -93,7 +93,7 @@
                                     </form>
                                 </div>
                             </div>
-                            {{-- 
+                            {{--
 
                             <div class="card-body">
                                 <form action="{{ route('encounter-list') }}" method="GET">
@@ -158,7 +158,8 @@
                                             </td>
                                             <td>{{ optional($encounter->student)->sex ?? '-' }}</td>
 
-                                            <td>{{ $encounter->created_at->diffForHumans() }} </td>
+                                            <td>{{ $encounter->created_at->format('M d, Y') }}
+                                            </td>
                                             <td>
 
 

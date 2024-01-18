@@ -134,7 +134,6 @@
                             </tr>
                         </thead>
 
-
                         <tbody>
                             @foreach ($encounters as $key => $encounter)
                                 <tr>
