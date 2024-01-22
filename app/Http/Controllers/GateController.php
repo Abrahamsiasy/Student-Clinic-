@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Campus;
 use App\Models\Student;
+use App\Models\GateScanner;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
-use Illuminate\Http\RedirectResponse;
+use App\Models\CurrentCardRead;
+use App\Models\Program;
 use Illuminate\Support\Facades\DB;
 
 class GateController extends Controller
@@ -15,62 +17,12 @@ class GateController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request): View
+    public function index()
     {
-        // dd($request);
-        $this->authorize('view-any', Student::class);
-
-        $search = $request->get('search', '');
-
-        $students = Student::search($search)
-            ->latest()
-            ->paginate(10)
-            ->withQueryString();
-        // dd($request);
-        $student = Student::search($search)->first();
-        // dd($student);
-
-
-        return view('app.gate.index', compact('students', 'search', 'student'));
-    }
-
-    public function store(Request $request): View
-    {
-        // dd($request);
-        $this->authorize('view-any', Student::class);
-
-        $search = $request->get('search', '');
-
-        $students = Student::search($search)
-            ->latest()
-            ->paginate(10)
-            ->withQueryString();
-        // dd($request);
-        $student = Student::search($search)->first();
-        // dd($student);
-
-
-        return view('app.gate.index', compact('students', 'search', 'student'));
-    }
-
-    public function searchStudent(Request $request)
-    {
-        $this->authorize('view-any', Student::class);
-
-        dd($request);
-
-        $studentId = trim($request->input('student_id'));
-        $student = Student::where('id_number', $studentId)
-            ->orWhere('rfid', $studentId)
-            ->first();
-
-        if ($student) {
-            // return $studnet 
-            return view('app.gate.index', compact('student'));
-        } else {
-            return redirect()->route('gate')->with('error', 'No student record found!');
-        }
-        return response()->json('data', $student);
+        //
+        $gateScanner = GateScanner::orderBy('gate_name','ASC')->get();
+        $campuses = Campus::all();
+        return view('app.gate.index',compact('gateScanner','campuses'));
     }
 
     /**
@@ -78,10 +30,9 @@ class GateController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
+    public function create()
     {
         //
-        dd($request);
     }
 
     /**
@@ -90,26 +41,22 @@ class GateController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function storee(Request $request)
+    public function store(Request $request)
     {
         //
-        $this->authorize('view-any', Student::class);
+        $validated = $request->validate([
+            'gate_name' =>'required|string',
+            'scanner_id' =>'required|string',
+            'campus_id' =>'required|numeric',
+            'location' =>'string',
+        ]);
+        
+        GateScanner::create($validated);
 
-        // dd($request);
-
-        $studentId = trim($request->input('student_id'));
-        $student = Student::where('id_number', $studentId)
-            ->orWhere('rfid', $studentId)
-            ->first();
-        // dd($student);
-
-        if ($student) {
-            // return $studnet 
-            return view('app.gate.index', compact('student'));
-        } else {
-            return redirect()->route('gate.index')->with('error', 'No student record found!');
-        }
-        return response()->json('data', $student);
+        // return redirect()
+        //     ->route('appointments.edit', $appointment)
+        //     ->withSuccess(__('crud.common.created'));
+        
     }
 
     /**
@@ -121,6 +68,8 @@ class GateController extends Controller
     public function show($id)
     {
         //
+        $gate = GateScanner::find($id);
+        return view('app.gate.show', array('gate_id' => $id,'gate' => $gate));
     }
 
     /**
@@ -155,5 +104,29 @@ class GateController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function searchStudent(Request $request)
+    {
+        $check = 0;
+        $id_number = $request->get('id_number');
+        $student = Student::where('id_number',$id_number)->orWhere('rfid',$id_number)->first();
+        if($student){
+            $campus = Campus::find($student->campus_id);
+            $program = Program::where('program_id', $student->program_id)->first();
+            if($campus){
+                return response()->json(['data' => $student, 'check'=>$check, 'campus' => $campus,'program' => $program]);
+            }else{
+                return response()->json(['data' => $student, 'check'=>$check, 'campus' => '' ,'program' => $program]);
+            }
+        }
+    }
+
+    public function checkCurrentData(Request $request){
+        $gateScanner = GateScanner::find($request->gate_id);
+        $data = CurrentCardRead::where('cjihao', $gateScanner->scanner_id)->first();
+        $data = $data->card_id;
+        CurrentCardRead::where('card_id',$data)->delete();
+        return response()->json(['data' => $data]);
     }
 }

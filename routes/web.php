@@ -26,6 +26,7 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\PharmacyController;
 use App\Http\Controllers\ReligionController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\WellcomeController;
 use App\Http\Controllers\DiagnosisController;
 use App\Http\Controllers\EncounterController;
 use App\Http\Controllers\StockUnitController;
@@ -45,6 +46,8 @@ use App\Http\Controllers\ItemsInPharmacyController;
 use App\Http\Controllers\MedicalSickLeaveController;
 use App\Http\Controllers\LabTestRequestGroupController;
 use App\Http\Controllers\ProductResponseController;
+
+require_once "route_gate.php";
 
 /*
 |--------------------------------------------------------------------------
@@ -80,6 +83,7 @@ Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard'
 Route::get('/logout', '\App\Http\Controllers\Auth\LoginController@logout');
 Route::get('/lab-queue', [QueueController::class, 'getLabQueue'])->name('lab-queue');
 Route::get('/opd-queue', [QueueController::class, 'getOPDQueue'])->name('opd-queue');
+Route::get('/wellcome', [WellcomeController::class, 'index'])->name('wellcome');
 Route::prefix('/')->middleware('auth')->group(function () {
     //->middleware('redirectIfDoctor');
     Route::resource('roles', RoleController::class);
@@ -239,8 +243,8 @@ Route::prefix('/')->middleware('auth')->group(function () {
 
     Route::get('/store_and_pharmacy_users/pharmacy_users', [UserController::class, 'pharmacy_users'])->name('store_and_pharmacy_users.pharmacy');
     Route::get('/store_and_pharmacy_users/store_users', [UserController::class, 'store_users'])->name('store_and_pharmacy_users.store');
-    Route::get('/product-requests/approve/{productRequest}', [ProductRequestController::class, 'approve'])->name('product-requests.approve');
-    Route::get('/product-requests/reject/{productRequest}', [ProductRequestController::class, 'reject'])->name('product-requests.reject');
+    Route::Post('/product-requests/approve/', [ProductRequestController::class, 'approve'])->name('product-requests.approve');
+    Route::Post('/product-requests/reject/', [ProductRequestController::class, 'reject'])->name('product-requests.reject');
     Route::get('/product-requests/sentRequests', [ProductRequestController::class, 'sentRequests'])->name('product-requests.sentRequests');
     Route::get('/product-requests/records', [ProductRequestController::class, 'recordsOfRequests'])->name('product-requests.recordsOfRequests');
 

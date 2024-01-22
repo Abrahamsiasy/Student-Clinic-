@@ -13,7 +13,7 @@ class MainDiagnosesHelper
         foreach ($mainDiagnoses as $mainDiagnosis) {
             $student = $mainDiagnosis->student;
             $diagnosis = $mainDiagnosis->diagnosis;
-            if(isset(Carbon::parse($student->date_of_birth)->age)){
+            if(isset($student->date_of_birth)){    
                 $studentsWithDiagnoses[] = [
                     'diagnosis' => [
                         'code' => $diagnosis->name,
