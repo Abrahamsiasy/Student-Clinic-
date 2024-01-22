@@ -44,7 +44,7 @@
     <script></script>
 @endpush
 @section('content')
-    <div class="container">
+    <div class="">
         <div class="card">
 
             <div class="card-header p-0 pt-1 border-bottom-0">
@@ -54,6 +54,11 @@
                             <a class="nav-link active" id="schedule-tab" data-toggle="pill" href="#ongoing-tabs"
                                 role="tab" aria-controls="custom-tabs-one-tabs" aria-selected="false"
                                 onclick="setTabCookie(0)">OnGoing</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="schedule-tab" data-toggle="pill" href="#accepted-tabs" role="tab"
+                                aria-controls="custom-tabs-one-tabs" aria-selected="false"
+                                onclick="setTabCookie(1)">Accepted Requestes</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" id="schedule-tab" data-toggle="pill" href="#approved-tabs" role="tab"
@@ -75,6 +80,98 @@
 
 
                 <div class="tab-content" id="records-of-requested">
+                    <div class="tab-pane fade" id="accepted-tabs" role="tabpanel"
+                        aria-labelledby="custom-tabs-three-home-tab">
+
+
+
+                        <div style="display: flex; justify-content: space-between;">
+                            <h4 class="card-title">
+                                Accepted Requestes
+                            </h4>
+                        </div>
+
+                        <div class="searchbar mt-4 mb-5">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <form>
+                                        <div class="input-group">
+                                            <input id="indexSearch" type="text" name="$searchAccepted"
+                                                placeholder="{{ __('crud.common.search') }}" value="{{ $search ?? '' }}"
+                                                class="form-control" autocomplete="off" />
+                                            <div class="input-group-append">
+                                                <button type="submit" class="btn btn-primary">
+                                                    <i class="icon ion-md-search"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover  table-sm table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th class="text-left">
+                                            @lang('crud.product_requests.inputs.product_id')
+                                        </th>
+                                        <th class="text-left">
+                                            Requested Amount
+                                        </th>
+                                        <th class="text-left">
+                                            Accepted Amount
+                                        </th>
+
+                                        <th class="text-left">
+                                            Store
+                                        </th>
+
+                                        <th>Accepted Date</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $i = 1;
+                                    @endphp
+                                    @forelse($AcceptedProductRequests as $AcceptedRequest)
+                                        <tr>
+                                            <td>{{ $i++ }}</td>
+                                            <td>
+                                                {{ optional($AcceptedRequest->product)->name ?? '-' }}
+                                            </td>
+                                            <td>{{ $AcceptedRequest->amount ?? '-' }}</td>
+                                            <td>{{ $AcceptedRequest->approval_amount ?? '-' }}</td>
+                                            <td>
+                                                {{ optional($AcceptedRequest->store)->name ?? '-' }}
+                                            </td>
+                                            <td>{{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $AcceptedRequest->updated_at)->format('d-m-Y') }}
+                                            </td>
+
+
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="5">
+                                                @lang('crud.common.no_items_found')
+                                            </td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="5">
+                                            {!! $AcceptedProductRequests->render() !!}
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+
+                    </div>
                     <div class="tab-pane fade" id="approved-tabs" role="tabpanel"
                         aria-labelledby="custom-tabs-three-home-tab">
 
@@ -114,7 +211,10 @@
                                             @lang('crud.product_requests.inputs.product_id')
                                         </th>
                                         <th class="text-left">
-                                            @lang('crud.product_requests.inputs.amount')
+                                            Requested Amount
+                                        </th>
+                                        <th class="text-left">
+                                            Approved Amount
                                         </th>
 
                                         <th class="text-left">
@@ -136,6 +236,7 @@
                                                 {{ optional($ApprovedRequest->product)->name ?? '-' }}
                                             </td>
                                             <td>{{ $ApprovedRequest->amount ?? '-' }}</td>
+                                            <td>{{ $ApprovedRequest->approval_amount ?? '-' }}</td>
                                             <td>
                                                 {{ optional($ApprovedRequest->store)->name ?? '-' }}
                                             </td>
@@ -203,16 +304,19 @@
                                     <tr>
                                         <th>#</th>
                                         <th class="text-left">
-                                            @lang('crud.product_requests.inputs.amount')
+                                            @lang('crud.product_requests.inputs.product_id')
                                         </th>
                                         <th class="text-left">
-                                            @lang('crud.product_requests.inputs.product_id')
+                                           Requested Amount
                                         </th>
 
                                         <th class="text-left">
                                             Store
                                         </th>
-                                        <th>Rejected Date</th>
+                                        <th class="text-left">
+                                            Rejection reason
+                                        </th>
+                                        <th>Rejection Date</th>
 
 
 
@@ -221,17 +325,20 @@
                                 <tbody>
                                     @forelse($RejectedProductRequests as $RejectedRequest)
                                         <tr>
-                                            <th>{{$i++}}</th>
-
-                                            <td>{{ $RejectedRequest->amount ?? '-' }}</td>
+                                            <th>{{ $i++ }}</th>
 
                                             <td>
                                                 {{ optional($RejectedRequest->product)->name ?? '-' }}
                                             </td>
+                                            <td>{{ $RejectedRequest->amount ?? '-' }}</td>
+
 
 
                                             <td>
                                                 {{ optional($RejectedRequest->store)->name ?? '-' }}
+                                            </td>
+                                            <td>
+                                                {{ $RejectedRequest->reason_of_rejection ?? '-' }}
                                             </td>
                                             <td>{{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $RejectedRequest->updated_at)->format('d-m-Y') }}
                                             </td>
@@ -333,7 +440,7 @@
                                 <tbody>
                                     @forelse($RequestedProductRequests as $requestedProductRequest)
                                         <tr>
-                                        <th>{{$i++}}</th>
+                                            <th>{{ $i++ }}</th>
                                             <td>{{ $requestedProductRequest->amount ?? '-' }}</td>
                                             {{-- <td>
                                             {{ optional($productRequest->clinic)->name ??
@@ -394,7 +501,7 @@
                                                             method="POST"
                                                             onsubmit="return confirm('{{ __('crud.common.are_you_sure') }}')">
                                                             @csrf @method('DELETE')
-                                                            <button type="submit" class="btn btn-light text-danger">
+                                                            <button type="submit" class="btn btn-sm btn-outline-danger mx-1">
                                                                 Cancel
                                                             </button>
                                                         </form>

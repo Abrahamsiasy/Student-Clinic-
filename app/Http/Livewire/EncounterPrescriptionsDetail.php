@@ -104,18 +104,19 @@ class EncounterPrescriptionsDetail extends Component
         }
         // dd($this);
         if ($this->prescription->drug_name == null) {
+            dd($this->prescription->product_id);
             $this->prescription->location_of_medication = 0;
-            // dd($this->prescription->items_in_pharmacies_id);
-            $item = ItemsInPharmacy::where('id', $this->prescription->items_in_pharmacies_id)->first();
-            $product = $item->item->product->id;
-            $product = $item->item->product;
-            $this->prescription->product_id = $item->item->product->id;
-            $this->prescription->drug_name = $product->name;
+            // $item = ItemsInPharmacy::where('id', $this->prescription->items_in_pharmacies_id)->first();
+            // $product=$item->item->product->id;
+            // $product = $item->item->product;
+            // $this->prescription->product_id = $item->item->product->id;
+            // $this->prescription->drug_name = $product->name;
         } else {
-            $this->prescription->product_id = Null;
             $this->prescription->location_of_medication = 1;
+            $this->prescription->product_id = Null;
         }
 
+        // dd($this->prescription);
         $this->prescription->save();
 
         $this->hideModal();

@@ -51,6 +51,7 @@ class labQueueCard extends AbstractWidget
 
 
         $opdQueue = Encounter::whereIn('status', [STATUS_TEST_PENDING])->get();
+        
         $opdQueueToBe = Encounter::whereIn('status', [STATUS_WAITING])->get();
         // dd($opdQueueToBe);
 

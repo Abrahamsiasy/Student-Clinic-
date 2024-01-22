@@ -25,13 +25,14 @@ class ProductItemsDetail extends Component
     public $modalTitle = 'New Item';
 
     protected $rules = [
-        'item.batch_number' => ['nullable', 'max:255', 'string'],
-        'itemExpireDate' => ['nullable', 'date'],
+        'item.batch_number' => ['required', 'max:255', 'string'],
+        'itemExpireDate' => ['required', 'date'],
         'item.brand' => ['nullable', 'max:255', 'string'],
         'item.supplier_name' => ['nullable', 'max:255', 'string'],
         'item.campany_name' => ['nullable', 'max:255', 'string'],
-        'item.number_of_units' => ['nullable', 'numeric'],
+        'item.number_of_units' => ['required', 'numeric'],
         'item.number_of_unit_per_pack' => ['nullable', 'numeric'],
+        'item.unit_type' => ['nullable', 'string'],
         'item.unit_price' => ['nullable', 'numeric'],
         'item.price_per_unit' => ['nullable', 'numeric'],
         'item.profit_margit' => ['nullable', 'numeric'],

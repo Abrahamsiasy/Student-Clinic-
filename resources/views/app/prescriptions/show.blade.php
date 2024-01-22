@@ -16,7 +16,7 @@
                 </div>
                 <div class="col-md-6">
                     <div class="prescription-details">
-                        <p><strong>Doctor Name:</strong> {{ optional($prescription->encounter->Doctor)->user->name ?? '-' }}
+                        <p><strong>Doctor Name:</strong> {{ optional($prescription->encounter->Doctor)->name ?? '-' }}
                         </p>
                     </div>
                 </div>

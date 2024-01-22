@@ -50,12 +50,12 @@
                         </thead>
                         <tbody>
                             @php
-                                $key=0
+                                $key=1
                             @endphp
                             @forelse($stockCategories as  $stockCategory)
                                 <tr>
 
-                                    <td> {{ $key + 1 }}
+                                    <td> {{ $key ++  }}
                                     </td>
                             <td>{{ $stockCategory->name ?? '-' }}</td>
 

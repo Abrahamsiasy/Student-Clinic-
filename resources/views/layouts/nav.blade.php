@@ -21,9 +21,14 @@
 
             <style>
                 .notification-badge {
-                    animation: blinkAnimation 1s infinite; /* Blinking animation */
+                    animation: blinkAnimation 0.5s infinite; /* Blinking animation */
+
                 }
         
+
+                .notification-badge:hover {
+                    animation: none; /* Stop the animation on hover */
+                }
                 @keyframes blinkAnimation {
                     0% { opacity: 1; }
                     50% { opacity: 0; }
@@ -53,12 +58,13 @@
                     ->flatMap->labRequests
                     ->whereNotNull('status')
                     ->whereNotNull('result')
+                    ->whereNull('closed_at') 
                     ->count();
                 @endphp
 
     
             
-                   @if (Auth::user()->hasRole('doctor')or Auth::user()->hasRole('super-admin'))
+                   @can('result_notification')
 
                    <li class="nav-item dropdown">
                     <a class="nav-link" data-toggle="dropdown" href="#">
@@ -95,16 +101,17 @@
 
                       <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
                     </div>
-                    
+                
+
                   </li>
-                  @endif
+                  @endcan
                 @php
                
                   $labRequests = \App\Models\LabTestRequest::whereNull('status')
                       ->whereNull('result')
                       ->get();
               @endphp   
-      @if (Auth::user()->hasRole('lab_technician') or Auth::user()->hasRole('super-admin') )
+      @can('lab_notification')
      <div class="dropdown-divider"></div>
                 <!-- Notifications Dropdown Menu -->
      <li class="nav-item dropdown">
@@ -136,7 +143,7 @@
         </div>
       </li>
 
-      @endif
+      @endcan
                 <li class="nav-item">
 
                     <a class="nav-link" data-toggle="dropdown" style="color:white; href="#">

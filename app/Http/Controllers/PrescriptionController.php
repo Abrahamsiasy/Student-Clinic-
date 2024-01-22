@@ -152,18 +152,23 @@ class PrescriptionController extends Controller
         // dd($prescription->itemInPharmacy);
         // dd($prescription->itemInPharmacy->amount);
         // $prescription->itemInPharmacy->amount -= 1;
+
+        if (Auth::user()->can('pharmacy.prescriptions.approve')) {
         $prescription->status = 1;
         $prescription->save();
 
         return redirect()
             ->route('prescriptions.index')
             ->withSuccess(__('Approved succefully'));
+        }
+        abort(Response::HTTP_UNAUTHORIZED, 'Unauthorized access.');
     }
 
 
     public function reject(Prescription $prescription)
     {
 
+        if (Auth::user()->can('pharmacy.prescriptions.reject')) {
         $prescription->status = -1;
 
         $prescription->save();
@@ -171,6 +176,8 @@ class PrescriptionController extends Controller
             ->route('prescriptions.index')
             ->withSuccess(__('Rejected succefully'));
     }
+    abort(Response::HTTP_UNAUTHORIZED, 'Unauthorized access.');
+}
 
     public function history(Request $request): View
     {
