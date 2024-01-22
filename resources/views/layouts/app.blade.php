@@ -9,6 +9,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>JU-SIS-V2</title>
+
+
     <style>
         html {
             background-color: #f4f6f9;
@@ -18,10 +20,16 @@
             width: 25px;
         }
 
+        .select2-selection {
+            height: auto !important;
+        }
+
         /* * {
             outline: 1px solid red;
         } */
     </style>
+
+
 
     <!-- Styles -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.1/dist/css/adminlte.min.css">
@@ -69,6 +77,8 @@
 
     <!-- Additional Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
+
+    @stack('styles')
 
     <!-- Livewire Styles -->
     @livewireStyles

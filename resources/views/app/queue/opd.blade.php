@@ -48,6 +48,12 @@
                                                                 @else
                                                                     Waiting
                                                                 @endif
+                                                                <span id="timeCounter" class="right badge badge-danger">
+                                                                    @if ($encounter->created_at)
+                                                                        {{ $encounter->created_at?->diffForHumans() }}
+                                                                    @endif
+                                                                </span>
+
                                                             </p>
                                                         </td>
                                                     @endforeach
@@ -55,7 +61,7 @@
                                             @endforeach
                                         </tbody>
                                     </table>
-
+                                    {{ $opdQueueToBe->links() }}
                                     <!-- Add a script section to handle AJAX updates -->
                                     @push('scripts')
                                         <script>

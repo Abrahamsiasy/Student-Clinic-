@@ -4,6 +4,8 @@ namespace Database\Seeders;
 
 use App\Models\Product;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+
 
 class ProductSeeder extends Seeder
 {
@@ -17,5 +19,6 @@ class ProductSeeder extends Seeder
         // Product::factory()
         //     ->count(5)
         //     ->create();
-    }
+
+  }
 }

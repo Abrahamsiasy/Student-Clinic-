@@ -179,7 +179,9 @@ class PermissionsSeeder extends Seeder
         Permission::updateOrCreate(['name'=>'view-OPD-dispay']);
         Permission::updateOrCreate(['name'=>'view-setting']);
         Permission::updateOrCreate(['name'=>'accept_patient']);
-
+        Permission::updateOrCreate(['name' => 'reporting']);
+        Permission::updateOrCreate(['name' => 'lab_notification']);
+        Permission::updateOrCreate(['name' => 'result_notification']);
     //////////////////////////////////////////////////////////
 
         Permission::findOrCreate('store.*');
@@ -232,152 +234,25 @@ class PermissionsSeeder extends Seeder
         Permission::updateOrCreate(['name' => 'update users']);
         Permission::updateOrCreate(['name' => 'delete users']);
 
-
-        $admins = \App\Models\User::role('super-admin')->get();
-        $doctorUsers = \App\Models\User::role('doctor')->get();
-        foreach ($admins as $admin) {
-            // Detach roles and delete related records
-            $admin->roles()->detach();
-            $admin->clinicusers()->delete(); // Assuming clinicusers is a relationship method
-            $admin->encounters()->delete(); // Assuming encounters is a relationship method
-            $admin->delete();
-        }
-
-        foreach ($doctorUsers as $doctorUser) {
-            // Detach roles and delete related records
-            $doctorUser->roles()->detach();
-            $doctorUser->clinicusers()->delete(); // Assuming clinicusers is a relationship method
-            $doctorUser->encounters()->delete(); // Assuming encounters is a relationship method
-            $doctorUser->delete();
-        }
+        Permission::updateOrCreate(['name' => 'view report']);
+        Permission::updateOrCreate(['name' => 'export report']);
 
 
-            // Create or update roles
-            $doctorRole = Role::updateOrCreate(['name' => 'doctor']);
-            $labTechnicianRole = Role::updateOrCreate(['name' => 'lab_technician']);
-            $receptionRole = Role::updateOrCreate(['name' => 'reception']);
-            $pharmacyRole = Role::updateOrCreate(['name' => 'PHARMACY_USER']);
-            $nurseRole = Role::updateOrCreate(['name' => 'nurse']);
-            $adminRole = Role::updateOrCreate(['name' => 'super-admin']);
-            $headRole = Role::updateOrCreate(['name' => 'clinic-head']);
-            $pharmacy_user = Role::updateOrCreate(['name' => Constants::PHARMACY_USER]);
-            $store_user = Role::updateOrCreate(['name' => Constants::STORE_USER_ROLE]);
+        $pharmacy_user = Role::updateOrCreate(['name' => Constants::PHARMACY_USER]);
+        $store_user = Role::updateOrCreate(['name' => Constants::STORE_USER_ROLE]);
 
 
-              $allPermissions = Permission::all();
-            // $allPermissions = Permission::pluck('name');
-               $superadminRole = Role::where('name', 'super-admin')->first();
-               $clinicHeadRole = Role::where('name', 'clinic-head')->first();
-             if ($superadminRole) {
-
-                 $superadminRole->givePermissionTo($allPermissions);
-                 $superadminRole->assignRole($superadminRole);
-             }
-             if ($clinicHeadRole ) {
-
-                 $clinicHeadRole->givePermissionTo($allPermissions);
-                 $clinicHeadRole->assignRole($clinicHeadRole);
-             }
-
-//'password' => Hash::make('password'),
-        $adminUser = \App\Models\User::whereEmail('admin@admin.com')->first();
-        // If the admin user doesn't exist, updateOrCreate it and assign the 'super-admin' role
-        if (!$adminUser) {
-            $adminUser = \App\Models\User::updateOrCreate([
-                'email' => 'admin@admin.com',
-                // Add other user details as needed
-            ]);
-
-            $adminUser->assignRole($e);
-        }
-
-        // Similar checks for the doctor user
-        $doctorUser = \App\Models\User::whereEmail('doctor@doctor.com')->first();
-
-        if (!$doctorUser) {
-            $doctorUser = \App\Models\User::updateOrCreate([
-                'email' => 'doctor@doctor.com',
-                // Add other user details as needed
-            ]);
-
-            // Assign roles to the doctor user if needed
-        }
-
-        $permissionsForDoctor = [
-            'list appointments',
-            'create appointments',
-            'update appointments',
-            'delete appointments',
-            'list encounters',
-            'view encounters',
-            'create encounters',
-            'update encounters',
-            'delete encounters',
-            'list diagnoses',
-            'view diagnoses',
-            'create diagnoses',
-            'update diagnoses',
-            'delete diagnoses',
-            'list labtests',
-            'view labtests',
-            'create labtests',
-            'update labtests',
-            'delete labtests',
-            'list prescriptions',
-            'view prescriptions',
-            'create prescriptions',
-            'update prescriptions',
-            'delete prescriptions',
-            'list medicalrecords',
-            'view medicalrecords',
-            'create medicalrecords',
-            'update medicalrecords',
-            'delete medicalrecords',
-            'list vitalsigns',
-            'view vitalsigns',
-            'create vitalsigns',
-            'update vitalsigns',
-            'delete vitalsigns',
-            // Add other doctor-specific permissions here
-        ];
-        $doctorRole->givePermissionTo($permissionsForDoctor);
-
-        if ($doctorUser) {
-
-            $doctorUser->assignRole($doctorRole);
-        }
-
-        $permissionsForReception = [
-            'list appointments',
-            'view appointments',
-            'create appointments',
-            'update appointments',
-            'delete appointments',
-            'list encounters',
-            'view encounters',
-            'create encounters',
-            'update encounters',
-            'delete encounters',
-            // Add other reception-specific permissions here
-        ];
-        $receptionRole->givePermissionTo($permissionsForReception);
-
-        $receptionUser = \App\Models\User::whereEmail('reception@reception.com')->first();
-
-        if ($receptionUser) {
-            $receptionUser->assignRole($receptionRole);
-        }
 
       //  $store_user = Role::updateOrCreate(Constants::STORE_USER_ROLE);
 
-        $store_user->syncPermissions('store.product.*', 'store.product.index', 'store.product.create', 'store.product.update', 'store.product.view', 'store.product.item', 'store.request.*', 'store.request.index', 'store.request.approve', 'store.request.reject', 'store.records.*', 'store.records.index', 'store.records.view', 'store.records.edit', 'store.records.delete');
+        $store_user->syncPermissions('store.*','store.product.*', 'store.product.index', 'store.product.create', 'store.product.update', 'store.product.view', 'store.product.item', 'store.request.*', 'store.request.index', 'store.request.approve', 'store.request.reject', 'store.records.*', 'store.records.index', 'store.records.view', 'store.records.edit', 'store.records.delete');
 
 
 
-        $pharmacy_user->syncPermissions('pharmacy.prescriptions.*', 'pharmacy.prescriptions.index', 'pharmacy.prescriptions.approve', 'pharmacy.prescriptions.view', 'pharmacy.products.*', 'pharmacy.products.index', 'pharmacy.products.request', 'pharmacy.products.view', 'pharmacy.history.*');
+        $pharmacy_user->syncPermissions('pharmacy.*','pharmacy.prescriptions.*', 'pharmacy.prescriptions.index', 'pharmacy.prescriptions.approve', 'pharmacy.prescriptions.view', 'pharmacy.products.*', 'pharmacy.products.index', 'pharmacy.products.request', 'pharmacy.products.view', 'pharmacy.history.*');
 
-    }
 
+        }
     catch (\Exception $e) {
         Log::error('Error in PermissionsSeeder: ' . $e->getMessage());
     }

@@ -5,12 +5,17 @@
         <x-inputs.text name="name" label="Name" :value="old('name', $editing ? $room->name : '')" maxlength="255" placeholder="Name"></x-inputs.text>
     </x-inputs.group>
 
-    <x-inputs.group class="col-sm-12">
-        <x-inputs.textarea name="description" label="Description"
-            maxlength="255">{{ old('description', $editing ? $room->description : '') }}</x-inputs.textarea>
-    </x-inputs.group>
-
     {{-- <x-inputs.group class="col-sm-12">
+        <x-inputs.textarea
+            name="description"
+            label="Description"
+            maxlength="255"
+            >{{ old('description', ($editing ? $room->description : ''))
+            }}</x-inputs.textarea
+        >
+    </x-inputs.group> --}}
+{{-- 
+    <x-inputs.group class="col-sm-12">
         <x-inputs.text
             name="status"
             label="Status"
@@ -21,8 +26,13 @@
     </x-inputs.group> --}}
 
     {{-- <x-inputs.group class="col-sm-12">
-        <x-inputs.text name="is_active" label="Is Active" :value="old('is_active', $editing ? $room->is_active : '')" maxlength="255"
-            placeholder="Is Active"></x-inputs.text>
+        <x-inputs.text
+            name="is_active"
+            label="Is Active"
+            :value="old('is_active', ($editing ? $room->is_active : ''))"
+            maxlength="255"
+            placeholder="Is Active"
+        ></x-inputs.text>
     </x-inputs.group> --}}
 
     <x-inputs.group class="col-sm-12">
@@ -35,7 +45,7 @@
             @endforeach
         </x-inputs.select>
     </x-inputs.group>
-    {{-- 
+{{-- 
     <x-inputs.group class="col-sm-12">
         <x-inputs.select name="encounter_id" label="Encounter">
             @php $selected = old('encounter_id', ($editing ? $room->encounter_id : '')) @endphp

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
+    <div class="">
         <div class="card">
             <div class="card-header p-0 pt-1 border-bottom-0">
                 <div class="d-flex justify-content-between">
@@ -57,7 +57,7 @@
                         </div>
 
                         <div class="table-responsive">
-                            <table class="table table-borderless table-hover">
+                              <table class="table table-hover  table-sm table-condensed">
                                 <thead>
                                     <tr>
                                         <th>#</th>
@@ -136,7 +136,7 @@
                         </div>
 
                         <div class="table-responsive">
-                            <table class="table table-borderless table-hover">
+                              <table class="table table-hover  table-sm table-condensed">
                                 <thead>
                                     <tr>
                                         <th>#</th>

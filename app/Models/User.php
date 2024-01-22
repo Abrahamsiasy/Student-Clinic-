@@ -43,7 +43,7 @@ class User extends Authenticatable
     }
     public function storeUser()
     {
-        return $this->belongsTo(StoreUser::class);
+        return $this->hasOne(StoreUser::class);
     }
 
     public function pharmacyUsers()
@@ -56,7 +56,7 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Clinic::class, 'clinic_clinic_user');
     }
-    
+
 
     public function encounters()
     {
@@ -66,6 +66,6 @@ class User extends Authenticatable
 
 
 
-    
+
 
 }

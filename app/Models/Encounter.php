@@ -21,6 +21,7 @@ class Encounter extends Model
         'doctor_id',
         'registered_by',
         'accepted_at',
+        'arrived_at'
     ];
 
     protected $searchableFields = ['*'];

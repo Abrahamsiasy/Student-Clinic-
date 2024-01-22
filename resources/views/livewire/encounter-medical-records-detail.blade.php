@@ -140,7 +140,7 @@
                         </a>
                     </h5>
 
-                    <span class="p small"> {{ $medicalRecord->subjective ?? '-' }}</span>
+                    <span class="p small"> {{ $medicalRecord->objective ?? '-' }}</span>
 
                 </div>
 

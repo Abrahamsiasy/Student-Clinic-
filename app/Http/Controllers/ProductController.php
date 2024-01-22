@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 
 use App\Constants;
+use App\Helper\ProductHelper;
 use App\Models\Store;
 use App\Models\Product;
 use App\Models\Category;
@@ -195,5 +196,26 @@ class ProductController extends Controller
         return redirect()
             ->route('products.index')
             ->withSuccess(__('crud.common.removed'));
+    }
+
+
+    public function sync(ProductHelper $productHelper){
+
+
+        if (Auth::user()->can('store.product.create')) {
+
+            $storeUser = StoreUser::where('user_id', Auth::user()->id)->first();
+            if($storeUser==null){
+                return back()->withError('Store user hasn\'t been assigned to any store yet ');
+            }
+            $store = Store::where('id', $storeUser->store_id)->first();
+            $productHelper->syncProducts($store);
+            return redirect()->back()->withSuccess(__('Product Synced successfully'));
+
+        }
+        else{
+            return $this->authorize('view-any', Product::class);
+
+        }
     }
 }

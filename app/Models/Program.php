@@ -11,7 +11,7 @@ class Program extends Model
     use HasFactory;
     use Searchable;
 
-    protected $fillable = ['name', 'collage_id', 'campus_id'];
+    protected $fillable = ['name', 'collage_id', 'campus_id','department_id'];
 
     protected $searchableFields = ['*'];
 

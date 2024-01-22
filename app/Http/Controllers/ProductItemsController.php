@@ -50,6 +50,7 @@ class ProductItemsController extends Controller
                 'campany_name' => ['nullable', 'max:255', 'string'],
                 'number_of_units' => ['nullable', 'numeric'],
                 'number_of_unit_per_pack' => ['nullable', 'numeric'],
+                'unit_type' => ['required', 'string'],
                 'unit_price' => ['nullable', 'numeric'],
                 'price_per_unit' => ['nullable', 'numeric'],
                 'profit_margit' => ['nullable', 'numeric'],

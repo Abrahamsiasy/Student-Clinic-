@@ -21,13 +21,10 @@
                     <h3>{{ $encounter->student->id_number ?? '-' }}</h3>
                     <div class="d-flex justify-content">
                         <p>
-                            {{-- {{ $encounter->first()->Doctor ? $encounter->first()->Doctor->user->name : '-' }} --}}
-                            {{ $encounter->Doctor ? $encounter->Doctor->name : '-' }}
-                            {{-- {{ dd($opdQueue->first()->Doctor->rooms->first()->name) }} --}}
+                          Called at  {{ $encounter->updated_at->diffForHumans() }} 
                         </p>
-                        <p class="px-2">
-                            {{-- Check if accepted_at exists and is not null --}}
-                            {{-- @dd($encounter->accepted_at) --}}
+                        {{-- <p class="px-2">
+                        
                             <span id="timeCounter" class="right badge badge-danger">
                                 @if ($encounter->accepted_at)
                                     @php
@@ -51,10 +48,8 @@
 
 
 
-                        </p>
+                        </p> --}}
                     </div>
-
-
                 </div>
                 <div class="icon">
                     <i class="ion ion-stat text-light font-weight-bold"><span class="small text-md">

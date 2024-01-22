@@ -23,8 +23,8 @@ class VideoStoreRequest extends FormRequest
             'title' => ['required', 'max:255', 'string'],
             'desc' => ['required', 'max:255', 'string'],
             'status' => ['required', 'max:255'],
-            'path' => ['required', 'max:255', 'string'],
-            'path' => ['file', 'max:1024', 'required'],
+            // 'path' => ['required', 'max:255', 'string'],
+            'path' => ['file', 'max:20044', 'required'],
         ];
     }
 }

@@ -16,7 +16,7 @@
                             <div class="card">
                                 <div class="card-body">
                                     <video width="400" controls>
-                                        <source src="{{ $video->path }}" type="video/mp4">
+                                        <source src="{{ \Storage::url($video->path) }}" type="video/mp4">
                                         Your browser does not support the video tag.
                                     </video>
                                 </div>
